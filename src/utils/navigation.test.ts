@@ -40,5 +40,25 @@ describe('Navigation Logic', () => {
     expect(result.modules[0].title).toBe('Módulo 1: Fundamentos');
     expect(result.modules[0].topics[0].title).toBe('Tema 1: Conceptos Generales');
     expect(result.modules[0].topics[0].lessons[0].title).toBe('Hardware y Software');
+
+    // Flat ordered list check for prev/next calculations
+    expect(result.allLessonsOrdered.length).toBe(3);
+    expect(result.allLessonsOrdered[0].title).toBe('Presentación');
+    expect(result.allLessonsOrdered[1].title).toBe('Plan de Estudio');
+    expect(result.allLessonsOrdered[2].title).toBe('Hardware y Software');
+
+    // Simulating the prev/next calculation from dynamic page router
+    const activeSlug = '00-inicio/02-plan-de-estudio';
+    const currentIndex = result.allLessonsOrdered.findIndex(l => l.slug === activeSlug);
+    expect(currentIndex).toBe(1);
+
+    const prevLesson = currentIndex > 0 ? result.allLessonsOrdered[currentIndex - 1] : null;
+    const nextLesson = currentIndex < result.allLessonsOrdered.length - 1 ? result.allLessonsOrdered[currentIndex + 1] : null;
+
+    expect(prevLesson).not.toBeNull();
+    expect(prevLesson!.title).toBe('Presentación');
+    expect(nextLesson).not.toBeNull();
+    expect(nextLesson!.title).toBe('Hardware y Software');
   });
 });
+

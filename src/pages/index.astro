@@ -1,11 +1,21 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const lecciones = await getCollection('lecciones');
+const sorted = [...lecciones].sort((a, b) => a.id.localeCompare(b.id));
+const firstSlug = sorted.length > 0 ? sorted[0].id.replace(/\.(mdx|md)$/, '') : '00-inicio/01-presentacion';
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0;url=/${firstSlug}`} />
+    <title>Cargando lecciones...</title>
+  </head>
+  <body>
+    <p class="p-6 text-center text-slate-500">
+      Redireccionando al temario... <a href={`/${firstSlug}`} class="text-indigo-600 underline">Haz clic aquí si no redirige automáticamente</a>.
+    </p>
+  </body>
+</html>
