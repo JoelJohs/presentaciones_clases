@@ -9,10 +9,10 @@ interface Props {
 const { nav, activeSlug } = Astro.props;
 ---
 
-<aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-80 -translate-x-full border-r border-slate-200 bg-slate-50 p-6 transition-transform duration-300 dark:border-slate-800 dark:bg-slate-950 lg:translate-x-0 overflow-y-auto">
+<aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-80 -translate-x-full border-r border-[#CBD5E0] bg-[#F5F7FA] p-6 transition-transform duration-300 dark:border-[#1E293B] dark:bg-[#0D1B3E] lg:translate-x-0 overflow-y-auto">
   <div class="mb-8 flex items-center justify-between">
-    <a href="/" class="text-xl font-bold tracking-tight text-indigo-600 dark:text-indigo-400 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 rounded">
-      Clases DigitalPlat
+    <a href="/" class="text-xl font-bold tracking-tight text-[#1A5FA8] dark:text-[#60A5FA]">
+      Plataforma de Estudios
     </a>
   </div>
 
@@ -23,10 +23,10 @@ const { nav, activeSlug } = Astro.props;
         <li>
           <a
             href={`/${page.slug}`}
-            class={`block rounded-md px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
+            class={`block rounded-md px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A5FA8] ${
               activeSlug === page.slug
-                ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300 border-l-2 border-indigo-600 dark:border-indigo-400'
-                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-slate-100 border-l-2 border-transparent'
+                ? 'bg-[#DCE8F5] text-[#1A5FA8] border-l-2 border-[#1A5FA8] dark:bg-[#1565C0]/30 dark:text-[#FFFFFF] dark:border-[#60A5FA]'
+                : 'text-slate-600 hover:bg-[#E8F0FA] hover:text-[#1A5FA8] dark:text-slate-400 dark:hover:bg-[#1A5FA8]/20 dark:hover:text-[#FFFFFF] border-l-2 border-transparent'
             }`}
           >
             {page.title}
@@ -52,10 +52,10 @@ const { nav, activeSlug } = Astro.props;
                 <li>
                   <a
                     href={`/${lesson.slug}`}
-                    class={`block rounded-md px-3 py-1.5 text-xs font-medium transition-colors focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
+                    class={`block rounded-md px-3 py-1.5 text-xs font-medium transition-colors focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A5FA8] ${
                       activeSlug === lesson.slug
-                        ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300 border-l-2 border-indigo-600 dark:border-indigo-400'
-                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-slate-100 border-l-2 border-transparent'
+                        ? 'bg-[#DCE8F5] text-[#1A5FA8] border-l-2 border-[#1A5FA8] dark:bg-[#1565C0]/30 dark:text-[#FFFFFF] dark:border-[#60A5FA]'
+                        : 'text-slate-600 hover:bg-[#E8F0FA] hover:text-[#1A5FA8] dark:text-slate-400 dark:hover:bg-[#1A5FA8]/20 dark:hover:text-[#FFFFFF] border-l-2 border-transparent'
                     }`}
                   >
                     {lesson.title}
@@ -69,3 +69,4 @@ const { nav, activeSlug } = Astro.props;
     ))}
   </nav>
 </aside>
+

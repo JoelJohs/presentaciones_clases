@@ -11,7 +11,7 @@ interface Props {
 }
 
 const { 
-  title = 'Clases', 
+  title = 'Plataforma de Estudios', 
   nav = { initialPages: [], modules: [], allLessonsOrdered: [] }, 
   activeSlug = '' 
 } = Astro.props;
@@ -25,7 +25,7 @@ const {
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title} | Clases</title>
+    <title>{title} | Plataforma de Estudios</title>
 
     <!-- Dark Mode Initial Script to Prevent Flashing -->
     <script is:inline>
@@ -40,7 +40,7 @@ const {
       }
     </script>
   </head>
-  <body class="bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-200">
+  <body class="bg-[#FFFFFF] text-[#2D3748] dark:bg-[#0B0F19] dark:text-[#E2E8F0]">
     <div class="min-h-screen">
       <!-- Sidebar -->
       <Sidebar nav={nav} activeSlug={activeSlug} />
