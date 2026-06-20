@@ -10,7 +10,8 @@ describe('Navigation Logic', () => {
         data: {
           title: 'Hardware y Software',
           moduleTitle: 'Módulo 1: Fundamentos',
-          topicTitle: 'Tema 1: Conceptos Generales'
+          topicTitle: 'Tema 1: Conceptos Generales',
+          fecha: '20-06-2026'
         }
       },
       {
@@ -76,7 +77,8 @@ describe('Navigation Logic', () => {
         data: {
           title: 'Hardware y Software',
           moduleTitle: 'Módulo 1: Fundamentos',
-          topicTitle: 'Tema 1: Conceptos Generales'
+          topicTitle: 'Tema 1: Conceptos Generales',
+          fecha: '20-06-2026'
         }
       },
       {
@@ -84,7 +86,8 @@ describe('Navigation Logic', () => {
         data: {
           title: 'Exploración del SO',
           moduleTitle: 'Módulo 1: Fundamentos',
-          topicTitle: 'Tema 1: Conceptos Generales'
+          topicTitle: 'Tema 1: Conceptos Generales',
+          fecha: '27-06-2026'
         }
       },
       {

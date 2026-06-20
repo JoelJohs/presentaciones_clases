@@ -158,3 +158,136 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 0.875rem;
   white-space: pre;
 }
+
+/* Plan de Estudios - Estilos de la tabla de mapa curricular */
+.plan-estudio-wrapper {
+  --ink: var(--color-brand-navy);
+  --ink-soft: var(--color-brand-muted);
+  --paper: transparent;
+  --line: var(--color-brand-border);
+  --panel: var(--color-brand-sidebar-bg);
+  margin-top: 2rem;
+}
+.plan-estudio-wrapper * { box-sizing: border-box; }
+.plan-estudio-wrapper .modulo { margin-bottom: 46px; }
+.plan-estudio-wrapper .modulo:last-child { margin-bottom: 0; }
+.plan-estudio-wrapper .modulo-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 6px;
+}
+.plan-estudio-wrapper .modulo-badge {
+  width: 42px; height: 42px;
+  min-width: 42px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display), serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: #fff;
+}
+.plan-estudio-wrapper .modulo-titles { flex: 1; }
+.plan-estudio-wrapper .modulo-titles .eyebrow-mini {
+  font-family: monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.plan-estudio-wrapper h2.modulo-title {
+  font-family: var(--font-display), serif;
+  font-weight: 700 !important;
+  font-size: 21px !important;
+  letter-spacing: -0.01em;
+  margin: 0 !important;
+  border: none !important;
+  padding: 0 !important;
+  color: var(--ink) !important;
+}
+.plan-estudio-wrapper .modulo-weeks {
+  font-family: monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+  text-align: right;
+}
+.plan-estudio-wrapper .modulo-weeks span {
+  display: block;
+  font-size: 9.5px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.plan-estudio-wrapper .modulo-track {
+  height: 5px;
+  background: var(--line);
+  border-radius: 3px;
+  margin: 14px 0 22px;
+  overflow: hidden;
+}
+.plan-estudio-wrapper .modulo-track div { height: 100%; border-radius: 3px; }
+.plan-estudio-wrapper .tema { margin-bottom: 18px; margin-top: 1.5rem; }
+.plan-estudio-wrapper .tema:last-child { margin-bottom: 0; }
+.plan-estudio-wrapper h3.tema-title {
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  color: var(--ink) !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  border: none !important;
+}
+.plan-estudio-wrapper h3.tema-title::before {
+  content: "";
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--accent, #2F6F6B);
+  display: inline-block;
+}
+.plan-estudio-wrapper table {
+  border-collapse: collapse;
+  width: 100% !important;
+  margin-bottom: 1.5rem !important;
+  margin-top: 0.5rem !important;
+  background: transparent !important;
+}
+.plan-estudio-wrapper thead th {
+  text-align: left;
+  font-family: monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-weight: 700;
+  padding: 0 12px 6px !important;
+  border-bottom: 1.5px solid var(--ink) !important;
+}
+.plan-estudio-wrapper thead th.dur-h { text-align: center; width: 90px; }
+.plan-estudio-wrapper tbody td {
+  padding: 10px 12px !important;
+  border-bottom: 1px solid var(--line) !important;
+  vertical-align: top;
+  color: var(--ink) !important;
+  font-size: 0.95rem !important;
+}
+.plan-estudio-wrapper tbody td.subtema { font-weight: 600 !important; white-space: nowrap; width: 1%; }
+.plan-estudio-wrapper tbody td.desc { color: var(--ink-soft) !important; }
+.plan-estudio-wrapper tbody tr:last-child td { border-bottom: none !important; }
+.plan-estudio-wrapper td.dur { text-align: center; }
+.plan-estudio-wrapper .pill {
+  display: inline-block;
+  min-width: 26px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-family: monospace;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--accent, #2F6F6B);
+}

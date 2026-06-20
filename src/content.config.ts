@@ -7,6 +7,7 @@ const lecciones = defineCollection({
     title: z.string(),
     moduleTitle: z.string().optional(),
     topicTitle: z.string().optional(),
+    fecha: z.string().optional(),
   }),
 });
 

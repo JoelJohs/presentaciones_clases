@@ -29,6 +29,16 @@ export function getLessonReleaseDate(index: number): Date {
   return date;
 }
 
+export function parseDDMMAAAA(dateStr: string): Date | null {
+  const parts = dateStr.split('-');
+  if (parts.length !== 3) return null;
+  const day = parseInt(parts[0], 10);
+  const month = parseInt(parts[1], 10) - 1; // 0-indexed month
+  const year = parseInt(parts[2], 10);
+  if (isNaN(day) || isNaN(month) || isNaN(year)) return null;
+  return new Date(year, month, day, 0, 0, 0, 0);
+}
+
 export function getNavigationStructure(entries: any[], currentDate: Date = new Date()): NavigationResult {
   const showAll = import.meta.env.DEV || 
                   (typeof process !== 'undefined' && process.env.SHOW_ALL_LESSONS === 'true');
@@ -39,8 +49,6 @@ export function getNavigationStructure(entries: any[], currentDate: Date = new D
   const modulesMap = new Map<string, ModuleGroup>();
   const allLessonsOrdered: LessonLink[] = [];
 
-  let moduleLessonIndex = 0;
-
   for (const entry of sortedEntries) {
     const slug = entry.id.replace(/\.(mdx|md)$/, '');
     const isInitial = !entry.data.moduleTitle;
@@ -49,10 +57,18 @@ export function getNavigationStructure(entries: any[], currentDate: Date = new D
     let isReleased = true;
 
     if (!isInitial) {
-      const releaseDate = getLessonReleaseDate(moduleLessonIndex);
-      releaseDateStr = releaseDate.toISOString();
-      isReleased = showAll || currentDate >= releaseDate;
-      moduleLessonIndex++;
+      const fechaStr = entry.data.fecha;
+      if (fechaStr) {
+        const releaseDate = parseDDMMAAAA(fechaStr);
+        if (releaseDate) {
+          releaseDateStr = releaseDate.toISOString();
+          isReleased = showAll || currentDate >= releaseDate;
+        } else {
+          isReleased = false;
+        }
+      } else {
+        isReleased = false;
+      }
     }
 
     if (!isReleased) {
