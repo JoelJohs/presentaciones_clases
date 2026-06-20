@@ -74,8 +74,35 @@ El hardware representa los componentes físicos que podemos tocar.
 
 ---
 
-## 4. Publicar Cambios
+## 4. Agregar Imágenes y Recursos
+
+Para incluir imágenes, esquemas o diagramas en tus lecciones, tienes dos opciones:
+
+### Opción A: Usando la carpeta `public/` (Recomendado por simplicidad)
+Cualquier archivo colocado dentro de `public/` se sirve de manera directa desde la raíz del sitio web.
+
+1. Guarda la imagen en la siguiente ruta (crea carpetas si no existen):
+   `public/images/lecciones/[nombre-del-modulo]/[nombre-del-tema]/imagen.png`
+2. En tu archivo `.mdx`, haz referencia con una ruta absoluta:
+   ```markdown
+   ![Texto alternativo](/images/lecciones/01-fundamentos-mantenimiento/01-introduccion-informatica/imagen.png)
+   ```
+
+### Opción B: Usando `src/assets/` (Con optimización automática)
+Astro procesará y optimizará las imágenes, pero requiere escribir rutas relativas que pueden ser largas:
+
+1. Guarda la imagen en:
+   `src/assets/images/lecciones/[nombre-del-modulo]/[nombre-del-tema]/imagen.png`
+2. Referencia la imagen de forma relativa (usando `../` para retroceder niveles hasta `src/assets/`):
+   ```markdown
+   ![Texto alternativo](../../../assets/images/lecciones/01-fundamentos-mantenimiento/01-introduccion-informatica/imagen.png)
+   ```
+
+---
+
+## 5. Publicar Cambios
 
 Una vez que guardes tu nuevo archivo `.mdx` en la carpeta correspondiente:
 1. Sube tus cambios a GitHub (`git add .`, `git commit -m "Lección agregada"`, `git push`).
 2. Vercel detectará los cambios automáticamente y reconstruirá el sitio web en menos de 1 minuto, actualizando el menú y las páginas al instante.
+

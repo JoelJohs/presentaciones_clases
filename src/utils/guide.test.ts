@@ -16,7 +16,8 @@ describe('GUIA_CONTENIDO.md verification', () => {
     expect(content).toContain('## 1. Estructura de Carpetas');
     expect(content).toContain('## 2. Metadatos (Frontmatter)');
     expect(content).toContain('## 3. Formato del Texto (Markdown y MDX)');
-    expect(content).toContain('## 4. Publicar Cambios');
+    expect(content).toContain('## 4. Agregar Imágenes y Recursos');
+    expect(content).toContain('## 5. Publicar Cambios');
     
     // 3. Verify all backticks (code blocks) are balanced
     const codeBlockCount = (content.match(/```/g) || []).length;
