@@ -95,7 +95,7 @@ Astro procesará y optimizará las imágenes, pero requiere escribir rutas relat
    `src/assets/images/lecciones/[nombre-del-modulo]/[nombre-del-tema]/imagen.png`
 2. Referencia la imagen de forma relativa (usando `../` para retroceder niveles hasta `src/assets/`):
    ```markdown
-   ![Texto alternativo](../../../assets/images/lecciones/01-fundamentos-mantenimiento/01-introduccion-informatica/imagen.png)
+   ![Texto alternativo](../../../../assets/images/lecciones/01-fundamentos-mantenimiento/01-introduccion-informatica/imagen.png)
    ```
 
 ---
