@@ -159,6 +159,32 @@ h1, h2, h3, h4, h5, h6 {
   white-space: pre;
 }
 
+/* Markdown Tables inside .prose */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  text-align: left;
+}
+.prose th {
+  background-color: var(--color-brand-sidebar-bg);
+  color: var(--color-brand-navy);
+  font-weight: 700;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid var(--color-brand-border);
+}
+.prose td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-brand-border);
+  color: var(--color-brand-text);
+  vertical-align: middle;
+}
+.prose tr:hover td {
+  background-color: var(--color-brand-hover-bg);
+}
+
 /* Plan de Estudios - Estilos de la tabla de mapa curricular */
 .plan-estudio-wrapper {
   --ink: var(--color-brand-navy);
