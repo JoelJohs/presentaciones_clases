@@ -178,37 +178,88 @@ Los profesionales casi no usan el ratón. Aquí tienes los superpoderes del tecl
 
 ## 4. Archivos y Extensiones 📂
 
-La computadora necesita saber qué tipo de información tiene enfrente para saber cómo abrirla. La anatomía de un archivo siempre es:
-`nombre_del_archivo` **.** `extensión`
+Para que la computadora comprenda qué tipo de datos contiene un archivo y qué debe hacer con él, se utiliza un estándar de identificación:
+
+### 🧩 Conceptos Clave
+
+- **Anatomía de un archivo:** `nombre_del_archivo` **.** `extensión`
+  - **Nombre:** Identifica el contenido para el usuario.
+  - **Punto:** Actúa como separador obligatorio.
+  - **Extensión:** Define el formato de datos interno (suele ser de 3 o 4 letras).
+- **El Icono vs. La Extensión:** El icono es solo una representación gráfica que asigna el Sistema Operativo. Lo que realmente define cómo se procesa el archivo es la extensión.
+- **Cambio de Extensión:** Modificar la extensión **no convierte los datos** internos del archivo. Solo cambia el programa con el que el S.O. intentará abrirlo (lo que suele provocar errores de formato).
+
+---
+
+### ⚠️ El Peligro de las Extensiones Ocultas (Ciberseguridad)
+
+- **Configuración por defecto:** Los sistemas operativos modernos ocultan las extensiones conocidas para "limpiar" la interfaz visual.
+- **La trampa:** Un archivo malicioso llamado `foto.jpg.exe` se mostrará en pantalla simplemente como `foto.jpg`. Al hacer doble clic pensando que es una imagen, se ejecutará código dañino en la computadora.
+- **Buenas prácticas:** Activar la visibilidad de extensiones y sospechar siempre de archivos de origen desconocido con extensiones ejecutables (`.exe`, `.bat`, `.scr`, `.msi`).
+
+---
+
+### 📋 Tabla de Extensiones Comunes
 
 <table>
   <thead>
     <tr>
+      <th>Categoría</th>
       <th>Extensión</th>
-      <th>¿Qué es?</th>
-      <th>¿Con qué se abre?</th>
+      <th>Tipo de Información</th>
+      <th>Programa Predeterminado</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><strong>.txt</strong></td>
-      <td>Texto sin formato.</td>
-      <td>Bloc de notas.</td>
+      <td rowspan="2" style="font-weight: bold; vertical-align: middle;">Documentos</td>
+      <td><strong>.pdf</strong></td>
+      <td>Documento de lectura fija (no editable).</td>
+      <td>Navegador Web / Adobe Reader</td>
     </tr>
     <tr>
+      <td><strong>.docx / .xlsx</strong></td>
+      <td>Procesador de textos / Hojas de cálculo.</td>
+      <td>Microsoft Office / LibreOffice</td>
+    </tr>
+    <tr>
+      <td rowspan="2" style="font-weight: bold; vertical-align: middle;">Imágenes</td>
       <td><strong>.jpg / .png</strong></td>
-      <td>Imágenes y fotos.</td>
-      <td>Visor de imágenes.</td>
+      <td>Fotografía comprimida / Gráfico con transparencia.</td>
+      <td>Visor de Fotos del Sistema</td>
     </tr>
     <tr>
+      <td><strong>.svg</strong></td>
+      <td>Gráfico vectorial (escalable sin pixelarse).</td>
+      <td>Navegador Web / Illustrator</td>
+    </tr>
+    <tr>
+      <td rowspan="2" style="font-weight: bold; vertical-align: middle;">Multimedia</td>
       <td><strong>.mp3</strong></td>
-      <td>Música y audio.</td>
-      <td>Reproductor de música.</td>
+      <td>Archivo de audio digital comprimido.</td>
+      <td>Reproductor de música VLC / Windows Media</td>
     </tr>
     <tr>
+      <td><strong>.mp4</strong></td>
+      <td>Video digital (audio y video sincronizados).</td>
+      <td>Reproductor de video</td>
+    </tr>
+    <tr>
+      <td rowspan="1" style="font-weight: bold; vertical-align: middle;">Compresión</td>
+      <td><strong>.zip / .rar</strong></td>
+      <td>Paquete contenedor con archivos reducidos de tamaño.</td>
+      <td>WinRAR / 7-Zip / Gestor de archivadores</td>
+    </tr>
+    <tr>
+      <td rowspan="2" style="font-weight: bold; vertical-align: middle;">Programas y Código</td>
       <td><strong>.exe</strong></td>
-      <td>Un programa o aplicación.</td>
-      <td>Windows lo ejecuta directo.</td>
+      <td>Aplicación ejecutable con instrucciones directas para la CPU.</td>
+      <td>Ejecutado directamente por el Sistema Operativo</td>
+    </tr>
+    <tr>
+      <td><strong>.html</strong></td>
+      <td>Código estructurado para maquetación web.</td>
+      <td>Navegador Web (Chrome, Firefox, Safari)</td>
     </tr>
   </tbody>
 </table>
