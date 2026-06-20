@@ -40,8 +40,8 @@ export function parseDDMMAAAA(dateStr: string): Date | null {
 }
 
 export function getNavigationStructure(entries: any[], currentDate: Date = new Date()): NavigationResult {
-  const showAll = import.meta.env.DEV || 
-                  (typeof process !== 'undefined' && process.env.SHOW_ALL_LESSONS === 'true');
+  const showAll = (typeof process !== 'undefined' && process.env.SHOW_ALL_LESSONS === 'true') ||
+                  import.meta.env.SHOW_ALL_LESSONS === 'true';
 
   const sortedEntries = [...entries].sort((a, b) => a.id.localeCompare(b.id));
 
@@ -62,7 +62,9 @@ export function getNavigationStructure(entries: any[], currentDate: Date = new D
         const releaseDate = parseDDMMAAAA(fechaStr);
         if (releaseDate) {
           releaseDateStr = releaseDate.toISOString();
-          isReleased = showAll || currentDate >= releaseDate;
+          // Release lessons 24 hours before class to allow teacher/student preparation the day before
+          const releaseLimit = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
+          isReleased = showAll || releaseLimit >= releaseDate;
         } else {
           isReleased = false;
         }
