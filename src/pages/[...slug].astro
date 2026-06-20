@@ -6,13 +6,15 @@ import { getNavigationStructure } from '../utils/navigation';
 export async function getStaticPaths() {
   const lecciones = await getCollection('lecciones');
   
-  // Sort them physically first
-  const sorted = [...lecciones].sort((a, b) => a.id.localeCompare(b.id));
+  // Use getNavigationStructure to get the list of lessons that are currently released
+  // at build time. This filters out future entries in production.
+  const nav = getNavigationStructure(lecciones);
 
-  return sorted.map((leccion) => {
-    const slug = leccion.id.replace(/\.(mdx|md)$/, '');
+  return nav.allLessonsOrdered.map((lessonLink) => {
+    // Find the original collection entry
+    const leccion = lecciones.find(l => l.id === lessonLink.id)!;
     return {
-      params: { slug },
+      params: { slug: lessonLink.slug },
       props: { leccion, lecciones },
     };
   });

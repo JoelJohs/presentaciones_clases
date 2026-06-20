@@ -25,8 +25,7 @@ const START_DATE = '2026-06-20T00:00:00-06:00'; // Week 1 date
 
 export function getLessonReleaseDate(index: number): Date {
   const date = new Date(START_DATE);
-  date.setDate(date.getDate() + index * 7);
-  return date;
+  return new Date(date.getTime() + index * 7 * 24 * 60 * 60 * 1000);
 }
 
 export function getNavigationStructure(entries: any[], currentDate: Date = new Date()): NavigationResult {
