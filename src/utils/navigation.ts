@@ -2,6 +2,7 @@ export interface LessonLink {
   id: string;
   slug: string;
   title: string;
+  releaseDate?: string;
 }
 
 export interface TopicGroup {
@@ -20,26 +21,54 @@ export interface NavigationResult {
   allLessonsOrdered: LessonLink[]; // Flat list to easily calculate Prev/Next links
 }
 
-export function getNavigationStructure(entries: any[]): NavigationResult {
-  // 1. Sort entries physically by id (which mirrors filepath order, e.g. 00-..., 01-...)
+const START_DATE = '2026-06-20T00:00:00-06:00'; // Week 1 date
+
+export function getLessonReleaseDate(index: number): Date {
+  const date = new Date(START_DATE);
+  date.setDate(date.getDate() + index * 7);
+  return date;
+}
+
+export function getNavigationStructure(entries: any[], currentDate: Date = new Date()): NavigationResult {
+  const showAll = import.meta.env.DEV || 
+                  (typeof process !== 'undefined' && process.env.SHOW_ALL_LESSONS === 'true');
+
   const sortedEntries = [...entries].sort((a, b) => a.id.localeCompare(b.id));
 
   const initialPages: LessonLink[] = [];
   const modulesMap = new Map<string, ModuleGroup>();
   const allLessonsOrdered: LessonLink[] = [];
 
+  let moduleLessonIndex = 0;
+
   for (const entry of sortedEntries) {
-    // Generate slug by removing extensions (e.g. mdx) from entry.id or use default slug
     const slug = entry.id.replace(/\.(mdx|md)$/, '');
+    const isInitial = !entry.data.moduleTitle;
+
+    let releaseDateStr: string | undefined = undefined;
+    let isReleased = true;
+
+    if (!isInitial) {
+      const releaseDate = getLessonReleaseDate(moduleLessonIndex);
+      releaseDateStr = releaseDate.toISOString();
+      isReleased = showAll || currentDate >= releaseDate;
+      moduleLessonIndex++;
+    }
+
+    if (!isReleased) {
+      continue; // Exclude from navigation and dynamic generation
+    }
+
     const lesson: LessonLink = {
       id: entry.id,
       slug,
       title: entry.data.title,
+      releaseDate: releaseDateStr,
     };
 
     allLessonsOrdered.push(lesson);
 
-    if (!entry.data.moduleTitle) {
+    if (isInitial) {
       initialPages.push(lesson);
     } else {
       const moduleTitle = entry.data.moduleTitle;
