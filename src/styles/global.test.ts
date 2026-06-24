@@ -32,4 +32,23 @@ describe('global.css prose table styles', () => {
     // Check .prose tr:hover td properties
     expect(cssContent).toMatch(/\.prose\s+tr:hover\s+td\s*\{[^}]*background-color:\s*var\(--color-brand-hover-bg\)/);
   });
+
+  it('should contain mobile responsiveness rules for images and table container overflow', () => {
+    const cssPath = path.join(__dirname, 'global.css');
+    const cssContent = fs.readFileSync(cssPath, 'utf-8');
+
+    // Assert img and video constraints in prose
+    expect(cssContent).toContain('.prose img,');
+    expect(cssContent).toContain('.prose video');
+    expect(cssContent).toMatch(/\.prose\s+img,\s*\.prose\s+video\s*\{[^}]*max-width:\s*100%/);
+
+    // Assert table scroll rules
+    expect(cssContent).toMatch(/\.prose\s+table\s*\{[^}]*display:\s*block/);
+    expect(cssContent).toMatch(/\.prose\s+table\s*\{[^}]*overflow-x:\s*auto/);
+    
+    // Assert curricular study plan table scroll rules
+    expect(cssContent).toMatch(/\.plan-estudio-wrapper\s+table\s*\{[^}]*display:\s*block\s*!important/);
+    expect(cssContent).toMatch(/\.plan-estudio-wrapper\s+table\s*\{[^}]*overflow-x:\s*auto\s*!important/);
+  });
 });
+

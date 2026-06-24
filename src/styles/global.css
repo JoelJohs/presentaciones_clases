@@ -161,7 +161,10 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Markdown Tables inside .prose */
 .prose table {
+  display: block;
   width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border-collapse: collapse;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
@@ -183,6 +186,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 .prose tr:hover td {
   background-color: var(--color-brand-hover-bg);
+}
+
+.prose img,
+.prose video {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  margin: 1.5rem auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 /* Plan de Estudios - Estilos de la tabla de mapa curricular */
@@ -282,6 +294,9 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 1.5rem !important;
   margin-top: 0.5rem !important;
   background: transparent !important;
+  display: block !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
 }
 .plan-estudio-wrapper thead th {
   text-align: left;
