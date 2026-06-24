@@ -130,12 +130,14 @@ const {
           document.documentElement.classList.remove('reading-mode');
           document.documentElement.classList.add('presentation-mode');
           btnPresentation?.classList.add('bg-white', 'dark:bg-slate-700', 'text-brand-primary', 'shadow-sm');
+          btnPresentation?.classList.remove('text-slate-500', 'dark:text-slate-400');
           btnReading?.classList.remove('bg-white', 'dark:bg-slate-700', 'text-brand-primary', 'shadow-sm');
           btnReading?.classList.add('text-slate-500', 'dark:text-slate-400');
         } else {
           document.documentElement.classList.remove('presentation-mode');
           document.documentElement.classList.add('reading-mode');
           btnReading?.classList.add('bg-white', 'dark:bg-slate-700', 'text-brand-primary', 'shadow-sm');
+          btnReading?.classList.remove('text-slate-500', 'dark:text-slate-400');
           btnPresentation?.classList.remove('bg-white', 'dark:bg-slate-700', 'text-brand-primary', 'shadow-sm');
           btnPresentation?.classList.add('text-slate-500', 'dark:text-slate-400');
         }
