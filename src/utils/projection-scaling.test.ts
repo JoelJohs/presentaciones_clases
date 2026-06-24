@@ -36,4 +36,18 @@ describe('Visual Text Scaling for Projections Validation', () => {
     expect(cssContent).toContain('margin-top: 1.75rem;');
     expect(cssContent).toContain('margin-bottom: 0.75rem;');
   });
+
+  it('should contain CSS classes for reading and presentation mode scaling overrides', () => {
+    const globalCssPath = path.join(__dirname, '../styles/global.css');
+    const cssContent = fs.readFileSync(globalCssPath, 'utf-8');
+
+    // Reading mode checks
+    expect(cssContent).toContain('.reading-mode .prose');
+    expect(cssContent).toMatch(/\.reading-mode\s+\.prose\s*\{[^}]*font-size:\s*1\.0625rem/);
+
+    // Presentation mode checks
+    expect(cssContent).toContain('.presentation-mode .prose');
+    expect(cssContent).toMatch(/\.presentation-mode\s+\.prose\s*\{[^}]*font-size:\s*1\.375rem/);
+  });
 });
+

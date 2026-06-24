@@ -44,6 +44,10 @@ const {
         document.documentElement.classList.add('sidebar-collapsed');
       }
     </script>
+    <script is:inline>
+      const viewMode = localStorage.getItem('view-mode') || 'reading';
+      document.documentElement.classList.add(`${viewMode}-mode`);
+    </script>
   </head>
   <body class="bg-brand-bg text-brand-text">
     <div class="min-h-screen">
@@ -115,6 +119,40 @@ const {
         document.documentElement.classList.toggle('sidebar-collapsed');
         const isCollapsed = document.documentElement.classList.contains('sidebar-collapsed');
         localStorage.setItem('sidebar-collapsed', String(isCollapsed));
+      });
+
+      // 4. Reading vs Presentation Mode Switcher
+      const btnReading = document.getElementById('btn-reading-mode');
+      const btnPresentation = document.getElementById('btn-presentation-mode');
+
+      function updateModeUI(mode) {
+        if (mode === 'presentation') {
+          document.documentElement.classList.remove('reading-mode');
+          document.documentElement.classList.add('presentation-mode');
+          btnPresentation?.classList.add('bg-white', 'dark:bg-slate-700', 'text-brand-primary', 'shadow-sm');
+          btnReading?.classList.remove('bg-white', 'dark:bg-slate-700', 'text-brand-primary', 'shadow-sm');
+          btnReading?.classList.add('text-slate-500', 'dark:text-slate-400');
+        } else {
+          document.documentElement.classList.remove('presentation-mode');
+          document.documentElement.classList.add('reading-mode');
+          btnReading?.classList.add('bg-white', 'dark:bg-slate-700', 'text-brand-primary', 'shadow-sm');
+          btnPresentation?.classList.remove('bg-white', 'dark:bg-slate-700', 'text-brand-primary', 'shadow-sm');
+          btnPresentation?.classList.add('text-slate-500', 'dark:text-slate-400');
+        }
+      }
+
+      // Read preference on load
+      const currentMode = document.documentElement.classList.contains('presentation-mode') ? 'presentation' : 'reading';
+      updateModeUI(currentMode);
+
+      btnReading?.addEventListener('click', () => {
+        localStorage.setItem('view-mode', 'reading');
+        updateModeUI('reading');
+      });
+
+      btnPresentation?.addEventListener('click', () => {
+        localStorage.setItem('view-mode', 'presentation');
+        updateModeUI('presentation');
       });
     </script>
 
