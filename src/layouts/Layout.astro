@@ -27,8 +27,9 @@ const {
     <meta name="generator" content={Astro.generator} />
     <title>{title} | Plataforma de Estudios</title>
 
-    <!-- Dark Mode Initial Script to Prevent Flashing -->
+    <!-- Dark Mode & Layout Settings Initial Script to Prevent Flashing -->
     <script is:inline>
+      // 1. Color Theme
       if (
         localStorage.getItem('color-theme') === 'dark' ||
         (!('color-theme' in localStorage) &&
@@ -38,13 +39,13 @@ const {
       } else {
         document.documentElement.classList.remove('dark');
       }
-    </script>
-    <script is:inline>
+
+      // 2. Sidebar Collapse
       if (localStorage.getItem('sidebar-collapsed') === 'true') {
         document.documentElement.classList.add('sidebar-collapsed');
       }
-    </script>
-    <script is:inline>
+
+      // 3. View Mode
       const viewMode = localStorage.getItem('view-mode') || 'reading';
       document.documentElement.classList.add(`${viewMode}-mode`);
     </script>
