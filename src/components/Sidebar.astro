@@ -60,20 +60,24 @@ const { nav, activeSlug } = Astro.props;
                   </svg>
                 </summary>
                 <ul class="space-y-1 pl-3">
-                  {topic.lessons.map((lesson) => (
-                    <li>
-                      <a
-                        href={`/${lesson.slug}`}
-                        class={`block rounded-md px-3 py-1.5 text-xs font-medium transition-colors focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
-                          activeSlug === lesson.slug
-                            ? 'bg-brand-callout-bg text-brand-primary border-l-2 border-brand-primary'
-                            : 'text-slate-600 hover:bg-brand-hover-bg hover:text-brand-primary dark:text-slate-400 border-l-2 border-transparent'
-                        }`}
-                      >
-                        {lesson.title}
-                      </a>
-                    </li>
-                  ))}
+                  {topic.lessons.map((lesson) => {
+                    const isRepaso = lesson.slug.endsWith('/repaso');
+                    const displayTitle = isRepaso ? '↳ Repaso' : lesson.title;
+                    return (
+                      <li class={isRepaso ? 'pl-4' : ''}>
+                        <a
+                          href={`/${lesson.slug}`}
+                          class={`block rounded-md px-3 py-1.5 text-xs font-medium transition-colors focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
+                            activeSlug === lesson.slug
+                              ? 'bg-brand-callout-bg text-brand-primary border-l-2 border-brand-primary'
+                              : 'text-slate-600 hover:bg-brand-hover-bg hover:text-brand-primary dark:text-slate-400 border-l-2 border-transparent'
+                          }`}
+                        >
+                          {displayTitle}
+                        </a>
+                      </li>
+                    );
+                  })}
                 </ul>
               </details>
             );
