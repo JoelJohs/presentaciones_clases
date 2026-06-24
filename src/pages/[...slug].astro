@@ -15,16 +15,16 @@ export async function getStaticPaths() {
     const leccion = lecciones.find(l => l.id === lessonLink.id)!;
     return {
       params: { slug: lessonLink.slug },
-      props: { leccion, lecciones },
+      props: { leccion, lecciones, nav },
     };
   });
 }
 
-const { leccion, lecciones } = Astro.props;
+const { leccion, lecciones, nav: propsNav } = Astro.props;
 const { Content } = await render(leccion);
 
-// Build navigation
-const nav = getNavigationStructure(lecciones);
+// Build navigation (reuse pre-calculated structure if available to optimize build performance)
+const nav = propsNav || getNavigationStructure(lecciones);
 
 // Find index of active lesson to generate Prev / Next
 const activeSlug = leccion.id.replace(/\.(mdx|md)$/, '').replace(/\/index$/, '');
