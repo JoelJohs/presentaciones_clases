@@ -126,5 +126,33 @@ describe('Navigation Logic', () => {
       import.meta.env.DEV = originalDev;
     }
   });
+
+  it('should strip /index suffix from entry IDs to generate clean slugs', () => {
+    const mockEntries = [
+      {
+        id: '01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software/index.mdx',
+        data: {
+          title: 'Hardware y Software',
+          moduleTitle: 'Módulo 1: Fundamentos',
+          topicTitle: 'Tema 1: Introducción a la Informática',
+          fecha: '20-06-2026'
+        }
+      },
+      {
+        id: '01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software/repaso.mdx',
+        data: {
+          title: 'Repaso: Hardware y Software',
+          moduleTitle: 'Módulo 1: Fundamentos',
+          topicTitle: 'Tema 1: Introducción a la Informática',
+          fecha: '20-06-2026'
+        }
+      }
+    ];
+
+    const result = getNavigationStructure(mockEntries as any);
+    expect(result.allLessonsOrdered[0].slug).toBe('01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software');
+    expect(result.allLessonsOrdered[1].slug).toBe('01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software/repaso');
+  });
 });
+
 
