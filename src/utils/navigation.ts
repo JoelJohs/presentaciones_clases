@@ -43,7 +43,26 @@ export function getNavigationStructure(entries: any[], currentDate: Date = new D
   const showAll = (typeof process !== 'undefined' && process.env.SHOW_ALL_LESSONS === 'true') ||
                   import.meta.env.SHOW_ALL_LESSONS === 'true';
 
-  const sortedEntries = [...entries].sort((a, b) => a.id.localeCompare(b.id));
+  const sortedEntries = [...entries].sort((a, b) => {
+    const aParts = a.id.split('/');
+    const bParts = b.id.split('/');
+    const aParent = aParts.slice(0, -1).join('/');
+    const bParent = bParts.slice(0, -1).join('/');
+    
+    if (aParent === bParent) {
+      const aFile = aParts[aParts.length - 1].replace(/\.(mdx|md)$/, '');
+      const bFile = bParts[bParts.length - 1].replace(/\.(mdx|md)$/, '');
+      
+      if (aFile === 'index') return -1;
+      if (bFile === 'index') return 1;
+      if (aFile === 'repaso') return 1;
+      if (bFile === 'repaso') return -1;
+      
+      return aFile.localeCompare(bFile);
+    }
+    
+    return a.id.localeCompare(b.id);
+  });
 
   const initialPages: LessonLink[] = [];
   const modulesMap = new Map<string, ModuleGroup>();

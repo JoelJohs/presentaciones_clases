@@ -153,6 +153,53 @@ describe('Navigation Logic', () => {
     expect(result.allLessonsOrdered[0].slug).toBe('01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software');
     expect(result.allLessonsOrdered[1].slug).toBe('01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software/repaso');
   });
+
+  it('should sort entries within the same folder placing index first, repaso last, and others alphabetically', () => {
+    const mockEntries = [
+      {
+        id: '01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software/repaso.mdx',
+        data: {
+          title: 'Repaso: Hardware y Software',
+          moduleTitle: 'Módulo 1: Fundamentos',
+          topicTitle: 'Tema 1: Introducción a la Informática',
+          fecha: '20-06-2026'
+        }
+      },
+      {
+        id: '01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software/detalles.mdx',
+        data: {
+          title: 'Detalles de la práctica',
+          moduleTitle: 'Módulo 1: Fundamentos',
+          topicTitle: 'Tema 1: Introducción a la Informática',
+          fecha: '20-06-2026'
+        }
+      },
+      {
+        id: '01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software/index.mdx',
+        data: {
+          title: 'Hardware y Software',
+          moduleTitle: 'Módulo 1: Fundamentos',
+          topicTitle: 'Tema 1: Introducción a la Informática',
+          fecha: '20-06-2026'
+        }
+      },
+      {
+        id: '01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software/contenido-audiovisual.mdx',
+        data: {
+          title: 'Contenido Audiovisual',
+          moduleTitle: 'Módulo 1: Fundamentos',
+          topicTitle: 'Tema 1: Introducción a la Informática',
+          fecha: '20-06-2026'
+        }
+      }
+    ];
+
+    const result = getNavigationStructure(mockEntries as any);
+    expect(result.allLessonsOrdered[0].title).toBe('Hardware y Software');
+    expect(result.allLessonsOrdered[1].title).toBe('Contenido Audiovisual');
+    expect(result.allLessonsOrdered[2].title).toBe('Detalles de la práctica');
+    expect(result.allLessonsOrdered[3].title).toBe('Repaso: Hardware y Software');
+  });
 });
 
 
