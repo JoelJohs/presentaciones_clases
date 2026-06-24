@@ -364,3 +364,37 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+/* Interactive Review details/summary styling */
+.prose details {
+  background-color: var(--color-brand-sidebar-bg);
+  border: 1px solid var(--color-brand-border);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  transition: all 0.2s ease-in-out;
+}
+.prose details[open] {
+  border-color: var(--color-brand-primary);
+  box-shadow: 0 4px 12px rgba(26, 95, 168, 0.08);
+}
+.prose details summary {
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--color-brand-primary);
+  outline: none;
+}
+.prose details summary:hover {
+  color: var(--color-brand-accent);
+}
+.prose details blockquote {
+  border-left: 3px solid var(--color-brand-primary);
+  margin-top: 0.75rem;
+  margin-bottom: 0;
+  padding-left: 1rem;
+  background-color: rgba(26, 95, 168, 0.03);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+

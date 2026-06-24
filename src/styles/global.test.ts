@@ -50,5 +50,16 @@ describe('global.css prose table styles', () => {
     expect(cssContent).toMatch(/\.plan-estudio-wrapper\s+table\s*\{[^}]*display:\s*block\s*!important/);
     expect(cssContent).toMatch(/\.plan-estudio-wrapper\s+table\s*\{[^}]*overflow-x:\s*auto\s*!important/);
   });
+
+  it('should contain CSS styles for details summary toggle elements in prose', () => {
+    const cssPath = path.join(__dirname, 'global.css');
+    const cssContent = fs.readFileSync(cssPath, 'utf-8');
+
+    expect(cssContent).toContain('.prose details');
+    expect(cssContent).toContain('.prose details[open]');
+    expect(cssContent).toContain('.prose details summary');
+    expect(cssContent).toContain('.prose details blockquote');
+  });
 });
+
 
