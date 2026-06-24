@@ -187,163 +187,122 @@ Si un programa se congela por completo y la computadora no responde a tus clics,
 
 ## 4. Archivos y Extensiones 📂
 
-Para que la computadora comprenda qué tipo de datos contiene un archivo y qué debe hacer con él, se utiliza un estándar de identificación:
+Para que la computadora sepa qué tipo de información tiene un archivo y con qué programa debe abrirlo, utiliza un sistema muy parecido a nuestros nombres y apellidos:
 
-### 🧩 Conceptos Clave
+### 🧩 Anatomía de un Archivo: Nombre + Apellido
 
-- **Anatomía de un archivo:** `nombre_del_archivo` **.** `extensión`
-  - **Nombre:** Identifica el contenido para el usuario.
-  - **Punto:** Actúa como separador obligatorio.
-  - **Extensión:** Define el formato de datos interno (suele ser de 3 o 4 letras).
-- **El Icono vs. La Extensión:** El icono es solo una representación gráfica que asigna el Sistema Operativo. Lo que realmente define cómo se procesa el archivo es la extensión.
-- **Cambio de Extensión:** Modificar la extensión **no convierte los datos** internos del archivo. Solo cambia el programa con el que el S.O. intentará abrirlo (lo que suele provocar errores de formato).
+Todo archivo tiene esta estructura básica:
 
----
+**Nombre** + **.** (punto) + **Apellido (Extensión)**
 
-### ⚠️ El Peligro de las Extensiones Ocultas (Ciberseguridad)
+- **Nombre:** El texto que tú eliges para identificar tu archivo (por ejemplo, `tarea_de_historia` o `foto_familiar`).
+- **Punto (`.`):** El separador obligatorio que divide el nombre del "apellido".
+- **Extensión ("Apellido"):** Un grupo de 3 o 4 letras al final que indica el formato del archivo y le dice al sistema operativo con qué programa abrirlo (por ejemplo, `pdf`, `png`, `mp3`).
 
-- **Configuración por defecto:** Los sistemas operativos modernos ocultan las extensiones conocidas para "limpiar" la interfaz visual.
-- **La trampa:** Un archivo malicioso llamado `foto.jpg.exe` se mostrará en pantalla simplemente como `foto.jpg`. Al hacer doble clic pensando que es una imagen, se ejecutará código dañino en la computadora.
-- **Buenas prácticas:** Activar la visibilidad de extensiones y sospechar siempre de archivos de origen desconocido con extensiones ejecutables (`.exe`, `.bat`, `.scr`, `.msi`).
+> [!IMPORTANT]
+> **El Icono no manda:** Aunque veas el dibujo de un reproductor de música en tu archivo, lo que realmente define su tipo es la extensión. Cambiar manualmente la extensión (por ejemplo, renombrar `cancion.mp3` a `cancion.pdf`) **no convierte el archivo**, solo hará que la computadora intente abrirlo con el programa equivocado (Adobe Reader) y te muestre un error.
 
 ---
 
-### 📋 Tabla de Extensiones Comunes
+### 📋 Las 5 Extensiones más Comunes
 
 <table>
   <thead>
     <tr>
-      <th>Categoría</th>
       <th>Extensión</th>
+      <th>¿Qué es?</th>
       <th>Tipo de Información</th>
-      <th>Programa Predeterminado</th>
+      <th>Programa Común</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td rowspan="2" style="font-weight: bold; vertical-align: middle;">Documentos</td>
       <td><strong>.pdf</strong></td>
-      <td>Documento de lectura fija (no editable).</td>
+      <td>Documento Fijo</td>
+      <td>Texto y lectura (no editable).</td>
       <td>Navegador Web / Adobe Reader</td>
     </tr>
     <tr>
-      <td><strong>.docx / .xlsx</strong></td>
-      <td>Procesador de textos / Hojas de cálculo.</td>
-      <td>Microsoft Office / LibreOffice</td>
-    </tr>
-    <tr>
-      <td rowspan="2" style="font-weight: bold; vertical-align: middle;">Imágenes</td>
       <td><strong>.jpg / .png</strong></td>
-      <td>Fotografía comprimida / Gráfico con transparencia.</td>
+      <td>Imagen</td>
+      <td>Fotografía o gráfico digital.</td>
       <td>Visor de Fotos del Sistema</td>
     </tr>
     <tr>
-      <td><strong>.svg</strong></td>
-      <td>Gráfico vectorial (escalable sin pixelarse).</td>
-      <td>Navegador Web / Illustrator</td>
-    </tr>
-    <tr>
-      <td rowspan="2" style="font-weight: bold; vertical-align: middle;">Multimedia</td>
       <td><strong>.mp3</strong></td>
-      <td>Archivo de audio digital comprimido.</td>
-      <td>Reproductor de música VLC / Windows Media</td>
+      <td>Audio</td>
+      <td>Música y grabaciones de sonido.</td>
+      <td>Reproductor VLC / Windows Media</td>
     </tr>
     <tr>
       <td><strong>.mp4</strong></td>
-      <td>Video digital (audio y video sincronizados).</td>
+      <td>Video</td>
+      <td>Películas, clips y grabaciones de pantalla.</td>
       <td>Reproductor de video</td>
     </tr>
     <tr>
-      <td rowspan="1" style="font-weight: bold; vertical-align: middle;">Compresión</td>
-      <td><strong>.zip / .rar</strong></td>
-      <td>Paquete contenedor con archivos reducidos de tamaño.</td>
-      <td>WinRAR / 7-Zip / Gestor de archivadores</td>
-    </tr>
-    <tr>
-      <td rowspan="2" style="font-weight: bold; vertical-align: middle;">Programas y Código</td>
       <td><strong>.exe</strong></td>
-      <td>Aplicación ejecutable con instrucciones directas para la CPU.</td>
-      <td>Ejecutado directamente por el Sistema Operativo</td>
-    </tr>
-    <tr>
-      <td><strong>.html</strong></td>
-      <td>Código estructurado para maquetación web.</td>
-      <td>Navegador Web (Chrome, Firefox, Safari)</td>
+      <td>Ejecutable</td>
+      <td>Un programa o instalador de software.</td>
+      <td>Ejecutado directamente por la PC</td>
     </tr>
   </tbody>
 </table>
 
 ---
 
-## 🧙‍♂️ Actividad Final: "Hackeando" la Extensión
+### ⚠️ El Peligro de las Extensiones Ocultas
 
-Vamos a escribir nuestro primer código y transformarlo en una página web real.
+Por defecto, muchos sistemas operativos (como Windows) ocultan las extensiones para que los nombres de los archivos se vean más limpios. Sin embargo, esto representa un peligro de seguridad:
 
-**Misión:**
-
-1. Habilita la vista de "Extensiones de archivo" en tu explorador.
-2. Crea un archivo `.txt` en el Escritorio.
-3. Escribe la frase: `<h1>Hola Mundo</h1>` dentro del archivo y guárdalo.
-4. Cambia el "apellido" del archivo de `.txt` a `.html`.
-5. Ábrelo. ¿Qué pasó?
+- **La trampa:** Un atacante puede enviarte un virus llamado `tarea.pdf.exe`. Como el sistema oculta las extensiones conocidas, tú solo verás en tu pantalla `tarea.pdf` y un icono de documento.
+- **El riesgo:** Al hacer doble clic pensando que abrirás un documento de lectura, estarás ejecutando un archivo ejecutable (`.exe`) que instalará un virus en tu computadora.
+- **Buena práctica:** Activa siempre la visibilidad de extensiones de archivo en tu explorador y sospecha de archivos descargados con nombres dobles o extensiones ejecutables.
 
 ---
 
-## ⚡ Repaso Ninja: ¿Cuánto recuerdas de la clase anterior? 🥷
+## 🧙‍♂️ Actividad Práctica: "Hackeando" la Extensión
 
-¡Es hora de poner a prueba tus conocimientos antes de que el servidor se caiga! Aquí tienes un **mini examen verbal** rápido para repasar lo que comentamos en clase. Haz clic en cada tarjeta para revelar la respuesta y ver si eres un verdadero maestro del Hardware y Software.
+Vamos a crear tu primera página web sin usar ningún programa de programación, ¡solo cambiando su "apellido"!
 
-### 🔌 Desafío 1: El Universo de los Periféricos
-¿Qué tipo de periférico (Entrada, Salida o Mixto) es una **pantalla táctil** de celular y por qué?
+**Misión Paso a Paso:**
+
+1. **Prepara tu sistema:** Asegúrate de activar la opción de "Mostrar extensiones de archivo" en tu explorador.
+2. **Crea un archivo nuevo:** Haz clic derecho en tu Escritorio, selecciona *Nuevo > Documento de texto* (se creará como `Nuevo documento.txt`).
+3. **Escribe el código:** Abre ese archivo de texto y escribe exactamente la siguiente línea:
+   ```html
+   <h1>¡Hola! He hackeado la extensión con éxito 🎉</h1>
+   ```
+4. **Guarda y cierra** el archivo de texto.
+5. **El "Hackeo":** Cambia el nombre del archivo de `Nuevo documento.txt` a `index.html`. Confirma el cambio si tu computadora te lo pregunta.
+6. **¡Listo!** Haz doble clic en tu nuevo archivo `index.html`. Verás cómo se abre en tu navegador de internet mostrando el título en grande. ¡Has creado una página web!
+
+---
+
+### ⏱️ Mini-Repaso Rápido
+
+¡Asegúrate de haber entendido el concepto de archivos y extensiones! Responde mentalmente a estas preguntas:
+
+#### 1. La Amenaza Oculta
+Te descargas una imagen para una presentación escolar llamada `trabajo.jpg.exe`. ¿Es seguro abrirla?
 <details>
-  <summary>🔍 Revelar respuesta y explicación</summary>
+  <summary>🔍 Ver respuesta</summary>
   <blockquote>
-    ¡Es un periférico **Mixto (Entrada y Salida)**!
-    * **Entrada:** Porque cuando tocas la pantalla con tu dedo, le envías señales a la CPU (clics, gestos, escribir).
-    * **Salida:** Porque al mismo tiempo te muestra luz, imágenes y la interfaz de tu juego favorito. 
-    * *Otros ejemplos:* Auriculares con micrófono integrado.
+    **¡No, es extremadamente peligroso!** 🚨
+    Aunque comience con `.jpg`, su extensión real (su último "apellido") es **`.exe`** (un programa ejecutable). Esto significa que no es una foto, sino un programa que podría infectar tu computadora si lo abres.
   </blockquote>
 </details>
 
-### 🧠 Desafío 2: La Placa Madre y sus Conexiones
-¿Cuál es la diferencia real entre la **Memoria RAM** y el disco **SSD/HDD** usando la analogía de hacer la tarea escolar?
+#### 2. Guardando Música
+Si descargas una canción de internet para escucharla más tarde en tu reproductor, ¿cuál de las siguientes extensiones debería tener el archivo?
+- a) `cancion.mp4`
+- b) `cancion.mp3`
+- c) `cancion.pdf`
 <details>
-  <summary>🔍 Revelar respuesta y explicación</summary>
+  <summary>🔍 Ver respuesta</summary>
   <blockquote>
-    ¡Imagina que estás haciendo un dibujo escolar!
-    * **La Memoria RAM es tu escritorio:** Aquí pones las hojas, lápices y colores que estás usando *justo en este momento*. Es súper rápida para agarrar cosas, pero si te vas a dormir y apagas la luz (apagas la PC), el escritorio queda vacío.
-    * **El SSD/HDD es tu mochila:** Es donde guardas tus libretas ordenadas. Tarda un poquito más en abrirse y sacar el libro, pero todo se queda guardado de forma permanente aunque apagues la computadora.
-  </blockquote>
-</details>
-
-### ⚙️ Desafío 3: El Dilema del Almacenamiento (HDD vs. SSD)
-Si tuvieras que armar una computadora para jugar o programar, ¿por qué elegirías un **SSD** en lugar de un **HDD** para instalar el sistema operativo?
-<details>
-  <summary>🔍 Revelar respuesta y explicación</summary>
-  <blockquote>
-    * **El HDD (Disco Duro Mecánico)** funciona como un tocadiscos antiguo: tiene un disco de metal que gira físicamente y una aguja que busca los datos. Si se mueve la PC, puede dañarse, y es lento porque tiene partes móviles.
-    * **El SSD (Unidad de Estado Sólido)** es como una memoria USB gigante: no tiene partes móviles, guarda todo en microchips de memoria flash. ¡Es hasta 10 veces más rápido y resistente a golpes! El SSD hará que tu sistema y aplicaciones arranquen en segundos.
-  </blockquote>
-</details>
-
-### 📊 Desafío 4: El Control de los Recursos (Software)
-Estás jugando a 120 FPS y de repente todo empieza a ir lento ("laguearse"). Abres el **Administrador de Tareas** y ves que el uso de la memoria RAM está en el **99%**. ¿Qué está pasando físicamente en tu computadora?
-<details>
-  <summary>🔍 Revelar respuesta y explicación</summary>
-  <blockquote>
-    ¡Te quedaste sin espacio en el "escritorio"! Cuando abres demasiadas aplicaciones de fondo (como Discord, Spotify, y 20 pestañas de Chrome) junto con tu juego, consumen toda la RAM. 
-    Como la RAM no tiene más espacio físico, el procesador (CPU) tiene que empezar a usar parte del SSD/HDD como RAM de emergencia. Y como el almacenamiento es mucho más lento que la RAM, tu juego empieza a perder fotogramas ("lags").
-  </blockquote>
-</details>
-
-### 🧩 Desafío 5: El Código Secreto de las Extensiones
-¿Por qué una computadora ejecuta y abre de manera diferente un archivo llamado `cancion.mp3` y otro llamado `instalador.exe` si ambos están en tu carpeta de descargas?
-<details>
-  <summary>🔍 Revelar respuesta y explicación</summary>
-  <blockquote>
-    ¡Por la extensión del archivo! El "apellido" del archivo le dice al sistema qué hacer:
-    * **`.mp3`** es un archivo de **datos (multimedia)**. La PC sabe que debe abrir un reproductor de música y leer la pista de audio sin alterar nada más.
-    * **`.exe`** es un archivo **ejecutable**. Contiene una serie de instrucciones directas escritas en código de programación para que la CPU las ejecute directamente en el hardware. ¡Por eso instalar programas nuevos requiere un archivo `.exe`!
+    **La respuesta correcta es la b) `cancion.mp3`.** 🎵
+    La extensión **`.mp3`** está diseñada específicamente para audio y música, mientras que `.mp4` es para video y `.pdf` es para documentos de lectura.
   </blockquote>
 </details>
 
