@@ -17,7 +17,7 @@
   --color-brand-hover-bg: #E8F0FA;
   --color-brand-callout-bg: #DCE8F5;
   --color-brand-navy: #0D1B3E;
-  --color-brand-muted: #718096;
+  --color-brand-muted: #4A5568;
 }
 
 .dark {
@@ -58,6 +58,7 @@ h1, h2, h3, h4, h5, h6 {
 .prose {
   line-height: 1.8;
   font-size: 1.125rem; /* text-lg (~18px) */
+  transition: font-size 0.25s ease-in-out, line-height 0.25s ease-in-out;
 }
 @media (min-width: 1024px) {
   .prose {
@@ -397,4 +398,10 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.6;
 }
 
-
+/* Rotar flecha de colapso cuando la barra lateral está oculta */
+.sidebar-collapsed #sidebar-toggle svg {
+  transform: rotate(180deg);
+}
+#sidebar-toggle svg {
+  transition: transform 0.3s ease-in-out;
+}
