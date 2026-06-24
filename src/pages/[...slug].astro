@@ -38,10 +38,10 @@ const nextLesson = currentIndex < nav.allLessonsOrdered.length - 1 ? nav.allLess
   <!-- Cabecera de Página (Estilo Documento) -->
   {leccion.data.moduleTitle && (
     <div class="mb-8 text-xs font-mono text-slate-400 dark:text-slate-500 border-b border-slate-200 dark:border-slate-800 pb-3 select-none">
-      <div class="flex justify-between items-baseline gap-4">
+      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-1 sm:gap-4">
         <span class="font-semibold uppercase tracking-wider">{leccion.data.moduleTitle}</span>
         {leccion.data.fecha && (
-          <span class="text-right whitespace-nowrap">{leccion.data.fecha}</span>
+          <span class="whitespace-nowrap">{leccion.data.fecha}</span>
         )}
       </div>
       {leccion.data.topicTitle && (
