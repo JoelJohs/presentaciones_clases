@@ -23,10 +23,10 @@ const { nav, activeSlug } = Astro.props;
         <li>
           <a
             href={`/${page.slug}`}
-            class={`block rounded-md px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
+            class={`block rounded-md px-3 py-2 text-sm font-medium border-l-2 transition-all duration-200 ease-in-out focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
               activeSlug === page.slug
-                ? 'bg-brand-callout-bg text-brand-primary border-l-2 border-brand-primary'
-                : 'text-slate-600 hover:bg-brand-hover-bg hover:text-brand-primary dark:text-slate-400 border-l-2 border-transparent'
+                ? 'bg-brand-callout-bg text-brand-primary border-brand-primary'
+                : 'text-slate-600 hover:bg-brand-hover-bg hover:text-brand-primary dark:text-slate-400 border-transparent'
             }`}
           >
             {page.title}
@@ -67,10 +67,10 @@ const { nav, activeSlug } = Astro.props;
                       <li class={isRepaso ? 'pl-4' : ''}>
                         <a
                           href={`/${lesson.slug}`}
-                          class={`block rounded-md px-3 py-1.5 text-xs font-medium transition-colors focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
+                          class={`block rounded-md px-3 py-1.5 text-xs font-medium border-l-2 transition-all duration-200 ease-in-out focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
                             activeSlug === lesson.slug
-                              ? 'bg-brand-callout-bg text-brand-primary border-l-2 border-brand-primary'
-                              : 'text-slate-600 hover:bg-brand-hover-bg hover:text-brand-primary dark:text-slate-400 border-l-2 border-transparent'
+                              ? 'bg-brand-callout-bg text-brand-primary border-brand-primary'
+                              : 'text-slate-600 hover:bg-brand-hover-bg hover:text-brand-primary dark:text-slate-400 border-transparent'
                           }`}
                         >
                           {displayTitle}

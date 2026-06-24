@@ -52,6 +52,9 @@ const {
   </head>
   <body class="bg-brand-bg text-brand-text">
     <div class="min-h-screen">
+      <!-- Backdrop para móviles -->
+      <div id="sidebar-backdrop" class="fixed inset-0 z-30 bg-slate-900/40 backdrop-blur-xs transition-opacity duration-300 opacity-0 pointer-events-none lg:hidden"></div>
+
       <!-- Sidebar -->
       <Sidebar nav={nav} activeSlug={activeSlug} />
 
@@ -67,20 +70,39 @@ const {
 
     <!-- Script for Sidebar Drawer Toggle & Theme Toggle -->
     <script>
-      // 1. Sidebar Toggle
+      // 1. Sidebar Toggle & Backdrop
       const menuToggle = document.getElementById('menu-toggle');
       const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('sidebar-backdrop');
+
+      function toggleMobileSidebar(open) {
+        if (open) {
+          sidebar?.classList.remove('-translate-x-full');
+          backdrop?.classList.remove('opacity-0', 'pointer-events-none');
+          backdrop?.classList.add('opacity-100');
+        } else {
+          sidebar?.classList.add('-translate-x-full');
+          backdrop?.classList.add('opacity-0', 'pointer-events-none');
+          backdrop?.classList.remove('opacity-100');
+        }
+      }
 
       if (menuToggle && sidebar) {
         menuToggle.addEventListener('click', (e) => {
           e.stopPropagation();
-          sidebar.classList.toggle('-translate-x-full');
+          const isOpen = !sidebar.classList.contains('-translate-x-full');
+          toggleMobileSidebar(!isOpen);
         });
 
-        // Close sidebar when clicking outside
+        // Close sidebar when clicking backdrop
+        backdrop?.addEventListener('click', () => {
+          toggleMobileSidebar(false);
+        });
+
+        // Close sidebar when clicking outside sidebar area
         document.addEventListener('click', (e) => {
           if (sidebar && !sidebar.contains(e.target as Node) && !sidebar.classList.contains('-translate-x-full')) {
-            sidebar.classList.add('-translate-x-full');
+            toggleMobileSidebar(false);
           }
         });
       }
