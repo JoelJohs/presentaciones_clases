@@ -95,13 +95,21 @@ const {
         });
 
         // Close sidebar when clicking backdrop
-        backdrop?.addEventListener('click', () => {
+        backdrop?.addEventListener('click', (e) => {
+          e.stopPropagation();
           toggleMobileSidebar(false);
         });
 
         // Close sidebar when clicking outside sidebar area
         document.addEventListener('click', (e) => {
           if (sidebar && !sidebar.contains(e.target as Node) && !sidebar.classList.contains('-translate-x-full')) {
+            toggleMobileSidebar(false);
+          }
+        });
+
+        // Close sidebar with Escape key
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && sidebar && !sidebar.classList.contains('-translate-x-full')) {
             toggleMobileSidebar(false);
           }
         });
