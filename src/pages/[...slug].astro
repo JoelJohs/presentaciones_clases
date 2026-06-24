@@ -35,6 +35,23 @@ const nextLesson = currentIndex < nav.allLessonsOrdered.length - 1 ? nav.allLess
 ---
 
 <Layout title={leccion.data.title} nav={nav} activeSlug={activeSlug}>
+  <!-- Cabecera de Página (Estilo Documento) -->
+  {leccion.data.moduleTitle && (
+    <div class="mb-8 text-xs font-mono text-slate-400 dark:text-slate-500 border-b border-slate-200 dark:border-slate-800 pb-3 select-none">
+      <div class="flex justify-between items-baseline gap-4">
+        <span class="font-semibold uppercase tracking-wider">{leccion.data.moduleTitle}</span>
+        {leccion.data.fecha && (
+          <span class="text-right whitespace-nowrap">{leccion.data.fecha}</span>
+        )}
+      </div>
+      {leccion.data.topicTitle && (
+        <div class="mt-1 text-slate-500 dark:text-slate-400 font-medium">
+          {leccion.data.topicTitle}
+        </div>
+      )}
+    </div>
+  )}
+
   <article class="prose text-slate-800 dark:text-slate-200">
     <Content />
   </article>
