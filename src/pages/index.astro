@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 
 const lecciones = await getCollection('lecciones');
 const sorted = [...lecciones].sort((a, b) => a.id.localeCompare(b.id));
-const firstSlug = sorted.length > 0 ? sorted[0].id.replace(/\.(mdx|md)$/, '') : '00-inicio/01-presentacion';
+const firstSlug = sorted.length > 0 ? sorted[0].id.replace(/\.(mdx|md)$/, '').replace(/\/index$/, '') : '00-inicio/01-presentacion';
 ---
 
 <!doctype html>

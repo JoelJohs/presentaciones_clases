@@ -27,7 +27,7 @@ const { Content } = await render(leccion);
 const nav = getNavigationStructure(lecciones);
 
 // Find index of active lesson to generate Prev / Next
-const activeSlug = leccion.id.replace(/\.(mdx|md)$/, '');
+const activeSlug = leccion.id.replace(/\.(mdx|md)$/, '').replace(/\/index$/, '');
 const currentIndex = nav.allLessonsOrdered.findIndex(l => l.slug === activeSlug);
 
 const prevLesson = currentIndex > 0 ? nav.allLessonsOrdered[currentIndex - 1] : null;

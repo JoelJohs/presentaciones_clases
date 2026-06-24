@@ -50,7 +50,7 @@ export function getNavigationStructure(entries: any[], currentDate: Date = new D
   const allLessonsOrdered: LessonLink[] = [];
 
   for (const entry of sortedEntries) {
-    const slug = entry.id.replace(/\.(mdx|md)$/, '');
+    const slug = entry.id.replace(/\.(mdx|md)$/, '').replace(/\/index$/, '');
     const isInitial = !entry.data.moduleTitle;
 
     let releaseDateStr: string | undefined = undefined;
