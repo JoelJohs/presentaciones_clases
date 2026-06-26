@@ -60,6 +60,16 @@ describe('global.css prose table styles', () => {
     expect(cssContent).toContain('.prose details summary');
     expect(cssContent).toContain('.prose details blockquote');
   });
+
+  it('should contain CSS overrides for terminal code blocks in prose', () => {
+    const cssPath = path.join(__dirname, 'global.css');
+    const cssContent = fs.readFileSync(cssPath, 'utf-8');
+
+    expect(cssContent).toContain('.prose pre.bg-gray-950');
+    expect(cssContent).toContain('.prose pre.text-gray-200');
+    expect(cssContent).toMatch(/\.prose\s+pre\.bg-gray-950\s*\{[^}]*background-color:\s*var\(--color-gray-950,\s*#030712\)\s*!important/);
+    expect(cssContent).toMatch(/\.prose\s+pre\.text-gray-200\s*\{[^}]*color:\s*var\(--color-gray-200,\s*#e5e7eb\)\s*!important/);
+  });
 });
 
 

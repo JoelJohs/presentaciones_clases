@@ -152,6 +152,12 @@ h1, h2, h3, h4, h5, h6 {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
 }
+.prose pre.bg-gray-950 {
+  background-color: var(--color-gray-950, #030712) !important;
+}
+.prose pre.text-gray-200 {
+  color: var(--color-gray-200, #e5e7eb) !important;
+}
 .prose pre code {
   background-color: transparent !important;
   color: inherit !important;
