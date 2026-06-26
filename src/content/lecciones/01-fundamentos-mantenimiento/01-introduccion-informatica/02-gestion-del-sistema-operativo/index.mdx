@@ -3,20 +3,402 @@ title: "Gestión del Sistema Operativo"
 moduleTitle: "Módulo 1: Fundamentos y Mantenimiento"
 topicTitle: "Tema 1: Introducción a la Informática"
 subtopicTitle: "Gestión del Sistema Operativo"
-fecha: "27-06-2026"
+fecha: "20-06-2026"
 ---
 
-# Gestión del Sistema Operativo
+import { Icon } from "astro-icon/components";
 
-Esta es la sesión de **Gestión del Sistema Operativo**, que forma parte del **Tema 1: Introducción a la Informática** en el **Módulo 1: Fundamentos y Mantenimiento**.
+# El Sistema Operativo
 
-## Objetivo de la Sesión
-Comprender los conceptos clave de Gestión del Sistema Operativo y desarrollar las competencias correspondientes a esta sesión práctica.
+El **Sistema Operativo (OS)** es el director de la computadora. Sin él, cada programa pelearía por la pantalla y el sistema se trabaría.
 
-## Contenido y Actividades
-* **Descripción de la Unidad:** Uso del explorador de archivos, administrador de tareas y comandos básicos en CMD.
-* **Fecha Programada:** 27-06-2026 (Semana del curso: 2)
+## 1. Qué hace
 
-## Recursos y Práctica
-* Guía de estudio y ejercicios prácticos en clase.
-* Realiza las lecturas sugeridas y el proyecto asignado.
+1. <Icon
+     name="lucide:cpu"
+     class="inline w-5 h-5 align-text-bottom text-sky-600"
+   />
+   **Administra Programas:** Decide quién usa el procesador (Ej. Spotify vs
+   Chrome).
+2. <Icon
+     name="lucide:memory-stick"
+     class="inline w-5 h-5 align-text-bottom text-emerald-600"
+   />
+   **Administra Memoria:** Reparte los "pupitres" de la RAM.
+3. <Icon
+     name="lucide:folder"
+     class="inline w-5 h-5 align-text-bottom text-amber-600"
+   />
+   **Administra Archivos:** Guarda y organiza documentos y fotos.
+4. <Icon
+     name="lucide:plug"
+     class="inline w-5 h-5 align-text-bottom text-purple-600"
+   />
+   **Administra Dispositivos:** Conecta mouse, teclado, USB y pantalla.
+
+---
+
+## 2. Administrador de Tareas
+
+¿Tu computadora se congela o va lenta? El **Administrador de Tareas** muestra en qué está gastando su energía cada programa.
+
+![Administrador de tareas mostrando el uso de CPU, memoria y discos](@assets/images/lecciones/01-fundamentos-mantenimiento/01-introduccion-informatica/02-gestion-del-sistema-operativo/system_task.png)
+
+### Lo que ves vs. lo que no ves
+
+- <Icon name="lucide:eye" class="inline w-5 h-5 align-text-bottom text-blue-600" />
+  **Aplicaciones:** Programas que abriste a propósito (Chrome, Discord, juegos).
+- <Icon name="lucide:ghost" class="inline w-5 h-5 align-text-bottom text-neutral-500" />
+  **Procesos en segundo plano:** Programas invisibles que el SO necesita para funcionar (el que escucha el mouse, busca WiFi).
+
+### Signos vitales
+
+1. <Icon name="lucide:cpu" class="inline w-5 h-5 align-text-bottom text-sky-600" />
+   **CPU:** Qué tanto está trabajando el procesador.
+2. <Icon name="lucide:memory-stick" class="inline w-5 h-5 align-text-bottom text-emerald-600" />
+   **Memoria (RAM):** Qué tan llena está la mesa de trabajo.
+
+### Aplicaciones de Inicio
+
+<Icon name="lucide:rocket" class="inline w-5 h-5 align-text-bottom text-purple-600" />
+**Startup:** Programas que se abren solos al encender la PC. Si tarda mucho en prender, aquí puedes desactivar los que sobran.
+
+> **Atajo:** `Ctrl + Shift + Esc` abre el Administrador de Tareas al instante.
+
+---
+
+## 3. Al encender la computadora
+
+1. La energía despierta al **Hardware**.
+2. El **BIOS** revisa que todo esté en su lugar.
+3. El BIOS busca al **Sistema Operativo**.
+4. El **Kernel** toma el control.
+5. Inicias sesión y ves tu escritorio.
+
+---
+
+## 4. Los sistemas operativos
+
+<table>
+  <thead>
+    <tr>
+      <th>Sistema</th>
+      <th>¿Dónde lo usamos?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <Icon
+          name="simple-icons:windows"
+          class="inline w-5 h-5 align-text-bottom text-blue-600"
+        />{" "}
+        <strong>Windows</strong>
+      </td>
+      <td>Computadoras de casa y videojuegos.</td>
+    </tr>
+    <tr>
+      <td>
+        <Icon
+          name="simple-icons:apple"
+          class="inline w-5 h-5 align-text-bottom text-slate-700"
+        />{" "}
+        <strong>macOS</strong>
+      </td>
+      <td>Computadoras Apple (Diseño gráfico).</td>
+    </tr>
+    <tr>
+      <td>
+        <Icon
+          name="simple-icons:android"
+          class="inline w-5 h-5 align-text-bottom text-green-600"
+        />{" "}
+        <strong>Android</strong>
+      </td>
+      <td>Teléfonos celulares.</td>
+    </tr>
+    <tr>
+      <td>
+        <Icon
+          name="simple-icons:linux"
+          class="inline w-5 h-5 align-text-bottom text-neutral-700"
+        />{" "}
+        <strong>Linux</strong>
+      </td>
+      <td>Servidores, internet y programadores.</td>
+    </tr>
+  </tbody>
+</table>
+
+### Video complementario (opcional)
+
+<iframe
+  width="560"
+  height="315"
+  src="https://www.youtube.com/embed/vnJCudAed08"
+  title="Video complementario"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen
+  class="rounded-lg mx-auto max-w-full"
+></iframe>
+
+---
+
+## 5. El Explorador de Archivos
+
+El **Explorador de Archivos** muestra todas las carpetas, discos y archivos guardados.
+
+### Estructura de Carpetas
+
+Las carpetas guardan archivos y otras carpetas. Como un árbol:
+
+```
+C:\
+├── Usuarios\
+│   └── TuNombre\
+│       ├── Escritorio\
+│       ├── Imágenes\
+│       └── Música\
+├── Archivos de Programa\
+└── Windows\
+```
+
+`Música` está dentro de `TuNombre`, que está dentro de `Usuarios`, que está dentro de `C:\`. Entre más adentro, más específico es el contenido.
+
+### La Ruta
+
+La computadora no busca archivos a ciegas. Sigue una dirección exacta llamada **Ruta** (_Path_):
+
+`C:\Usuarios\TuNombre\Escritorio\Tarea.txt`
+
+![Barra de direcciones en Linux mostrando la ruta de carpetas](@assets/images/lecciones/01-fundamentos-mantenimiento/01-introduccion-informatica/02-gestion-del-sistema-operativo/system_path_linux.png)
+
+---
+
+### Superpoderes del Teclado
+
+<Icon
+  name="lucide:copy"
+  class="inline w-5 h-5 align-text-bottom text-blue-600"
+/>
+**Copiar (`Ctrl + C`):** Duplica el archivo.
+
+<Icon
+  name="lucide:scissors"
+  class="inline w-5 h-5 align-text-bottom text-red-600"
+/>
+**Cortar (`Ctrl + X`):** Lo mueve a otra carpeta.
+
+<Icon
+  name="lucide:clipboard-paste"
+  class="inline w-5 h-5 align-text-bottom text-emerald-600"
+/>
+**Pegar (`Ctrl + V`):** Lo coloca donde elegiste.
+
+<Icon
+  name="lucide:trash-2"
+  class="inline w-5 h-5 align-text-bottom text-stone-500"
+/>
+**Borrar (`Supr` o `Del`):** Lo manda a la Papelera.
+
+<Icon
+  name="lucide:folder-plus"
+  class="inline w-5 h-5 align-text-bottom text-amber-600"
+/>
+**Nueva carpeta (`Ctrl + Shift + N`):** Crea una carpeta al instante.
+
+---
+
+## 6. Práctica: Arquitectos Digitales
+
+Usa los superpoderes del teclado. Nada de ratón.
+
+1. Presiona `Ctrl + Shift + N` en tu Escritorio. Se crea una carpeta.
+2. Nómbrala como quieras.
+3. Ábrela. Dentro crea 3 carpetas: `Colegio`, `Juegos` y `Memes`.
+4. Abre `Colegio`. Crea un archivo de texto llamado `tarea.txt`.
+5. Corta `tarea.txt` y pégalo dentro de `Juegos`.
+6. Bórralo de `Juegos`.
+
+> **Pista:** Mira la barra de direcciones arriba del explorador. Te dice en qué carpeta estás parado.
+
+---
+
+## 7. Reto de Velocidad
+
+Demuestra que dominas el teclado. Tienes **2 minutos**.
+
+1. Crea una carpeta en tu Escritorio llamada `Musica`.
+2. Dentro de `Musica`, crea 3 carpetas: `Rock`, `Pop` y `Electronica`.
+3. Dentro de `Rock`, crea `bohemian-rhapsody.txt`.
+4. Dentro de `Pop`, crea `blinding-lights.txt`.
+5. Dentro de `Electronica`, crea `strobe.txt`.
+
+Todo sin ratón. Solo teclado. El primero en terminar gana.
+
+---
+
+## 8. Detrás de las Ventanas: El CMD
+
+La **Línea de Comandos (CMD)** es la forma directa de darle instrucciones al sistema escribiendo, sin ventanas ni ratón.
+
+### Primeros comandos
+
+<table>
+  <thead>
+    <tr>
+      <th>Comando</th>
+      <th>Significa</th>
+      <th>Qué hace</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><code>dir</code></strong></td>
+      <td><em>Directory</em></td>
+      <td>Muestra todo lo que hay en la carpeta actual.</td>
+    </tr>
+    <tr>
+      <td><strong><code>cd</code></strong></td>
+      <td><em>Change Directory</em></td>
+      <td>Entra a una carpeta (<code>cd Musica</code>).</td>
+    </tr>
+    <tr>
+      <td><strong><code>mkdir</code></strong></td>
+      <td><em>Make Directory</em></td>
+      <td>Crea una carpeta nueva.</td>
+    </tr>
+    <tr>
+      <td><strong><code>cls</code></strong></td>
+      <td><em>Clear Screen</em></td>
+      <td>Limpia la pantalla.</td>
+    </tr>
+  </tbody>
+</table>
+
+### Comandos de sistema
+
+- <Icon name="lucide:info" class="inline w-5 h-5 align-text-bottom text-blue-600" />
+  **`ver`** — Muestra la versión de Windows.
+- <Icon name="lucide:folder-tree" class="inline w-5 h-5 align-text-bottom text-emerald-600" />
+  **`tree`** — Dibuja un árbol con todas tus carpetas.
+- <Icon name="lucide:palette" class="inline w-5 h-5 align-text-bottom text-purple-600" />
+  **`color [código]`** — Cambia el color del texto de la terminal.
+
+> **Tip:** Puedes usar diferentes letras y números para cambiar de color:
+> - `a` = Verde Matrix
+> - `b` = Celeste
+> - `c` = Rojo
+> - `e` = Amarillo
+> - `f` = Blanco brillante
+> - `7` = Blanco grisáceo (por defecto)
+>
+> Por ejemplo, para poner las letras celestes, escribe `color b`. Para volver a la normalidad, escribe `color` o `color 7`.
+
+---
+
+### Reto
+
+Abre el menú Inicio, escribe `cmd` y presiona Enter. Sigue cada paso en orden.
+
+**1. Personaliza el color de la terminal (Opcional)**
+
+Si no te gusta el color por defecto, puedes cambiar el color del texto. Por ejemplo, para activar el verde Matrix, escribe `color a` y presiona Enter.
+
+<pre class="bg-gray-950 text-gray-200 p-3 rounded-lg overflow-x-auto font-mono text-sm leading-relaxed select-none">
+C:\Users\Alumno&gt; <span class="text-white">color a</span>
+</pre>
+
+**2. Mira lo que hay en tu carpeta actual**
+
+Escribe `dir` y presiona Enter. La terminal te muestra todo lo que hay dentro.
+
+<pre class="bg-gray-950 text-gray-200 p-3 rounded-lg overflow-x-auto font-mono text-sm leading-relaxed select-none">
+C:\Users\Alumno&gt; <span class="text-white">dir</span>
+ El volumen de la unidad C no tiene etiqueta.
+ Directorio de C:\Users\Alumno
+
+04/03/2026  10:15    &lt;DIR&gt;          Escritorio
+04/03/2026  10:15    &lt;DIR&gt;          Documentos
+04/03/2026  10:15    &lt;DIR&gt;          Música
+               0 archivos              0 bytes
+               5 dirs  100,123 MB libres
+</pre>
+
+**3. Crea una carpeta secreta**
+
+Usa `mkdir` (Make Directory) para crear una carpeta nueva.
+
+<pre class="bg-gray-950 text-gray-200 p-3 rounded-lg overflow-x-auto font-mono text-sm leading-relaxed select-none">
+C:\Users\Alumno&gt; <span class="text-white">mkdir base_secreta</span>
+</pre>
+
+**4. Verifica que se creó**
+
+Vuelve a listar con `dir`. Ahora debería aparecer `base_secreta` en la lista.
+
+<pre class="bg-gray-950 text-gray-200 p-3 rounded-lg overflow-x-auto font-mono text-sm leading-relaxed select-none">
+C:\Users\Alumno&gt; <span class="text-white">dir</span>
+04/03/2026  10:16    &lt;DIR&gt;          base_secreta
+</pre>
+
+**5. Entra a tu carpeta**
+
+Con `cd` (Change Directory) te mueves adentro.
+
+<pre class="bg-gray-950 text-gray-200 p-3 rounded-lg overflow-x-auto font-mono text-sm leading-relaxed select-none">
+C:\Users\Alumno&gt; <span class="text-white">cd base_secreta</span>
+C:\Users\Alumno\base_secreta&gt;
+</pre>
+
+Fíjate cómo cambió el prompt. Ahora dice `C:\Users\Alumno\base_secreta>` — estás adentro.
+
+**6. Crea un archivo dentro**
+
+El comando `echo` escribe texto dentro de un archivo.
+
+<pre class="bg-gray-950 text-gray-200 p-3 rounded-lg overflow-x-auto font-mono text-sm leading-relaxed select-none">
+C:\Users\Alumno\base_secreta&gt; <span class="text-white">echo 12345 &gt; clave.txt</span>
+</pre>
+
+**7. Lista el archivo**
+
+Confirma que el archivo se creó.
+
+<pre class="bg-gray-950 text-gray-200 p-3 rounded-lg overflow-x-auto font-mono text-sm leading-relaxed select-none">
+C:\Users\Alumno\base_secreta&gt; <span class="text-white">dir</span>
+04/03/2026  10:16                13 clave.txt
+               1 archivo              13 bytes
+</pre>
+
+**8. Activa el modo "wow" con tree**
+
+El comando `tree` dibuja todas las carpetas como un árbol. Se ve impresionante en pantalla.
+
+<pre class="bg-gray-950 text-gray-200 p-3 rounded-lg overflow-x-auto font-mono text-sm leading-relaxed select-none">
+C:\Users\Alumno\base_secreta&gt; <span class="text-white">tree</span>
+ Folder PATH listing
+ Volume serial number is XXXX-XXXX
+ C:\USERS\ALUMNO\BASE_SECRETA
+└── clave.txt
+</pre>
+
+**9. Descubre tu versión de Windows**
+
+El comando `ver` muestra qué versión del sistema tienes.
+
+<pre class="bg-gray-950 text-gray-200 p-3 rounded-lg overflow-x-auto font-mono text-sm leading-relaxed select-none">
+C:\Users\Alumno\base_secreta&gt; <span class="text-white">ver</span>
+
+Microsoft Windows [Versión 10.0.22631.1]
+</pre>
+
+**10. Limpia la pantalla y sal**
+
+`cls` borra todo. `exit` cierra la terminal.
+
+<pre class="bg-gray-950 text-gray-200 p-3 rounded-lg overflow-x-auto font-mono text-sm leading-relaxed select-none">
+C:\Users\Alumno\base_secreta&gt; <span class="text-white">cls</span>
+C:\Users\Alumno\base_secreta&gt; <span class="text-white">exit</span>
+</pre>
