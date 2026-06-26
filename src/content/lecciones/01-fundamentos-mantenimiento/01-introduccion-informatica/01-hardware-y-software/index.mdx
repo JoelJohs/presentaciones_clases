@@ -6,89 +6,91 @@ subtopicTitle: "Hardware y Software"
 fecha: "20-06-2026"
 ---
 
+import { Icon } from "astro-icon/components";
+
 # Hardware y Software
 
 ![Diferencia entre Hardware y Software](@assets/images/lecciones/01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software/hardware-vs-software.jpg)
 
-## 1. ¿Qué es Hardware? 🛠️
+## 1. ¿Qué es Hardware? <Icon name="lucide:wrench" class="inline w-6 h-6 align-text-bottom text-gray-600" />
 
 ![Componentes de Hardware](@assets/images/lecciones/01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software/hardware.png)
 
-Es la parte **física** de la computadora. Todo lo que puedes tocar, conectar, desarmar y (si no funciona) ¡patear!
+Es la parte **física** de la computadora. Todo lo que puedes tocar, conectar y desarmar.
 
-Para entender cómo funciona, imagínalo como una cocina o un robot:
+Imagínalo como una cocina:
 
-- **Procesador (CPU) 👨‍🍳:** Es el **chef**. Se encarga de procesar las instrucciones, seguir las recetas y tomar las decisiones ultra rápido.
-- **Memoria RAM 🪟:** Es el **espacio de la mesa de trabajo** o escritorio. Aquí el chef coloca los ingredientes y platos que está usando *justo ahora*. Es super rápida, pero en cuanto apagas la computadora (o se va la luz), la mesa se limpia por completo y se borra todo.
-- **Almacenamiento (SSD/HDD) 🎒:** Es la **mochila escolar**. Aquí guardas tus cuadernos, libros y archivos de forma permanente. Aunque la computadora se apague, todo lo que dejes aquí se queda a salvo.
-- **Periféricos 🤖:** Son los **ojos y manos del robot**. Permiten que la computadora interactúe con el mundo exterior. Por ejemplo, el teclado y el mouse son sus "manos" para recibir órdenes, y la pantalla o los parlantes son sus "ojos" y "voz" para mostrarte lo que hace.
+- <Icon name="lucide:cpu" class="inline w-5 h-5 align-text-bottom text-sky-600" /> **Procesador (CPU):** Es el chef. Procesa instrucciones, sigue las recetas y toma decisiones.
+- <Icon name="lucide:layout-dashboard" class="inline w-5 h-5 align-text-bottom text-emerald-600" /> **Memoria RAM:** Es la mesa de trabajo. El chef coloca los ingredientes que usa *ahora*. Rápida, pero al apagar la computadora se limpia y se borra todo.
+- <Icon name="lucide:backpack" class="inline w-5 h-5 align-text-bottom text-amber-600" /> **Almacenamiento (SSD/HDD):** Es la mochila. Guardas archivos de forma permanente. Aunque la computadora se apague, todo se queda a salvo.
+- <Icon name="lucide:bot" class="inline w-5 h-5 align-text-bottom text-purple-600" /> **Periféricos:** Son los ojos y manos de la computadora. El teclado y el mouse reciben órdenes; la pantalla y los parlantes muestran resultados.
 
-> 💡 **En resumen:** Si lo puedes tocar físicamente, es Hardware.
+> <Icon name="lucide:lightbulb" class="inline w-5 h-5 align-text-bottom text-amber-500" /> Si lo puedes tocar físicamente, es Hardware.
 
 ---
 
-## 2. ¿Qué es Software? 💻
+## 2. ¿Qué es Software? <Icon name="lucide:monitor" class="inline w-6 h-6 align-text-bottom text-blue-600" />
 
 ![Componentes de Software](@assets/images/lecciones/01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software/software.png)
 
-Si el **Hardware** es como el **cuerpo físico** de un robot (sus cables, circuitos y botones), el **Software** son sus **ideas, recuerdos y habilidades**. Es la parte digital que no podemos tocar físicamente.
+El **Hardware** es el cuerpo físico de un robot. El **Software** son sus ideas, recuerdos y habilidades. Es la parte digital que no puedes tocar.
 
-El software está hecho de **programas**: conjuntos de instrucciones y reglas escritas por programadores que le dicen al hardware exactamente qué hacer paso a paso (como una receta de cocina).
+El software son **programas**: instrucciones que programadores escriben para decirle al hardware qué hacer paso a paso.
 
-- **Sistemas Operativos (El jefe):** Controla todo el sistema (ej. Windows, macOS, Android).
-- **Aplicaciones (Las herramientas):** Para hacer tareas o comunicarte (ej. Discord, Spotify, Google Chrome).
-- **Videojuegos (La diversión):** Programas diseñados para jugar (ej. Minecraft, Roblox).
+- <Icon name="lucide:layout-dashboard" class="inline w-5 h-5 align-text-bottom text-blue-600" /> **Sistemas Operativos:** Controlan todo el sistema (Windows, macOS, Android).
+- <Icon name="lucide:app-window" class="inline w-5 h-5 align-text-bottom text-green-600" /> **Aplicaciones:** Para hacer tareas o comunicarte (Discord, Spotify, Chrome).
+- <Icon name="lucide:gamepad-2" class="inline w-5 h-5 align-text-bottom text-red-600" /> **Videojuegos:** Programas para jugar (Minecraft, Roblox).
 
-> 💡 **En resumen:** Si no lo puedes golpear físicamente con el pie cuando se traba, es Software.
+> <Icon name="lucide:lightbulb" class="inline w-5 h-5 align-text-bottom text-amber-500" /> Si no lo puedes golpear físicamente cuando se traba, es Software.
 
 ---
 
-## 🛠️ Actividad Práctica: "Radiografía Digital"
+## <Icon name="lucide:wrench" class="inline w-6 h-6 align-text-bottom text-gray-600" /> Actividad Práctica: "Radiografía Digital"
 
-Vamos a ver cómo el software trabaja sobre el hardware en tiempo real en tu computadora.
+El software trabaja sobre el hardware en tiempo real.
 
-1. **Abre el Administrador de Tareas:** Presiona las teclas `Ctrl + Shift + Esc` al mismo tiempo.
-2. **Mira los gráficos:** Ve a la pestaña de **Rendimiento** (Performance). Ahí verás gráficos que muestran qué tan ocupado está tu procesador (CPU) y cuánta memoria (RAM) estás usando justo ahora.
+1. **Abre el Administrador de Tareas:** Presiona `Ctrl + Shift + Esc`.
+2. **Mira los gráficos:** Ve a la pestaña **Rendimiento**. Ahí ves qué tan ocupado está el procesador (CPU) y cuánta memoria (RAM) usas ahora.
 3. **El Experimento:**
    - Abre tu navegador web.
-   - Abre **5 pestañas** de YouTube y pon a reproducir un video en cada una.
-   - Regresa al Administrador de Tareas. ¿Qué pasó con los gráficos de CPU y RAM? ¡Eso es el software exigiendo más esfuerzo físico al hardware!
+   - Abre **5 pestañas** de YouTube con un video en cada una.
+   - Regresa al Administrador de Tareas. ¿Qué pasó con CPU y RAM? El software exige más esfuerzo físico al hardware.
 
 ---
 
-## 3. El Sistema Operativo (S.O.) 🧠
+## 3. El Sistema Operativo (S.O.) <Icon name="lucide:brain" class="inline w-6 h-6 align-text-bottom text-pink-600" />
 
-El Hardware no habla nuestro idioma y nosotros no hablamos código binario. El **Sistema Operativo** es el traductor oficial y el director de la orquesta.
+El Hardware no habla idiomas humanos y nosotros no hablamos código binario. El **Sistema Operativo** es el traductor.
 
-Sin él, la computadora es solo una caja de metal cara. Los sistemas operativos más comunes son:
+Sin él, la computadora es una caja de metal cara. Los más comunes:
 
-- 🪟 **Windows:** El más utilizado en computadoras del mundo, ideal para trabajar, estudiar y jugar videojuegos.
-- 🍎 **macOS:** El sistema de Apple para sus computadoras Mac, muy valorado por diseñadores, programadores y creadores de contenido.
-- 🤖 **Android:** El sistema operativo número uno del mundo para dispositivos móviles, presente en millones de teléfonos inteligentes y tabletas.
+- <Icon name="simple-icons:windows" class="inline w-5 h-5 align-text-bottom text-blue-600" /> **Windows:** El más usado en computadoras del mundo.
+- <Icon name="simple-icons:apple" class="inline w-5 h-5 align-text-bottom text-slate-700" /> **macOS:** El sistema de Apple para Mac, valorado por diseñadores y programadores.
+- <Icon name="simple-icons:android" class="inline w-5 h-5 align-text-bottom text-green-600" /> **Android:** El sistema operativo número uno en dispositivos móviles.
 
-> 🐧 **¿Y Linux?** Es otro sistema muy importante, gratuito y libre, pero se utiliza principalmente por programadores avanzados y en servidores que hacen funcionar internet.
-
----
-
-### ⏳ De la Terminal al Ratón: La Evolución del S.O.
-
-Hoy en día usamos ratones, pantallas táctiles y menús llenos de colores. Pero no siempre fue así:
-
-1. **La Era del Texto:** En los inicios, el ratón no existía. Las pantallas eran completamente negras y la única forma de interactuar era escribiendo comandos de texto.
-2. **La Llegada del Ratón:** La introducción de la Interfaz Gráfica de Usuario (GUI) y el mouse revolucionó la computación, permitiendo hacer "clic" en botones e iconos.
-3. **El Regreso a los Atajos:** Aunque el ratón es muy cómodo, los profesionales prefieren usar el teclado porque permite trabajar mucho más rápido sin levantar las manos de las teclas.
+> <Icon name="simple-icons:linux" class="inline w-5 h-5 align-text-bottom text-neutral-700" /> **¿Y Linux?** Es gratuito, libre, usado por programadores y en servidores de internet.
 
 ---
 
-## ⌨️ Hoja de Trucos: Atajos de Teclado
+### <Icon name="lucide:clock" class="inline w-5 h-5 align-text-bottom text-amber-600" /> De la Terminal al Ratón: La Evolución del S.O.
 
-Los profesionales casi no usan el ratón. Aquí tienes los 6 superpoderes indispensables del teclado:
+Hoy usamos ratones, pantallas táctiles y menús. No siempre fue así:
+
+1. **La Era del Texto:** Las pantallas eran negras. La única forma de interactuar era escribiendo comandos.
+2. **La Llegada del Ratón:** La Interfaz Gráfica (GUI) permitió hacer clic en botones e iconos.
+3. **El Regreso a los Atajos:** Los profesionales prefieren el teclado para trabajar más rápido sin levantar las manos.
+
+---
+
+## <Icon name="lucide:keyboard" class="inline w-6 h-6 align-text-bottom text-gray-600" /> Hoja de Trucos: Atajos de Teclado
+
+Los atajos evitan usar el ratón. Seis indispensables:
 
 <table>
   <thead>
     <tr>
       <th>Atajo</th>
-      <th>¿Qué hace?</th>
+      <th>Qué hace</th>
     </tr>
   </thead>
   <tbody>
@@ -106,53 +108,51 @@ Los profesionales casi no usan el ratón. Aquí tienes los 6 superpoderes indisp
     </tr>
     <tr>
       <td><strong>Alt + Tab</strong></td>
-      <td>Cambiar rápidamente entre las ventanas abiertas.</td>
+      <td>Cambiar entre ventanas abiertas.</td>
     </tr>
     <tr>
       <td><strong>Win + D</strong></td>
-      <td>Mostrar el Escritorio (ocultar todas las ventanas abiertas).</td>
+      <td>Mostrar el Escritorio (ocultar ventanas).</td>
     </tr>
     <tr>
       <td><strong>Ctrl + Shift + Esc</strong></td>
-      <td>Abrir el Administrador de Tareas (útil si la computadora se traba).</td>
+      <td>Abrir el Administrador de Tareas.</td>
     </tr>
   </tbody>
 </table>
 
 ---
 
-## 🥷 Actividad Práctica: "Modo Ninja" (Cero Ratón)
+## <Icon name="lucide:user" class="inline w-6 h-6 align-text-bottom text-gray-600" /> Actividad Práctica: "Modo Ninja" (Cero Ratón)
 
-**El Reto:** Abre el Bloc de notas, escribe tu nombre y cierra la ventana utilizando únicamente el teclado (sin tocar el ratón).
+**El Reto:** Abre el Bloc de notas, escribe tu nombre y cierra la ventana usando solo el teclado.
 
 ---
 
-## 4. Archivos y Extensiones 📂
+## 4. Archivos y Extensiones <Icon name="lucide:folder" class="inline w-6 h-6 align-text-bottom text-amber-600" />
 
-Para que la computadora sepa qué tipo de información tiene un archivo y con qué programa debe abrirlo, utiliza un sistema muy parecido a nuestros nombres y apellidos:
+La computadora identifica cada archivo por su extensión, como los apellidos identifican a una persona.
 
-### 🧩 Anatomía de un Archivo: Nombre + Apellido
-
-Todo archivo tiene esta estructura básica:
+### <Icon name="lucide:puzzle" class="inline w-5 h-5 align-text-bottom text-purple-600" /> Anatomía de un Archivo: Nombre + Apellido
 
 **Nombre** + **.** (punto) + **Apellido (Extensión)**
 
-- **Nombre:** El texto que tú eliges para identificar tu archivo (por ejemplo, `tarea_de_historia` o `foto_familiar`).
-- **Punto (`.`):** El separador obligatorio que divide el nombre del "apellido".
-- **Extensión ("Apellido"):** Un grupo de 3 o 4 letras al final que indica el formato del archivo y le dice al sistema operativo con qué programa abrirlo (por ejemplo, `pdf`, `png`, `mp3`).
+- **Nombre:** El texto que eliges (ej. `tarea_de_historia`).
+- **Punto (`.`):** El separador entre nombre y extensión.
+- **Extensión:** 3 o 4 letras que indican el formato (ej. `pdf`, `png`, `mp3`).
 
 > [!IMPORTANT]
-> **El Icono no manda:** Aunque veas el dibujo de un reproductor de música en tu archivo, lo que realmente define su tipo es la extensión. Cambiar manualmente la extensión (por ejemplo, renombrar `cancion.mp3` a `cancion.pdf`) **no convierte el archivo**, solo hará que la computadora intente abrirlo con el programa equivocado (Adobe Reader) y te muestre un error.
+> **El Icono no manda:** Lo que define el tipo de un archivo es su extensión, no su icono. Cambiar `cancion.mp3` a `cancion.pdf` **no convierte** el archivo, solo hace que la computadora intente abrirlo con el programa equivocado.
 
 ---
 
-### 📋 Las 5 Extensiones más Comunes
+### <Icon name="lucide:clipboard-list" class="inline w-5 h-5 align-text-bottom text-gray-600" /> Las 5 Extensiones más Comunes
 
 <table>
   <thead>
     <tr>
       <th>Extensión</th>
-      <th>¿Qué es?</th>
+      <th>Qué es</th>
       <th>Tipo de Información</th>
       <th>Programa Común</th>
     </tr>
@@ -161,62 +161,60 @@ Todo archivo tiene esta estructura básica:
     <tr>
       <td><strong>.pdf</strong></td>
       <td>Documento Fijo</td>
-      <td>Texto y lectura (no editable).</td>
-      <td>Navegador Web / Adobe Reader</td>
+      <td>Texto y lectura.</td>
+      <td>Navegador / Adobe Reader</td>
     </tr>
     <tr>
       <td><strong>.jpg / .png</strong></td>
       <td>Imagen</td>
       <td>Fotografía o gráfico digital.</td>
-      <td>Visor de Fotos del Sistema</td>
+      <td>Visor de Fotos</td>
     </tr>
     <tr>
       <td><strong>.mp3</strong></td>
       <td>Audio</td>
-      <td>Música y grabaciones de sonido.</td>
-      <td>Reproductor VLC / Windows Media</td>
+      <td>Música y grabaciones.</td>
+      <td>VLC / Windows Media</td>
     </tr>
     <tr>
       <td><strong>.mp4</strong></td>
       <td>Video</td>
-      <td>Películas, clips y grabaciones de pantalla.</td>
+      <td>Películas y clips.</td>
       <td>Reproductor de video</td>
     </tr>
     <tr>
       <td><strong>.exe</strong></td>
       <td>Ejecutable</td>
-      <td>Un programa o instalador de software.</td>
-      <td>Ejecutado directamente por la PC</td>
+      <td>Programa o instalador.</td>
+      <td>Ejecutado por la PC</td>
     </tr>
   </tbody>
 </table>
 
 ---
 
-### ⚠️ El Peligro de las Extensiones Ocultas
+### <Icon name="lucide:triangle-alert" class="inline w-5 h-5 align-text-bottom text-red-600" /> El Peligro de las Extensiones Ocultas
 
-Por defecto, muchos sistemas operativos (como Windows) ocultan las extensiones para que los nombres de los archivos se vean más limpios. Sin embargo, esto representa un peligro de seguridad:
+Windows oculta las extensiones por defecto. Esto es un riesgo de seguridad:
 
-- **La trampa:** Un atacante puede enviarte un virus llamado `tarea.pdf.exe`. Como el sistema oculta las extensiones conocidas, tú solo verás en tu pantalla `tarea.pdf` y un icono de documento.
-- **El riesgo:** Al hacer doble clic pensando que abrirás un documento de lectura, estarás ejecutando un archivo ejecutable (`.exe`) que instalará un virus en tu computadora.
-- **Buena práctica:** Activa siempre la visibilidad de extensiones de archivo en tu explorador y sospecha de archivos descargados con nombres dobles o extensiones ejecutables.
+- **La trampa:** Un atacante envía un virus llamado `tarea.pdf.exe`. Ves solo `tarea.pdf` con un icono de documento.
+- **El riesgo:** Al hacer clic, ejecutas un `.exe` que instala un virus.
+- **Buena práctica:** Activa la visibilidad de extensiones. Sospecha de archivos con nombres dobles.
 
 ---
 
-## 🧙‍♂️ Actividad Práctica: "Hackeando" la Extensión
+## <Icon name="lucide:wand-2" class="inline w-6 h-6 align-text-bottom text-purple-600" /> Actividad Práctica: Cambiando la Extensión
 
-Vamos a crear tu primera página web sin usar ningún programa de programación, ¡solo cambiando su "apellido"!
+Crea tu primera página web sin programas de programación, solo cambiando su extensión.
 
 **Misión Paso a Paso:**
 
-1. **Prepara tu sistema:** Asegúrate de activar la opción de "Mostrar extensiones de archivo" en tu explorador.
-2. **Crea un archivo nuevo:** Haz clic derecho en tu Escritorio, selecciona *Nuevo > Documento de texto* (se creará como `Nuevo documento.txt`).
-3. **Escribe el código:** Abre ese archivo de texto y escribe exactamente la siguiente línea:
+1. **Activa** "Mostrar extensiones de archivo" en el explorador.
+2. **Crea un archivo:** Clic derecho en el Escritorio > *Nuevo > Documento de texto*.
+3. **Escribe:** Abre el archivo y escribe:
    ```html
    <h1>¡Hola! He hackeado la extensión con éxito 🎉</h1>
    ```
-4. **Guarda y cierra** el archivo de texto.
-5. **El "Hackeo":** Cambia el nombre del archivo de `Nuevo documento.txt` a `index.html`. Confirma el cambio si tu computadora te lo pregunta.
-6. **¡Listo!** Haz doble clic en tu nuevo archivo `index.html`. Verás cómo se abre en tu navegador de internet mostrando el título en grande. ¡Has creado una página web!
-
-
+4. **Guarda y cierra.**
+5. **Cambia el nombre** de `Nuevo documento.txt` a `index.html`. Confirma el cambio.
+6. **Ábrelo.** Haz doble clic en `index.html`. Se abre en el navegador mostrando el título.

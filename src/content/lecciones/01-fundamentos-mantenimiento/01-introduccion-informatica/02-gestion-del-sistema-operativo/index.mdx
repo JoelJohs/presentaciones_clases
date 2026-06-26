@@ -10,7 +10,7 @@ import { Icon } from "astro-icon/components";
 
 # El Sistema Operativo
 
-El **Sistema Operativo (OS)** es el director de la computadora. Sin él, cada programa pelearía por la pantalla y el sistema se trabaría.
+El **Sistema Operativo (OS)** coordina los programas, la memoria, los archivos y los dispositivos.
 
 ## 1. Qué hace
 
@@ -40,28 +40,45 @@ El **Sistema Operativo (OS)** es el director de la computadora. Sin él, cada pr
 
 ## 2. Administrador de Tareas
 
-¿Tu computadora se congela o va lenta? El **Administrador de Tareas** muestra en qué está gastando su energía cada programa.
+Cuando la computadora se congela o va lenta, el **Administrador de Tareas** muestra qué programa está usando los recursos.
 
 ![Administrador de tareas mostrando el uso de CPU, memoria y discos](@assets/images/lecciones/01-fundamentos-mantenimiento/01-introduccion-informatica/02-gestion-del-sistema-operativo/system_task.png)
 
-### Lo que ves vs. lo que no ves
+### Aplicaciones y procesos en segundo plano
 
-- <Icon name="lucide:eye" class="inline w-5 h-5 align-text-bottom text-blue-600" />
+- <Icon
+    name="lucide:eye"
+    class="inline w-5 h-5 align-text-bottom text-blue-600"
+  />
   **Aplicaciones:** Programas que abriste a propósito (Chrome, Discord, juegos).
-- <Icon name="lucide:ghost" class="inline w-5 h-5 align-text-bottom text-neutral-500" />
-  **Procesos en segundo plano:** Programas invisibles que el SO necesita para funcionar (el que escucha el mouse, busca WiFi).
+- <Icon
+    name="lucide:ghost"
+    class="inline w-5 h-5 align-text-bottom text-neutral-500"
+  />
+  **Procesos en segundo plano:** Programas invisibles que el SO necesita para
+  funcionar (el que escucha el mouse, busca WiFi).
 
 ### Signos vitales
 
-1. <Icon name="lucide:cpu" class="inline w-5 h-5 align-text-bottom text-sky-600" />
+1. <Icon
+     name="lucide:cpu"
+     class="inline w-5 h-5 align-text-bottom text-sky-600"
+   />
    **CPU:** Qué tanto está trabajando el procesador.
-2. <Icon name="lucide:memory-stick" class="inline w-5 h-5 align-text-bottom text-emerald-600" />
+2. <Icon
+     name="lucide:memory-stick"
+     class="inline w-5 h-5 align-text-bottom text-emerald-600"
+   />
    **Memoria (RAM):** Qué tan llena está la mesa de trabajo.
 
 ### Aplicaciones de Inicio
 
-<Icon name="lucide:rocket" class="inline w-5 h-5 align-text-bottom text-purple-600" />
-**Startup:** Programas que se abren solos al encender la PC. Si tarda mucho en prender, aquí puedes desactivar los que sobran.
+<Icon
+  name="lucide:rocket"
+  class="inline w-5 h-5 align-text-bottom text-purple-600"
+/>
+**Startup:** Programas que se abren solos al encender la PC. Si tarda mucho en
+prender, aquí puedes desactivar los que sobran.
 
 > **Atajo:** `Ctrl + Shift + Esc` abre el Administrador de Tareas al instante.
 
@@ -151,7 +168,7 @@ El **Explorador de Archivos** muestra todas las carpetas, discos y archivos guar
 
 ### Estructura de Carpetas
 
-Las carpetas guardan archivos y otras carpetas. Como un árbol:
+Las carpetas guardan archivos y otras carpetas en forma de árbol:
 
 ```
 C:\
@@ -168,7 +185,7 @@ C:\
 
 ### La Ruta
 
-La computadora no busca archivos a ciegas. Sigue una dirección exacta llamada **Ruta** (_Path_):
+La computadora busca archivos siguiendo una dirección exacta llamada **Ruta** (_Path_):
 
 `C:\Usuarios\TuNombre\Escritorio\Tarea.txt`
 
@@ -227,7 +244,7 @@ Usa los superpoderes del teclado. Nada de ratón.
 
 ## 7. Reto de Velocidad
 
-Demuestra que dominas el teclado. Tienes **2 minutos**.
+Tienes **2 minutos** para demostrar que dominas el teclado.
 
 1. Crea una carpeta en tu Escritorio llamada `Musica`.
 2. Dentro de `Musica`, crea 3 carpetas: `Rock`, `Pop` y `Electronica`.
@@ -235,13 +252,13 @@ Demuestra que dominas el teclado. Tienes **2 minutos**.
 4. Dentro de `Pop`, crea `blinding-lights.txt`.
 5. Dentro de `Electronica`, crea `strobe.txt`.
 
-Todo sin ratón. Solo teclado. El primero en terminar gana.
+Sin ratón, solo teclado. Gana el primero en terminar.
 
 ---
 
 ## 8. Detrás de las Ventanas: El CMD
 
-La **Línea de Comandos (CMD)** es la forma directa de darle instrucciones al sistema escribiendo, sin ventanas ni ratón.
+La **Línea de Comandos (CMD)** da instrucciones al sistema escribiendo comandos de texto.
 
 ### Primeros comandos
 
@@ -255,23 +272,49 @@ La **Línea de Comandos (CMD)** es la forma directa de darle instrucciones al si
   </thead>
   <tbody>
     <tr>
-      <td><strong><code>dir</code></strong></td>
-      <td><em>Directory</em></td>
+      <td>
+        <strong>
+          <code>dir</code>
+        </strong>
+      </td>
+      <td>
+        <em>Directory</em>
+      </td>
       <td>Muestra todo lo que hay en la carpeta actual.</td>
     </tr>
     <tr>
-      <td><strong><code>cd</code></strong></td>
-      <td><em>Change Directory</em></td>
-      <td>Entra a una carpeta (<code>cd Musica</code>).</td>
+      <td>
+        <strong>
+          <code>cd</code>
+        </strong>
+      </td>
+      <td>
+        <em>Change Directory</em>
+      </td>
+      <td>
+        Entra a una carpeta (<code>cd Musica</code>).
+      </td>
     </tr>
     <tr>
-      <td><strong><code>mkdir</code></strong></td>
-      <td><em>Make Directory</em></td>
+      <td>
+        <strong>
+          <code>mkdir</code>
+        </strong>
+      </td>
+      <td>
+        <em>Make Directory</em>
+      </td>
       <td>Crea una carpeta nueva.</td>
     </tr>
     <tr>
-      <td><strong><code>cls</code></strong></td>
-      <td><em>Clear Screen</em></td>
+      <td>
+        <strong>
+          <code>cls</code>
+        </strong>
+      </td>
+      <td>
+        <em>Clear Screen</em>
+      </td>
       <td>Limpia la pantalla.</td>
     </tr>
   </tbody>
@@ -279,14 +322,24 @@ La **Línea de Comandos (CMD)** es la forma directa de darle instrucciones al si
 
 ### Comandos de sistema
 
-- <Icon name="lucide:info" class="inline w-5 h-5 align-text-bottom text-blue-600" />
-  **`ver`** — Muestra la versión de Windows.
-- <Icon name="lucide:folder-tree" class="inline w-5 h-5 align-text-bottom text-emerald-600" />
-  **`tree`** — Dibuja un árbol con todas tus carpetas.
-- <Icon name="lucide:palette" class="inline w-5 h-5 align-text-bottom text-purple-600" />
-  **`color [código]`** — Cambia el color del texto de la terminal.
+- <Icon
+    name="lucide:info"
+    class="inline w-5 h-5 align-text-bottom text-blue-600"
+  />
+  **`ver`** - Muestra la versión de Windows.
+- <Icon
+    name="lucide:folder-tree"
+    class="inline w-5 h-5 align-text-bottom text-emerald-600"
+  />
+  **`tree`** - Dibuja un árbol con todas tus carpetas.
+- <Icon
+    name="lucide:palette"
+    class="inline w-5 h-5 align-text-bottom text-purple-600"
+  />
+  **`color [código]`** - Cambia el color del texto de la terminal.
 
 > **Tip:** Puedes usar diferentes letras y números para cambiar de color:
+>
 > - `a` = Verde Matrix
 > - `b` = Celeste
 > - `c` = Rojo
@@ -307,7 +360,7 @@ Abre el menú Inicio, escribe `cmd` y presiona Enter. Sigue cada paso en orden.
 Si no te gusta el color por defecto, puedes cambiar el color del texto. Por ejemplo, para activar el verde Matrix, escribe `color a` y presiona Enter.
 
 <pre class="bg-gray-950 text-gray-200 p-3 rounded-lg overflow-x-auto font-mono text-sm leading-relaxed select-none">
-C:\Users\Alumno&gt; <span class="text-white">color a</span>
+  C:\Users\Alumno&gt; <span class="text-white">color a</span>
 </pre>
 
 **2. Mira lo que hay en tu carpeta actual**
@@ -315,15 +368,11 @@ C:\Users\Alumno&gt; <span class="text-white">color a</span>
 Escribe `dir` y presiona Enter. La terminal te muestra todo lo que hay dentro.
 
 <pre class="bg-gray-950 text-gray-200 p-3 rounded-lg overflow-x-auto font-mono text-sm leading-relaxed select-none">
-C:\Users\Alumno&gt; <span class="text-white">dir</span>
- El volumen de la unidad C no tiene etiqueta.
- Directorio de C:\Users\Alumno
-
-04/03/2026  10:15    &lt;DIR&gt;          Escritorio
-04/03/2026  10:15    &lt;DIR&gt;          Documentos
-04/03/2026  10:15    &lt;DIR&gt;          Música
-               0 archivos              0 bytes
-               5 dirs  100,123 MB libres
+  C:\Users\Alumno&gt; <span class="text-white">dir</span>
+  El volumen de la unidad C no tiene etiqueta. Directorio de C:\Users\Alumno
+  04/03/2026 10:15 &lt;DIR&gt; Escritorio 04/03/2026 10:15 &lt;DIR&gt;
+  Documentos 04/03/2026 10:15 &lt;DIR&gt; Música 0 archivos 0 bytes 5 dirs
+  100,123 MB libres
 </pre>
 
 **3. Crea una carpeta secreta**
@@ -331,7 +380,7 @@ C:\Users\Alumno&gt; <span class="text-white">dir</span>
 Usa `mkdir` (Make Directory) para crear una carpeta nueva.
 
 <pre class="bg-gray-950 text-gray-200 p-3 rounded-lg overflow-x-auto font-mono text-sm leading-relaxed select-none">
-C:\Users\Alumno&gt; <span class="text-white">mkdir base_secreta</span>
+  C:\Users\Alumno&gt; <span class="text-white">mkdir base_secreta</span>
 </pre>
 
 **4. Verifica que se creó**
@@ -339,8 +388,8 @@ C:\Users\Alumno&gt; <span class="text-white">mkdir base_secreta</span>
 Vuelve a listar con `dir`. Ahora debería aparecer `base_secreta` en la lista.
 
 <pre class="bg-gray-950 text-gray-200 p-3 rounded-lg overflow-x-auto font-mono text-sm leading-relaxed select-none">
-C:\Users\Alumno&gt; <span class="text-white">dir</span>
-04/03/2026  10:16    &lt;DIR&gt;          base_secreta
+  C:\Users\Alumno&gt; <span class="text-white">dir</span>
+  04/03/2026 10:16 &lt;DIR&gt; base_secreta
 </pre>
 
 **5. Entra a tu carpeta**
@@ -348,18 +397,19 @@ C:\Users\Alumno&gt; <span class="text-white">dir</span>
 Con `cd` (Change Directory) te mueves adentro.
 
 <pre class="bg-gray-950 text-gray-200 p-3 rounded-lg overflow-x-auto font-mono text-sm leading-relaxed select-none">
-C:\Users\Alumno&gt; <span class="text-white">cd base_secreta</span>
-C:\Users\Alumno\base_secreta&gt;
+  C:\Users\Alumno&gt; <span class="text-white">cd base_secreta</span>
+  C:\Users\Alumno\base_secreta&gt;
 </pre>
 
-Fíjate cómo cambió el prompt. Ahora dice `C:\Users\Alumno\base_secreta>` — estás adentro.
+Fíjate cómo cambió el prompt. Ahora dice `C:\Users\Alumno\base_secreta>`. Estás adentro.
 
 **6. Crea un archivo dentro**
 
 El comando `echo` escribe texto dentro de un archivo.
 
 <pre class="bg-gray-950 text-gray-200 p-3 rounded-lg overflow-x-auto font-mono text-sm leading-relaxed select-none">
-C:\Users\Alumno\base_secreta&gt; <span class="text-white">echo 12345 &gt; clave.txt</span>
+  C:\Users\Alumno\base_secreta&gt;{" "}
+  <span class="text-white">echo 12345 &gt; clave.txt</span>
 </pre>
 
 **7. Lista el archivo**
@@ -367,9 +417,8 @@ C:\Users\Alumno\base_secreta&gt; <span class="text-white">echo 12345 &gt; clave.
 Confirma que el archivo se creó.
 
 <pre class="bg-gray-950 text-gray-200 p-3 rounded-lg overflow-x-auto font-mono text-sm leading-relaxed select-none">
-C:\Users\Alumno\base_secreta&gt; <span class="text-white">dir</span>
-04/03/2026  10:16                13 clave.txt
-               1 archivo              13 bytes
+  C:\Users\Alumno\base_secreta&gt; <span class="text-white">dir</span>
+  04/03/2026 10:16 13 clave.txt 1 archivo 13 bytes
 </pre>
 
 **8. Activa el modo "wow" con tree**
@@ -377,11 +426,9 @@ C:\Users\Alumno\base_secreta&gt; <span class="text-white">dir</span>
 El comando `tree` dibuja todas las carpetas como un árbol. Se ve impresionante en pantalla.
 
 <pre class="bg-gray-950 text-gray-200 p-3 rounded-lg overflow-x-auto font-mono text-sm leading-relaxed select-none">
-C:\Users\Alumno\base_secreta&gt; <span class="text-white">tree</span>
- Folder PATH listing
- Volume serial number is XXXX-XXXX
- C:\USERS\ALUMNO\BASE_SECRETA
-└── clave.txt
+  C:\Users\Alumno\base_secreta&gt; <span class="text-white">tree</span>
+  Folder PATH listing Volume serial number is XXXX-XXXX
+  C:\USERS\ALUMNO\BASE_SECRETA └── clave.txt
 </pre>
 
 **9. Descubre tu versión de Windows**
@@ -389,9 +436,8 @@ C:\Users\Alumno\base_secreta&gt; <span class="text-white">tree</span>
 El comando `ver` muestra qué versión del sistema tienes.
 
 <pre class="bg-gray-950 text-gray-200 p-3 rounded-lg overflow-x-auto font-mono text-sm leading-relaxed select-none">
-C:\Users\Alumno\base_secreta&gt; <span class="text-white">ver</span>
-
-Microsoft Windows [Versión 10.0.22631.1]
+  C:\Users\Alumno\base_secreta&gt; <span class="text-white">ver</span>
+  Microsoft Windows [Versión 10.0.22631.1]
 </pre>
 
 **10. Limpia la pantalla y sal**
@@ -399,6 +445,65 @@ Microsoft Windows [Versión 10.0.22631.1]
 `cls` borra todo. `exit` cierra la terminal.
 
 <pre class="bg-gray-950 text-gray-200 p-3 rounded-lg overflow-x-auto font-mono text-sm leading-relaxed select-none">
-C:\Users\Alumno\base_secreta&gt; <span class="text-white">cls</span>
-C:\Users\Alumno\base_secreta&gt; <span class="text-white">exit</span>
+  C:\Users\Alumno\base_secreta&gt; <span class="text-white">cls</span>
+  C:\Users\Alumno\base_secreta&gt; <span class="text-white">exit</span>
 </pre>
+
+<iframe
+  width="560"
+  height="315"
+  src="https://www.youtube.com/embed/gN_0sWWV3CA"
+  title="Microaprendizaje: La terminal"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen
+  class="rounded-lg mx-auto max-w-full"
+></iframe>
+
+---
+
+## Tarea
+
+En el Administrador de Tareas viste que los programas compiten por RAM y CPU. Algunos consumen más que otros.
+
+1. **Tu juego favorito.** Busca los requisitos mínimos (RAM y CPU) del videojuego o app que más uses.
+2. **Google Chrome.** Investiga por qué Chrome consume tanta RAM. ¿Qué hace internamente?
+
+Anota los resultados en tu libreta: los requisitos de tu juego y tu conclusión sobre Chrome.
+
+---
+
+## Material de interés
+
+- [El Caos Organizado — Software Libre y Open Source](https://youtu.be/YfqfoiPc0vk) — Las cuatro libertades del software, Linux, OpenSSL, y quién mantiene los caños de internet.
+- [¡Todo, TODO sobre la RAM! Parte 1](https://youtu.be/yRNwl24l39E) — Funcionamiento técnico de la memoria RAM: buses, canales, modo dual channel, y qué significa realmente el estándar DDR4 SDRAM
+
+---
+
+## Material para la siguiente clase
+
+La próxima sesión abriremos la computadora. Vamos a hacer nuestra propia pulsera antiestática y a conocer los componentes internos.
+
+### Pulsera antiestática casera
+
+Si ya tienes una pulsera antiestática, tráela. Si no, armamos una con esto:
+
+- **Banda elástica** — 23–25 cm de largo, unos 18 mm de ancho. Un trozo de tela elástica o una venda sirve.
+- **Velcro** — 4 cm, adhesivo o para coser. Si no consigues, un broche o un botón pueden funcionar.
+- **Broche metálico** — tipo remache o de mercería. Si no encuentras, un clip sujetapapeles grande y plano funciona como sustituto.
+- **Cable flexible** — espiral de teléfono (de esos que se estiran) o cable coaxial de audio. Unos 30 cm–1 m. Cable normal de cobre también sirve.
+- **Pinza de cocodrilo** — con caperuza aislante. Se consigue en cualquier ferretería o electrónica.
+- **Resistencia** — 1–1.2 MΩ, ¼ W. Es la que va entre el cable y la pinza, por seguridad.
+- **Aguja e hilo** — para coser la banda con el velcro y sujetar el broche.
+- **Soldador y estaño** — para unir la resistencia al cable y al broche. Si no tienes, retorcer bien y forrar con cinta aislante es un plan B.
+
+### Para desarmar la computadora
+
+- **Desarmador de estrella** (Phillips #1 o #2) — el más común en electrónica.
+- **Desarmador de pala** (plano, pequeño) — para palancas o conectores.
+- **Bolsita o cajita** para guardar los tornillos — un cartón de huevos, un taparrosca, una bolsa Ziploc. Cualquier cosa que evite que los pierdas.
+- **Linterna del teléfono** — ayuda a ver conectores y etiquetas en la tarjeta madre.
+
+### Para formatear la computadora
+
+- **USB de mínimo 4 u 8 GB, vacía** — para ponerle una ISO de Windows y formatear.
