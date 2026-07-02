@@ -1,0 +1,155 @@
+---
+title: "Repaso: Gestión del Sistema Operativo"
+moduleTitle: "Módulo 1: Fundamentos y Mantenimiento"
+topicTitle: "Tema 1: Introducción a la Informática"
+subtopicTitle: "Gestión del Sistema Operativo"
+fecha: "04-07-2026"
+---
+
+import { Icon } from "astro-icon/components";
+
+# Repaso: Gestión del Sistema Operativo
+
+Preguntas y respuestas para coordinar la dinámica en clase.
+
+---
+
+## 1. Repaso del Sistema Operativo <Icon name="lucide:monitor" class="inline w-6 h-6 align-text-bottom text-gray-600" />
+
+### 1. ¿Qué administra el SO?
+
+El SO administra cuatro recursos de la computadora. Menciona tres.
+
+<details>
+  <summary><Icon name="lucide:search" class="inline w-5 h-5 align-text-bottom text-blue-600" /> Ver explicación</summary>
+  <blockquote>
+
+    Programas (decide quién usa el procesador), memoria RAM, archivos (guarda y organiza documentos) y dispositivos (mouse, teclado, USB).
+
+  </blockquote>
+</details>
+
+### 2. El orden de encendido
+
+Ordena los pasos al prender la PC:
+
+- a) BIOS → Hardware → Kernel → OS → Escritorio
+- b) Hardware → BIOS → OS → Kernel → Escritorio
+- c) Hardware → BIOS → Kernel → OS → Escritorio
+
+<details>
+  <summary><Icon name="lucide:search" class="inline w-5 h-5 align-text-bottom text-blue-600" /> Ver respuesta</summary>
+  <blockquote>
+
+    **c) Hardware → BIOS → Kernel → OS → Escritorio.** La energía despierta el hardware, el BIOS revisa los componentes, el kernel toma el control, carga el sistema operativo y ves el escritorio.
+
+  </blockquote>
+</details>
+
+---
+
+## 2. Administrador de Tareas <Icon name="lucide:activity" class="inline w-6 h-6 align-text-bottom text-blue-600" />
+
+### Atajo para abrirlo
+
+Un programa se traba y no responde. ¿Qué teclas presionas?
+
+<details>
+  <summary><Icon name="lucide:search" class="inline w-5 h-5 align-text-bottom text-blue-600" /> Ver respuesta</summary>
+  <blockquote>
+
+    **Ctrl + Shift + Esc.** Se abre el Administrador de Tareas. Seleccionas el programa y haces clic en "Finalizar tarea".
+
+  </blockquote>
+</details>
+
+### Procesos en segundo plano
+
+En el Administrador de Tareas ves programas que nunca abriste. ¿Debes cerrarlos?
+
+<details>
+  <summary><Icon name="lucide:search" class="inline w-5 h-5 align-text-bottom text-blue-600" /> Ver explicación</summary>
+  <blockquote>
+
+    No. Son **procesos en segundo plano**. El SO los necesita para funciones como detectar el mouse, buscar redes WiFi o mantener el reloj sincronizado.
+
+  </blockquote>
+</details>
+
+---
+
+## 3. Explorador, Rutas y Atajos <Icon name="lucide:folder" class="inline w-6 h-6 align-text-bottom text-amber-600" />
+
+### Leer una ruta
+
+`C:\Usuarios\Ana\Escritorio\cuento.docx`. Identifica el disco, la carpeta y el archivo.
+
+<details>
+  <summary><Icon name="lucide:search" class="inline w-5 h-5 align-text-bottom text-blue-600" /> Ver explicación</summary>
+  <blockquote>
+
+    - **Disco:** `C:\`
+    - **Carpeta:** `Usuarios\Ana\Escritorio\`
+    - **Archivo:** `cuento.docx`
+    La ruta es la dirección exacta que usa el sistema para localizar el archivo.
+
+  </blockquote>
+</details>
+
+### Mover sin ratón
+
+Quieres pasar un archivo de la carpeta `Documentos` a `Escritorio`. ¿Qué combinaciones de teclado usas?
+
+<details>
+  <summary><Icon name="lucide:search" class="inline w-5 h-5 align-text-bottom text-blue-600" /> Ver respuesta</summary>
+  <blockquote>
+
+    1. **Ctrl + X** sobre el archivo (cortar).
+    2. Navegas a `Escritorio`.
+    3. **Ctrl + V** (pegar). El archivo se movió sin usar el ratón.
+
+  </blockquote>
+</details>
+
+---
+
+## 4. CMD: La Terminal <Icon name="lucide:terminal" class="inline w-6 h-6 align-text-bottom text-green-600" />
+
+### Listar contenido
+
+Abriste CMD y quieres ver los archivos y carpetas donde estás parado. ¿Qué comando escribes?
+
+<details>
+  <summary><Icon name="lucide:search" class="inline w-5 h-5 align-text-bottom text-blue-600" /> Ver respuesta</summary>
+  <blockquote>
+
+    **`dir`**. Muestra el listado completo de la carpeta actual.
+
+  </blockquote>
+</details>
+
+### Cambiar color del texto
+
+Quieres el texto de la terminal en verde brillante. ¿Qué comando usas?
+
+<details>
+  <summary><Icon name="lucide:search" class="inline w-5 h-5 align-text-bottom text-blue-600" /> Ver respuesta</summary>
+  <blockquote>
+
+    **`color a`**. La letra `a` da verde brillante. Para restaurar el color por defecto escribe `color 7`.
+
+  </blockquote>
+</details>
+
+### Crear y entrar a una carpeta
+
+Necesitas crear una carpeta llamada `proyecto` y luego acceder a ella desde CMD. Escribe los dos comandos.
+
+<details>
+  <summary><Icon name="lucide:search" class="inline w-5 h-5 align-text-bottom text-blue-600" /> Ver respuesta</summary>
+  <blockquote>
+
+    `mkdir proyecto` la crea. `cd proyecto` te mueve dentro de ella.
+
+  </blockquote>
+</details>

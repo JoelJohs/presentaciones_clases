@@ -6,21 +6,215 @@ subtopicTitle: "Componentes Internos"
 fecha: "04-07-2026"
 ---
 
-# Componentes Internos
+import { Icon } from "astro-icon/components";
 
-Esta es la sesión de **Componentes Internos**, que forma parte del **Tema 2: Hardware y Mantenimiento** en el **Módulo 1: Fundamentos y Mantenimiento**.
+# Hardware y Formateo
 
-## Objetivo de la Sesión
-Aprender a armar y desarmar computadoras de forma segura e instalar un sistema operativo desde cero.
+Vamos a abrir una computadora, identificar sus componentes internos e instalar un sistema operativo desde cero.
 
-## Contenido y Actividades
-* **Identificación:** Reconocimiento físico de procesador, memoria RAM, almacenamiento, fuente de poder y tarjeta madre.
-* **Armado y Desarmado:** Uso de herramientas y aplicación de normas de seguridad física y antiestática. Ensamble de piezas.
-* **Instalación de Sistema Operativo:** Preparación de medios de arranque (USB booteable), configuración de la BIOS y carga del sistema.
-* **Fecha Programada:** 04-07-2026 (Semana del curso: 3)
+---
 
-## Recursos y Práctica
-* Guía paso a paso para el ensamble de computadoras.
-* Taller práctico de instalación de sistema operativo.
-* Cuestionario de repaso de componentes.
+## 1. Seguridad
 
+La electricidad estática quema componentes electrónicos. Tu cuerpo acumula carga al caminar, rozar ropa sintética o moverte en una silla. Al tocar un componente sin descargarte, esa energía pasa al circuito y lo daña.
+
+> <Icon
+>   name="lucide:shield-alert"
+>   class="inline w-5 h-5 align-text-bottom text-red-500"
+> />
+> **Descarga la estática:** Usa una pulsera antiestática conectada a una
+> superficie metálica. Si no tienes, toca el gabinete metálico sin pintar antes
+> de tocar cualquier placa.
+>
+> <Icon
+>   name="lucide:zap-off"
+>   class="inline w-5 h-5 align-text-bottom text-red-500"
+> />
+> **La fuente de poder (PSU) no se abre.** Sus capacitores almacenan voltajes
+> peligrosos incluso días después de desconectarla. No hay razón para abrirla en
+> este curso.
+>
+> <Icon
+>   name="lucide:plug"
+>   class="inline w-5 h-5 align-text-bottom text-red-500"
+> />
+> **Desconecta el cable de corriente** antes de quitar cualquier tornillo o
+> tocar un componente.
+
+> **Proyecto**: Fabricaremos una pulsera antiestática casera con cable, pinzas caimán y resistencia de 1 MΩ.
+
+---
+
+## 2. Componentes Internos
+
+Al quitar la tapa del gabinete encuentras cinco componentes principales:
+
+<table>
+  <thead>
+    <tr>
+      <th>Componente</th>
+      <th>Identificación</th>
+      <th>Función</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <Icon
+          name="lucide:circuit-board"
+          class="inline w-5 h-5 align-text-bottom text-emerald-600"
+        />{" "}
+        <strong>Tarjeta madre</strong> (Motherboard)
+      </td>
+      <td>Placa grande al fondo, llena de circuitos y conectores.</td>
+      <td>Conecta todos los componentes entre sí.</td>
+    </tr>
+    <tr>
+      <td>
+        <Icon
+          name="lucide:cpu"
+          class="inline w-5 h-5 align-text-bottom text-sky-600"
+        />{" "}
+        <strong>Procesador</strong> (CPU)
+      </td>
+      <td>Chip cuadrado bajo un ventilador con disipador de metal.</td>
+      <td>
+        Ejecuta cálculos e instrucciones. No lo retiraremos hoy para no dañar la
+        pasta térmica.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <Icon
+          name="lucide:memory-stick"
+          class="inline w-5 h-5 align-text-bottom text-yellow-600"
+        />{" "}
+        <strong>Memoria RAM</strong>
+      </td>
+      <td>Barras rectangulares delgadas insertadas en ranuras largas.</td>
+      <td>
+        Almacena datos temporales de los programas activos. Sin RAM la PC
+        enciende pero no da video.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <Icon
+          name="lucide:hard-drive"
+          class="inline w-5 h-5 align-text-bottom text-blue-600"
+        />{" "}
+        <strong>Disco duro / SSD</strong>
+      </td>
+      <td>
+        Caja de metal de 2.5" o 3.5" (HDD) o placa sin partes móviles (SSD).
+      </td>
+      <td>
+        Guarda archivos, programas y el sistema operativo de forma permanente.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <Icon
+          name="lucide:battery-charging"
+          class="inline w-5 h-5 align-text-bottom text-red-600"
+        />{" "}
+        <strong>Fuente de poder</strong> (PSU)
+      </td>
+      <td>
+        Caja metálica grande con un ventilador y un haz de cables de colores.
+      </td>
+      <td>
+        Convierte la corriente alterna de la pared en voltajes que los
+        componentes usan (12V, 5V, 3.3V).
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 3. USB Booteable
+
+Para instalar un sistema operativo en un disco vacío, la computadora debe arrancar desde un medio externo. Una memoria USB booteable contiene el sistema listo para instalarse.
+
+<Icon
+  name="lucide:disc"
+  class="inline w-5 h-5 align-text-bottom text-blue-500"
+/>
+**Archivo ISO:** Copia exacta del sistema operativo. Usaremos Tiny11 (Windows 10
+reducido, más rápido y ligero).
+
+### Rufus
+
+<Icon
+  name="lucide:usb"
+  class="inline w-5 h-5 align-text-bottom text-amber-500"
+/>
+**Rufus:** Programa que escribe la ISO en la USB y la configura como dispositivo
+de arranque. Es gratuito, no necesita instalación y solo admite un sistema
+operativo por USB.
+
+> **Proceso:**
+>
+> 1. Conecta la USB.
+> 2. Abre Rufus. Selecciona la USB y el archivo ISO.
+> 3. Haz clic en "Empezar". Rufus borra la USB, escribe la ISO y la deja lista para bootear.
+
+![Interfaz de Rufus seleccionando una imagen ISO](@assets/images/lecciones/01-fundamentos-mantenimiento/01-introduccion-informatica/02-gestion-del-sistema-operativo/rufus.png)
+
+### Ventoy
+
+Con Ventoy instalas la herramienta una sola vez en la USB. Después copias los archivos ISO directamente como si fueran archivos normales. Puedes tener Windows 10, Windows 11 y Linux en la misma memoria y elegir cuál instalar al arrancar.
+
+### Comandos desde la terminal
+
+Antes de los programas con interfaz gráfica, se usaban comandos directos:
+
+- **Windows:** `diskpart` (herramienta de particionado desde línea de comandos).
+- **Linux:** `dd` (escribe la ISO directamente al disco). Un error en el destino borra todo el disco, sin confirmación.
+
+---
+
+## 4. Formateo e Instalación
+
+Formatear borra todas las particiones del disco y lo deja limpio para instalar desde cero.
+
+1. <Icon
+     name="lucide:keyboard"
+     class="inline w-5 h-5 align-text-bottom text-purple-600"
+   />
+   **Entrar al BIOS.** Reinicia la PC y presiona repetidamente `F2`, `F12`,
+   `Supr` o `Esc` según el modelo.
+2. <Icon
+     name="lucide:arrow-left-right"
+     class="inline w-5 h-5 align-text-bottom text-blue-600"
+   />
+   **Cambiar orden de arranque.** En el menú Boot, selecciona la USB como primer
+   dispositivo.
+3. <Icon
+     name="lucide:save"
+     class="inline w-5 h-5 align-text-bottom text-green-600"
+   />
+   **Guardar y salir.** La PC reinicia y arranca desde la USB.
+4. <Icon
+     name="lucide:monitor"
+     class="inline w-5 h-5 align-text-bottom text-sky-600"
+   />
+   **Inicia el instalador.** Selecciona idioma y haz clic en "Instalar ahora".
+5. <Icon
+     name="lucide:trash-2"
+     class="inline w-5 h-5 align-text-bottom text-red-600"
+   />
+   **Eliminar particiones.** Borra una por una todas las particiones hasta que
+   solo quede "Espacio sin asignar".
+6. <Icon
+     name="lucide:check-circle"
+     class="inline w-5 h-5 align-text-bottom text-emerald-600"
+   />
+   **Instalar.** Selecciona el espacio sin asignar y haz clic en "Siguiente".
+7. <Icon
+     name="lucide:user"
+     class="inline w-5 h-5 align-text-bottom text-gray-600"
+   />
+   **Configuración inicial.** Cuando pida conexión a internet, selecciona "No
+   tengo internet". Crea una cuenta local sin correo electrónico.
