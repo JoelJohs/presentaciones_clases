@@ -9,7 +9,7 @@ describe('Navigation Logic', () => {
         filePath: 'src/content/lecciones/01-modulo-fundamentos/01-conceptos/01-hardware-software.mdx',
         data: {
           title: 'Hardware y Software',
-          moduleTitle: 'Módulo 1: Fundamentos',
+          moduleTitle: '2 - Fundamentos y Mantenimiento',
           topicTitle: 'Tema 1: Conceptos Generales',
           fecha: '20-06-2026'
         }
@@ -18,29 +18,32 @@ describe('Navigation Logic', () => {
         id: '00-inicio/02-plan-de-estudio.mdx',
         filePath: 'src/content/lecciones/00-inicio/02-plan-de-estudio.mdx',
         data: {
-          title: 'Plan de Estudio'
+          title: 'Plan de Estudio',
+          moduleTitle: '0 - Recursos',
+          topicTitle: 'Plan de Estudio'
         }
       },
       {
         id: '00-inicio/01-presentacion.mdx',
         filePath: 'src/content/lecciones/00-inicio/01-presentacion.mdx',
         data: {
-          title: 'Presentación'
+          title: 'Presentación',
+          moduleTitle: '1 - Presentación',
+          topicTitle: 'General'
         }
       }
     ];
 
     const result = getNavigationStructure(mockEntries as any);
 
-    // Initial pages (no moduleTitle) should be first, sorted by physical filename
-    expect(result.initialPages[0].title).toBe('Presentación');
-    expect(result.initialPages[1].title).toBe('Plan de Estudio');
+    // All entries have moduleTitle, so initialPages is empty
+    expect(result.initialPages.length).toBe(0);
 
-    // Modules should group topics
-    expect(result.modules.length).toBe(1);
-    expect(result.modules[0].title).toBe('Módulo 1: Fundamentos');
-    expect(result.modules[0].topics[0].title).toBe('Tema 1: Conceptos Generales');
-    expect(result.modules[0].topics[0].lessons[0].title).toBe('Hardware y Software');
+    // Modules should group by moduleTitle
+    expect(result.modules.length).toBe(3);
+    expect(result.modules[0].title).toBe('0 - Recursos');
+    expect(result.modules[1].title).toBe('1 - Presentación');
+    expect(result.modules[2].title).toBe('2 - Fundamentos y Mantenimiento');
 
     // Flat ordered list check for prev/next calculations
     expect(result.allLessonsOrdered.length).toBe(3);
@@ -76,7 +79,7 @@ describe('Navigation Logic', () => {
         id: '01-modulo-fundamentos/01-conceptos/01-hardware-software.mdx',
         data: {
           title: 'Hardware y Software',
-          moduleTitle: 'Módulo 1: Fundamentos',
+          moduleTitle: '2 - Fundamentos y Mantenimiento',
           topicTitle: 'Tema 1: Conceptos Generales',
           fecha: '20-06-2026'
         }
@@ -85,7 +88,7 @@ describe('Navigation Logic', () => {
         id: '01-modulo-fundamentos/01-conceptos/02-exploracion-so.mdx',
         data: {
           title: 'Exploración del SO',
-          moduleTitle: 'Módulo 1: Fundamentos',
+          moduleTitle: '2 - Fundamentos y Mantenimiento',
           topicTitle: 'Tema 1: Conceptos Generales',
           fecha: '27-06-2026'
         }
@@ -93,30 +96,29 @@ describe('Navigation Logic', () => {
       {
         id: '00-inicio/01-presentacion.mdx',
         data: {
-          title: 'Presentación'
+          title: 'Presentación',
+          moduleTitle: '1 - Presentación',
+          topicTitle: 'General'
         }
       }
     ];
 
-    // Force process.env.SHOW_ALL_LESSONS to empty to test filter behavior
     process.env.SHOW_ALL_LESSONS = 'false';
     const originalDev = import.meta.env.DEV;
     // @ts-ignore
     import.meta.env.DEV = false;
 
     try {
-      // Mock build time as 2026-06-20 (only Lesson 1 released)
       const testDate = new Date('2026-06-20T12:00:00-06:00');
       const result = getNavigationStructure(mockEntries as any, testDate);
 
-      // Presentación is always visible
-      expect(result.initialPages.length).toBe(1);
-      expect(result.initialPages[0].title).toBe('Presentación');
+      // Presentación is always visible (no fecha = no date gating)
+      expect(result.modules.find(m => m.title === '1 - Presentación')).toBeDefined();
 
-      // Lesson 1 is visible
-      expect(result.modules.length).toBe(1);
-      expect(result.modules[0].topics[0].lessons.length).toBe(1);
-      expect(result.modules[0].topics[0].lessons[0].title).toBe('Hardware y Software');
+      // Module 2 has 1 visible lesson (L1 released, L2 future)
+      const mod2 = result.modules.find(m => m.title === '2 - Fundamentos y Mantenimiento')!;
+      expect(mod2.topics[0].lessons.length).toBe(1);
+      expect(mod2.topics[0].lessons[0].title).toBe('Hardware y Software');
       
       // Lesson 2 is hidden because it releases on 2026-06-27
       const hasLesson2 = result.allLessonsOrdered.some(l => l.title === 'Exploración del SO');
@@ -133,7 +135,7 @@ describe('Navigation Logic', () => {
         id: '01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software/index.mdx',
         data: {
           title: 'Hardware y Software',
-          moduleTitle: 'Módulo 1: Fundamentos',
+          moduleTitle: '2 - Fundamentos y Mantenimiento',
           topicTitle: 'Tema 1: Introducción a la Informática',
           fecha: '20-06-2026'
         }
@@ -142,7 +144,7 @@ describe('Navigation Logic', () => {
         id: '01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software/repaso.mdx',
         data: {
           title: 'Repaso: Hardware y Software',
-          moduleTitle: 'Módulo 1: Fundamentos',
+          moduleTitle: '2 - Fundamentos y Mantenimiento',
           topicTitle: 'Tema 1: Introducción a la Informática',
           fecha: '20-06-2026'
         }
@@ -160,7 +162,7 @@ describe('Navigation Logic', () => {
         id: '01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software/repaso.mdx',
         data: {
           title: 'Repaso: Hardware y Software',
-          moduleTitle: 'Módulo 1: Fundamentos',
+          moduleTitle: '2 - Fundamentos y Mantenimiento',
           topicTitle: 'Tema 1: Introducción a la Informática',
           fecha: '20-06-2026'
         }
@@ -169,7 +171,7 @@ describe('Navigation Logic', () => {
         id: '01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software/detalles.mdx',
         data: {
           title: 'Detalles de la práctica',
-          moduleTitle: 'Módulo 1: Fundamentos',
+          moduleTitle: '2 - Fundamentos y Mantenimiento',
           topicTitle: 'Tema 1: Introducción a la Informática',
           fecha: '20-06-2026'
         }
@@ -178,7 +180,7 @@ describe('Navigation Logic', () => {
         id: '01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software/index.mdx',
         data: {
           title: 'Hardware y Software',
-          moduleTitle: 'Módulo 1: Fundamentos',
+          moduleTitle: '2 - Fundamentos y Mantenimiento',
           topicTitle: 'Tema 1: Introducción a la Informática',
           fecha: '20-06-2026'
         }
@@ -187,7 +189,7 @@ describe('Navigation Logic', () => {
         id: '01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software/contenido-audiovisual.mdx',
         data: {
           title: 'Contenido Audiovisual',
-          moduleTitle: 'Módulo 1: Fundamentos',
+          moduleTitle: '2 - Fundamentos y Mantenimiento',
           topicTitle: 'Tema 1: Introducción a la Informática',
           fecha: '20-06-2026'
         }
@@ -201,5 +203,3 @@ describe('Navigation Logic', () => {
     expect(result.allLessonsOrdered[3].title).toBe('Repaso: Hardware y Software');
   });
 });
-
-

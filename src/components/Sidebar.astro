@@ -7,81 +7,112 @@ interface Props {
 }
 
 const { nav, activeSlug } = Astro.props;
+
+function moduleBadgeClass(index: number): string {
+  const num = index + 1;
+  if (num > 7) return 'module-badge-m7';
+  return `module-badge-m${num}` as const;
+}
 ---
 
-<aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-80 -translate-x-full border-r border-brand-border bg-brand-sidebar-bg p-6 transition-transform duration-300 lg:translate-x-0 overflow-y-auto">
-  <div class="mb-8 flex items-center justify-between">
-    <a href="/" class="text-xl font-bold tracking-tight text-brand-primary hover:text-brand-accent focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary rounded">
+<aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-72 -translate-x-full border-r border-brand-border bg-brand-sidebar-bg transition-transform duration-300 lg:translate-x-0 overflow-y-auto flex flex-col">
+  <div class="p-5 border-b border-brand-border">
+    <a href="/" class="flex items-center gap-2 font-display font-bold text-brand-navy text-lg tracking-tight hover:text-brand-primary transition-colors duration-200">
+      <svg class="h-6 w-6 text-brand-primary flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342" />
+      </svg>
       Plataforma de Estudios
     </a>
   </div>
 
-  <nav class="space-y-6">
-    <!-- Initial Pages -->
-    <ul class="space-y-2">
-      {nav.initialPages.map((page) => (
-        <li>
-          <a
-            href={`/${page.slug}`}
-            class={`block rounded-md px-3 py-2 text-sm font-medium border-l-2 transition-all duration-200 ease-in-out focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
-              activeSlug === page.slug
-                ? 'bg-brand-callout-bg text-brand-primary border-brand-primary'
-                : 'text-slate-600 hover:bg-brand-hover-bg hover:text-brand-primary dark:text-slate-400 border-transparent'
-            }`}
-          >
-            {page.title}
-          </a>
-        </li>
-      ))}
-    </ul>
-
-    <!-- Modules -->
-    {nav.modules.map((mod) => {
+  <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
+    {nav.modules.map((mod, modIdx) => {
       const isModuleActive = mod.topics.some((topic) =>
         topic.lessons.some((lesson) => lesson.slug === activeSlug)
       );
+      const hasSingleTopic = mod.topics.length === 1;
+
       return (
-        <details class="group space-y-2" open={isModuleActive}>
-          <summary class="list-none cursor-pointer flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-brand-muted hover:text-brand-primary select-none">
-            <span>{mod.title}</span>
-            <svg class="h-4 w-4 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <details class="group" open={isModuleActive}>
+          <summary class="list-none cursor-pointer flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-semibold uppercase tracking-wider text-brand-muted hover:text-brand-primary hover:bg-brand-hover-bg select-none transition-all duration-200">
+            <span class={`module-badge ${moduleBadgeClass(modIdx)}`}>{modIdx}</span>
+            <span class="flex-1">{mod.title}</span>
+            <svg class="h-3.5 w-3.5 transition-transform duration-200 group-open:rotate-180 text-brand-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
             </svg>
           </summary>
-          
-          {mod.topics.map((topic) => {
-            const isTopicActive = topic.lessons.some((lesson) => lesson.slug === activeSlug);
-            return (
-              <details class="group space-y-1" open={isTopicActive}>
-                <summary class="list-none cursor-pointer flex items-center justify-between px-3 text-xs font-medium text-brand-muted hover:text-brand-primary select-none">
-                  <span>{topic.title}</span>
-                  <svg class="h-4 w-4 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </summary>
-                <ul class="space-y-1 pl-3">
-                  {topic.lessons.map((lesson) => {
-                    const isRepaso = lesson.slug.endsWith('/repaso');
-                    const displayTitle = isRepaso ? '↳ Repaso' : lesson.title;
-                    return (
-                      <li class={isRepaso ? 'pl-4' : ''}>
-                        <a
-                          href={`/${lesson.slug}`}
-                          class={`block rounded-md px-3 py-1.5 text-xs font-medium border-l-2 transition-all duration-200 ease-in-out focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary ${
-                            activeSlug === lesson.slug
-                              ? 'bg-brand-callout-bg text-brand-primary border-brand-primary'
-                              : 'text-slate-600 hover:bg-brand-hover-bg hover:text-brand-primary dark:text-slate-400 border-transparent'
-                          }`}
-                        >
-                          {displayTitle}
-                        </a>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </details>
-            );
-          })}
+
+          {hasSingleTopic ? (
+            /* Single topic → render lessons flat */
+            <ul class="mt-1 ml-1 space-y-0.5">
+              {mod.topics[0].lessons.map((lesson) => {
+                const isRepaso = lesson.slug.endsWith('/repaso');
+                const isActive = activeSlug === lesson.slug;
+                return (
+                  <li>
+                    <a
+                      href={`/${lesson.slug}`}
+                      class={`flex items-center gap-2 rounded-md px-3 py-1.5 text-xs font-medium border-l-[3px] transition-all duration-200 ${
+                        isActive
+                          ? 'bg-brand-hover-bg text-brand-primary border-brand-primary font-semibold'
+                          : 'text-brand-muted hover:bg-brand-hover-bg hover:text-brand-primary border-transparent'
+                      } ${isRepaso ? 'pl-9' : 'pl-6'}`}
+                    >
+                      {isRepaso ? (
+                        <svg class="h-3 w-3 flex-shrink-0 text-brand-amber" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182" />
+                        </svg>
+                      ) : null}
+                      <span>{isRepaso ? 'Repaso' : lesson.title}</span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            /* Multiple topics → nested accordion */
+            <div class="mt-2 ml-1 pl-9 border-l-2 border-brand-border space-y-2">
+              {mod.topics.map((topic) => {
+                const isTopicActive = topic.lessons.some((lesson) => lesson.slug === activeSlug);
+                return (
+                  <details class="group" open={isTopicActive}>
+                    <summary class="list-none cursor-pointer flex items-center gap-2 py-1 text-xs font-medium text-brand-muted hover:text-brand-primary select-none transition-colors duration-200">
+                      <span class="topic-bullet flex-shrink-0"></span>
+                      <span class="flex-1">{topic.title}</span>
+                      <svg class="h-3 w-3 transition-transform duration-200 group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </summary>
+                    <ul class="mt-1 ml-3 space-y-0.5 border-l border-brand-border pl-3">
+                      {topic.lessons.map((lesson) => {
+                        const isRepaso = lesson.slug.endsWith('/repaso');
+                        const isActive = activeSlug === lesson.slug;
+                        return (
+                          <li>
+                            <a
+                              href={`/${lesson.slug}`}
+                              class={`flex items-center gap-2 rounded-md px-2.5 py-1.5 text-xs font-medium border-l-[3px] transition-all duration-200 ${
+                                isActive
+                                  ? 'bg-brand-hover-bg text-brand-primary border-brand-primary font-semibold'
+                                  : 'text-brand-muted hover:bg-brand-hover-bg hover:text-brand-primary border-transparent'
+                              } ${isRepaso ? 'pl-6' : ''}`}
+                            >
+                              {isRepaso ? (
+                                <svg class="h-3 w-3 flex-shrink-0 text-brand-amber" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182" />
+                                </svg>
+                              ) : null}
+                              <span>{isRepaso ? 'Repaso' : lesson.title}</span>
+                            </a>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </details>
+                );
+              })}
+            </div>
+          )}
         </details>
       );
     })}
@@ -89,15 +120,10 @@ const { nav, activeSlug } = Astro.props;
 </aside>
 
 <style>
-  /* Ocultar flechas nativas de <summary> */
   summary::-webkit-details-marker {
     display: none;
   }
   summary {
     list-style: none;
   }
-  details[open] > summary > svg {
-    transform: rotate(180deg);
-  }
 </style>
-

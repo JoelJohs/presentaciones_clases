@@ -5,13 +5,9 @@ import { getNavigationStructure } from '../utils/navigation';
 
 export async function getStaticPaths() {
   const lecciones = await getCollection('lecciones');
-  
-  // Use getNavigationStructure to get the list of lessons that are currently released
-  // at build time. This filters out future entries in production.
   const nav = getNavigationStructure(lecciones);
 
   return nav.allLessonsOrdered.map((lessonLink) => {
-    // Find the original collection entry
     const leccion = lecciones.find(l => l.id === lessonLink.id)!;
     return {
       params: { slug: lessonLink.slug },
@@ -23,10 +19,8 @@ export async function getStaticPaths() {
 const { leccion, lecciones, nav: propsNav } = Astro.props;
 const { Content } = await render(leccion);
 
-// Build navigation (reuse pre-calculated structure if available to optimize build performance)
 const nav = propsNav || getNavigationStructure(lecciones);
 
-// Find index of active lesson to generate Prev / Next
 const activeSlug = leccion.id.replace(/\.(mdx|md)$/, '').replace(/\/index$/, '');
 const currentIndex = nav.allLessonsOrdered.findIndex(l => l.slug === activeSlug);
 
@@ -35,40 +29,63 @@ const nextLesson = currentIndex < nav.allLessonsOrdered.length - 1 ? nav.allLess
 ---
 
 <Layout title={leccion.data.title} nav={nav} activeSlug={activeSlug}>
-  <!-- Cabecera de Página (Estilo Documento) -->
+  <!-- Breadcrumb -->
   {leccion.data.moduleTitle && (
-    <div class="mb-8 text-xs font-mono text-slate-400 dark:text-slate-500 border-b border-slate-200 dark:border-slate-800 pb-3 select-none">
-      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-1 sm:gap-4">
-        <span class="font-semibold uppercase tracking-wider">{leccion.data.moduleTitle}</span>
+    <div class="mb-8">
+      <nav class="flex items-center gap-2 text-xs font-medium text-brand-muted mb-4">
+        <a href="/" class="hover:text-brand-primary transition-colors">
+          <svg class="h-3.5 w-3.5 inline" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+          </svg>
+        </a>
+        <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+        </svg>
+        <span class="font-semibold uppercase tracking-wider text-brand-primary">{leccion.data.moduleTitle}</span>
+        {leccion.data.topicTitle && (
+          <>
+            <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            </svg>
+            <span>{leccion.data.topicTitle}</span>
+          </>
+        )}
+      </nav>
+
+      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-2">
+        <h1 class="font-display font-extrabold text-brand-navy text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-tight">
+          {leccion.data.title}
+        </h1>
         {leccion.data.fecha && (
-          <span class="whitespace-nowrap">{leccion.data.fecha}</span>
+          <span class="text-xs text-brand-muted font-mono whitespace-nowrap flex-shrink-0">
+            <svg class="h-3 w-3 inline mr-1" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+            </svg>
+            {leccion.data.fecha}
+          </span>
         )}
       </div>
-      {leccion.data.topicTitle && (
-        <div class="mt-1 text-slate-500 dark:text-slate-400 font-medium">
-          {leccion.data.topicTitle}
-        </div>
-      )}
     </div>
   )}
 
-  <article class="prose text-slate-800 dark:text-slate-200">
+  <!-- Article Content -->
+  <article class="prose">
     <Content />
   </article>
 
-  <!-- Prev/Next Navigation Controls -->
-  <div class="mt-16 flex flex-col sm:flex-row gap-4 border-t border-slate-200 pt-8 dark:border-slate-800">
+  <!-- Prev/Next Navigation -->
+  <div class="mt-16 flex flex-col sm:flex-row gap-3 border-t border-brand-border pt-8">
     {prevLesson ? (
       <a
         href={`/${prevLesson.slug}`}
-        class="flex-1 inline-flex items-center gap-3 justify-start rounded-lg border border-slate-200 px-5 py-4 text-sm font-semibold transition-all hover:bg-slate-100 hover:text-brand-primary dark:border-slate-800 dark:hover:bg-slate-900/60 min-h-[52px]"
+        class="nav-card-lift flex-1 inline-flex items-center gap-3 justify-start rounded-xl px-5 py-4 text-sm font-semibold min-h-[52px]"
       >
-        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+        <svg class="h-5 w-5 flex-shrink-0 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
         </svg>
-        <div class="text-left">
-          <span class="block text-xs font-normal text-slate-400 dark:text-slate-500 uppercase tracking-wider">Anterior</span>
-          <span class="truncate max-w-[200px] block">{prevLesson.title}</span>
+        <div class="text-left min-w-0">
+          <span class="block text-xs font-normal text-brand-muted uppercase tracking-wider">Anterior</span>
+          <span class="block truncate text-brand-text">{prevLesson.title}</span>
         </div>
       </a>
     ) : <div class="flex-1"></div>}
@@ -76,14 +93,14 @@ const nextLesson = currentIndex < nav.allLessonsOrdered.length - 1 ? nav.allLess
     {nextLesson ? (
       <a
         href={`/${nextLesson.slug}`}
-        class="flex-1 inline-flex items-center gap-3 justify-end rounded-lg border border-slate-200 px-5 py-4 text-sm font-semibold transition-all hover:bg-slate-100 hover:text-brand-primary dark:border-slate-800 dark:hover:bg-slate-900/60 min-h-[52px] text-right"
+        class="nav-card-lift flex-1 inline-flex items-center gap-3 justify-end rounded-xl px-5 py-4 text-sm font-semibold min-h-[52px] text-right"
       >
-        <div class="text-right">
-          <span class="block text-xs font-normal text-slate-400 dark:text-slate-500 uppercase tracking-wider">Siguiente</span>
-          <span class="truncate max-w-[200px] block">{nextLesson.title}</span>
+        <div class="text-right min-w-0">
+          <span class="block text-xs font-normal text-brand-muted uppercase tracking-wider">Siguiente</span>
+          <span class="block truncate text-brand-text">{nextLesson.title}</span>
         </div>
-        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+        <svg class="h-5 w-5 flex-shrink-0 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
         </svg>
       </a>
     ) : <div class="flex-1"></div>}

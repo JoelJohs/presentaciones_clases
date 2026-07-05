@@ -46,9 +46,6 @@ describe('global.css prose table styles', () => {
     expect(cssContent).toMatch(/\.prose\s+table\s*\{[^}]*display:\s*block/);
     expect(cssContent).toMatch(/\.prose\s+table\s*\{[^}]*overflow-x:\s*auto/);
     
-    // Assert curricular study plan table scroll rules
-    expect(cssContent).toMatch(/\.plan-estudio-wrapper\s+table\s*\{[^}]*display:\s*block\s*!important/);
-    expect(cssContent).toMatch(/\.plan-estudio-wrapper\s+table\s*\{[^}]*overflow-x:\s*auto\s*!important/);
   });
 
   it('should contain CSS styles for details summary toggle elements in prose', () => {

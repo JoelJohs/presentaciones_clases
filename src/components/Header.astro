@@ -1,45 +1,47 @@
 ---
 ---
 
-<header class="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-200 bg-white/80 px-6 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/80">
-  <div class="flex items-center gap-4">
-    <!-- Mobile toggle -->
+<header class="glass sticky top-0 z-30 flex h-14 w-full items-center justify-between px-4 sm:px-6">
+  <div class="flex items-center gap-3">
     <button
       id="menu-toggle"
       type="button"
-      class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-slate-200 text-slate-500 hover:bg-slate-100 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary dark:border-slate-800 dark:text-slate-400 dark:hover:bg-slate-800 lg:hidden"
+      class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 hover:bg-brand-hover-bg hover:text-brand-primary focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary lg:hidden transition-colors duration-200"
       aria-label="Abrir Menú"
     >
-      <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
       </svg>
     </button>
 
-    <!-- Desktop toggle -->
     <button
       id="sidebar-toggle"
       type="button"
-      class="hidden lg:inline-flex h-10 w-10 items-center justify-center rounded-md border border-slate-200 text-slate-500 hover:bg-slate-100 dark:border-slate-800 dark:text-slate-400 dark:hover:bg-slate-800 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
+      class="hidden lg:inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 hover:bg-brand-hover-bg hover:text-brand-primary focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary transition-colors duration-200"
       aria-label="Alternar Temario"
     >
-      <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-9a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 004.5 21h9a2.25 2.25 0 002.25-2.25V15M21 12H9m12 0l-3-3m3 3l-3 3" />
       </svg>
     </button>
-    
-    <span class="font-semibold text-slate-800 dark:text-slate-200 lg:hidden">Temario</span>
+
+    <a href="/" class="flex items-center gap-2 font-display font-bold text-brand-navy text-base tracking-tight">
+      <svg class="h-6 w-6 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342" />
+      </svg>
+      <span class="hidden sm:inline">Plataforma de Estudios</span>
+    </a>
   </div>
 
-  <div class="flex items-center gap-4">
-    <!-- Desktop Font Sizing Modes Switcher -->
-    <div class="hidden lg:flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
+  <div class="flex items-center gap-2">
+    <div class="hidden lg:flex items-center gap-1 bg-brand-sidebar-bg p-0.5 rounded-lg border border-brand-border">
       <button
         id="btn-reading-mode"
         type="button"
-        class="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold transition-all hover:text-brand-primary bg-white dark:bg-slate-700 text-brand-primary shadow-sm"
+        class="mode-btn mode-btn-active flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all duration-200"
         aria-label="Modo Lectura"
       >
-        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
         </svg>
         Lectura
@@ -48,29 +50,26 @@
       <button
         id="btn-presentation-mode"
         type="button"
-        class="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold transition-all hover:text-brand-primary text-slate-500 dark:text-slate-400"
+        class="mode-btn flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 text-brand-muted hover:text-brand-primary"
         aria-label="Modo Presentación"
       >
-        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 20.25h12m-7.5-3v3m3-3v3m-10.125-3h17.25c.621 0 1.125-.504 1.125-1.125V4.875c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125z" />
         </svg>
         Presentación
       </button>
     </div>
 
-    <!-- Dark Mode Button -->
     <button
       id="theme-toggle"
       type="button"
-      class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-slate-200 text-slate-500 hover:bg-slate-100 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary dark:border-slate-800 dark:text-slate-400 dark:hover:bg-slate-800"
+      class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 hover:bg-brand-hover-bg hover:text-brand-primary focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary transition-colors duration-200"
       aria-label="Alternar Tema"
     >
-      <!-- Sun Icon -->
-      <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <svg id="theme-toggle-light-icon" class="hidden h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m0 13.5V21M4.22 4.22l1.636 1.636m12.294 12.294l1.636 1.636M3 12h2.25m13.5 0H21m-16.22 6.22l1.636-1.636m12.294-12.294l1.636-1.636M12 7.5a4.5 4.5 0 100 9 4.5 4.5 0 000-9z" />
       </svg>
-      <!-- Moon Icon -->
-      <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <svg id="theme-toggle-dark-icon" class="hidden h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
       </svg>
     </button>

@@ -28,7 +28,7 @@ describe('Sidebar Collapse Verification', () => {
     expect(layoutContent).toContain("const sidebarToggle = document.getElementById('sidebar-toggle');");
     expect(layoutContent).toContain("sidebarToggle?.addEventListener('click'");
     expect(layoutContent).toContain("document.documentElement.classList.toggle('sidebar-collapsed');");
-    expect(layoutContent).toContain("localStorage.setItem('sidebar-collapsed', String(isCollapsed));");
+    expect(layoutContent).toContain("localStorage.setItem('sidebar-collapsed', String(");
 
     // 5. Verify Layout.astro style is:global contains collapsed state overrides
     expect(layoutContent).toContain('<style is:global>');

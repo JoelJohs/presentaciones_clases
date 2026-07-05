@@ -75,18 +75,15 @@ export function getNavigationStructure(entries: any[], currentDate: Date = new D
     let releaseDateStr: string | undefined = undefined;
     let isReleased = true;
 
-    if (!isInitial) {
+    // Only date-gate entries that have a fecha AND are not initial pages
+    if (!isInitial && entry.data.fecha) {
       const fechaStr = entry.data.fecha;
-      if (fechaStr) {
-        const releaseDate = parseDDMMAAAA(fechaStr);
-        if (releaseDate) {
-          releaseDateStr = releaseDate.toISOString();
-          // Release lessons 24 hours before class to allow teacher/student preparation the day before
-          const releaseLimit = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
-          isReleased = showAll || releaseLimit >= releaseDate;
-        } else {
-          isReleased = false;
-        }
+      const releaseDate = parseDDMMAAAA(fechaStr);
+      if (releaseDate) {
+        releaseDateStr = releaseDate.toISOString();
+        // Release lessons 24 hours before class to allow teacher/student preparation the day before
+        const releaseLimit = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
+        isReleased = showAll || releaseLimit >= releaseDate;
       } else {
         isReleased = false;
       }
@@ -132,7 +129,7 @@ export function getNavigationStructure(entries: any[], currentDate: Date = new D
 
   return {
     initialPages,
-    modules: Array.from(modulesMap.values()),
+    modules: Array.from(modulesMap.values()).sort((a, b) => a.title.localeCompare(b.title)),
     allLessonsOrdered,
   };
 }

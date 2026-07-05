@@ -1,266 +1,573 @@
 ---
 title: "Plan de Estudio"
-moduleTitle: "Presentación"
-topicTitle: "Inicio"
-fecha: "01-06-2026"
+moduleTitle: "0 - Recursos"
+topicTitle: "Plan de Estudio"
+fecha: "05-07-2026"
 ---
 
-# Plan de Estudio
+import PlanEstudio from "../../../components/PlanEstudio.astro";
 
-Este plan está diseñado para guiarte en el aprendizaje de la computación e informática de manera práctica y directa durante el año escolar (56 semanas divididas en 7 módulos).
-
-
-
-
-
-<div class="plan-estudio-wrapper">
-
-
-<div class="modulo" style="--accent:#C99A3D">
-<div class="modulo-head">
-<div class="modulo-badge" style="background:#C99A3D">1</div>
-<div class="modulo-titles">
-<div class="eyebrow-mini">Módulo 1</div>
-<h2 class="modulo-title">Fundamentos y Mantenimiento</h2>
-</div>
-<div class="modulo-weeks">5<span>semanas</span></div>
-</div>
-<div class="modulo-track"><div style="width:8.9%; background:#C99A3D"></div></div>
-<div class="tema">
-<h3 class="tema-title">Tema 1: Introducción a la Informática</h3>
-<table>
-<thead><tr><th>Subtema</th><th>Descripción</th><th class="dur-h">Duración</th></tr></thead>
-<tbody>
-<tr><td class="subtema">Hardware y Software</td><td class="desc">Diferenciación entre hardware y software, introducción al sistema operativo, archivos y extensiones.</td><td class="dur"><span class="pill">1</span></td></tr>
-<tr><td class="subtema">Gestión del Sistema Operativo</td><td class="desc">Uso del explorador de archivos, administrador de tareas y comandos básicos en CMD.</td><td class="dur"><span class="pill">1</span></td></tr>
-</tbody>
-</table>
-</div>
-<div class="tema">
-<h3 class="tema-title">Tema 2: Hardware y Mantenimiento</h3>
-<table>
-<thead><tr><th>Subtema</th><th>Descripción</th><th class="dur-h">Duración</th></tr></thead>
-<tbody>
-<tr><td class="subtema">Componentes y Ensamble</td><td class="desc">Identificación de componentes internos, normas de seguridad, ensamble y desensamble de hardware, e instalación limpia del sistema operativo.</td><td class="dur"><span class="pill">1</span></td></tr>
-<tr><td class="subtema">Mantenimiento Preventivo</td><td class="desc">Limpieza física de componentes, aplicación de pasta térmica, optimización de software y monitoreo preventivo de discos.</td><td class="dur"><span class="pill">1</span></td></tr>
-<tr><td class="subtema">Mantenimiento Correctivo</td><td class="desc">Diagnóstico de fallas por pitidos de placa o pantallas azules, reemplazo de piezas dañadas y restauración de sistemas.</td><td class="dur"><span class="pill">1</span></td></tr>
-</tbody>
-</table>
-</div>
-</div>
-
-<div class="modulo" style="--accent:#8B5E83">
-<div class="modulo-head">
-<div class="modulo-badge" style="background:#8B5E83">2</div>
-<div class="modulo-titles">
-<div class="eyebrow-mini">Módulo 2</div>
-<h2 class="modulo-title">Ofimática</h2>
-</div>
-<div class="modulo-weeks">4<span>semanas</span></div>
-</div>
-<div class="modulo-track"><div style="width:7.1%; background:#8B5E83"></div></div>
-<div class="tema">
-<h3 class="tema-title">Tema 1: Documentos y Presentaciones</h3>
-<table>
-<thead><tr><th>Subtema</th><th>Descripción</th><th class="dur-h">Duración</th></tr></thead>
-<tbody>
-<tr><td class="subtema">Word Profesional</td><td class="desc">Uso avanzado de estilos, creación de tablas y exportación correcta a formato PDF.</td><td class="dur"><span class="pill">1</span></td></tr>
-<tr><td class="subtema">PowerPoint Efectivo</td><td class="desc">Reglas de diseño visual, acomodo de información y creación de presentaciones interactivas.</td><td class="dur"><span class="pill">1</span></td></tr>
-</tbody>
-</table>
-</div>
-<div class="tema">
-<h3 class="tema-title">Tema 2: Hojas de Cálculo</h3>
-<table>
-<thead><tr><th>Subtema</th><th>Descripción</th><th class="dur-h">Duración</th></tr></thead>
-<tbody>
-<tr><td class="subtema">Excel Básico</td><td class="desc">Implementación de fórmulas matemáticas esenciales y manejo de porcentajes.</td><td class="dur"><span class="pill">1</span></td></tr>
-<tr><td class="subtema">Excel Intermedio</td><td class="desc">Uso de condicionales SI(), función BUSCARV() y creación de gráficas para interpretar datos.</td><td class="dur"><span class="pill">1</span></td></tr>
-</tbody>
-</table>
-</div>
-</div>
-
-<div class="modulo" style="--accent:#2F6F6B">
-<div class="modulo-head">
-<div class="modulo-badge" style="background:#2F6F6B">3</div>
-<div class="modulo-titles">
-<div class="eyebrow-mini">Módulo 3</div>
-<h2 class="modulo-title">Pensamiento Computacional y Python</h2>
-</div>
-<div class="modulo-weeks">16<span>semanas</span></div>
-</div>
-<div class="modulo-track"><div style="width:28.6%; background:#2F6F6B"></div></div>
-<div class="tema">
-<h3 class="tema-title">Tema 1: Lógica y Algoritmia</h3>
-<table>
-<thead><tr><th>Subtema</th><th>Descripción</th><th class="dur-h">Duración</th></tr></thead>
-<tbody>
-<tr><td class="subtema">Lógica Secuencial</td><td class="desc">Desarrollo de algoritmos de la vida diaria paso a paso para entrenar la mente.</td><td class="dur"><span class="pill">1</span></td></tr>
-<tr><td class="subtema">Diagramas de Flujo</td><td class="desc">Mapeo visual de decisiones lógicas (If/Else) utilizando herramientas ligeras de diagramación.</td><td class="dur"><span class="pill">1</span></td></tr>
-<tr><td class="subtema">Pruebas de Escritorio</td><td class="desc">Simulación mental y en papel de cómo cambian los valores de un algoritmo en ejecución.</td><td class="dur"><span class="pill">1</span></td></tr>
-</tbody>
-</table>
-</div>
-<div class="tema">
-<h3 class="tema-title">Tema 2: Bases de Python</h3>
-<table>
-<thead><tr><th>Subtema</th><th>Descripción</th><th class="dur-h">Duración</th></tr></thead>
-<tbody>
-<tr><td class="subtema">Sintaxis e I/O</td><td class="desc">Variables, uso de print() para mostrar mensajes e input() para recibir datos del usuario.</td><td class="dur"><span class="pill">2</span></td></tr>
-<tr><td class="subtema">Operadores y Tipos de Datos</td><td class="desc">Manipulación de números (int, float), cadenas de texto (strings) y operaciones matemáticas.</td><td class="dur"><span class="pill">2</span></td></tr>
-</tbody>
-</table>
-</div>
-<div class="tema">
-<h3 class="tema-title">Tema 3: Estructuras de Control</h3>
-<table>
-<thead><tr><th>Subtema</th><th>Descripción</th><th class="dur-h">Duración</th></tr></thead>
-<tbody>
-<tr><td class="subtema">Condicionales (If, Elif, Else)</td><td class="desc">Creación de bifurcaciones en el código. Práctica con cuestionarios y validaciones de datos.</td><td class="dur"><span class="pill">2</span></td></tr>
-<tr><td class="subtema">Ciclos (For, While)</td><td class="desc">Automatización de tareas repetitivas. Prácticas con contadores y juegos de adivinanza.</td><td class="dur"><span class="pill">3</span></td></tr>
-</tbody>
-</table>
-</div>
-<div class="tema">
-<h3 class="tema-title">Tema 4: Funciones y Modularidad</h3>
-<table>
-<thead><tr><th>Subtema</th><th>Descripción</th><th class="dur-h">Duración</th></tr></thead>
-<tbody>
-<tr><td class="subtema">Creación de Funciones</td><td class="desc">Empaquetado de código reutilizable con def para mantener el programa limpio y ordenado.</td><td class="dur"><span class="pill">2</span></td></tr>
-<tr><td class="subtema">Proyecto Intermedio de Consola</td><td class="desc">Desarrollo de una calculadora avanzada, trivia o sistema básico para consolidar la lógica de Python.</td><td class="dur"><span class="pill">2</span></td></tr>
-</tbody>
-</table>
-</div>
-</div>
-
-<div class="modulo" style="--accent:#3D6FA8">
-<div class="modulo-head">
-<div class="modulo-badge" style="background:#3D6FA8">4</div>
-<div class="modulo-titles">
-<div class="eyebrow-mini">Módulo 4</div>
-<h2 class="modulo-title">Desarrollo Web</h2>
-</div>
-<div class="modulo-weeks">14<span>semanas</span></div>
-</div>
-<div class="modulo-track"><div style="width:25%; background:#3D6FA8"></div></div>
-<div class="tema">
-<h3 class="tema-title">Tema 1: Estructura Estática (HTML y CSS)</h3>
-<table>
-<thead><tr><th>Subtema</th><th>Descripción</th><th class="dur-h">Duración</th></tr></thead>
-<tbody>
-<tr><td class="subtema">HTML5 Semántico</td><td class="desc">Etiquetas esenciales, enlaces, imágenes y listas para construir la estructura de una página web.</td><td class="dur"><span class="pill">2</span></td></tr>
-<tr><td class="subtema">CSS3 y Diseño Visual</td><td class="desc">Uso del Box Model, selectores, colores y tipografías para darle estilo a la estructura HTML.</td><td class="dur"><span class="pill">3</span></td></tr>
-</tbody>
-</table>
-</div>
-<div class="tema">
-<h3 class="tema-title">Tema 2: Interactividad (JavaScript)</h3>
-<table>
-<thead><tr><th>Subtema</th><th>Descripción</th><th class="dur-h">Duración</th></tr></thead>
-<tbody>
-<tr><td class="subtema">Variables y Manipulación del DOM</td><td class="desc">Primeros pasos con JS en el navegador, alertas y cómo alterar el HTML dinámicamente.</td><td class="dur"><span class="pill">3</span></td></tr>
-<tr><td class="subtema">Funciones y Eventos</td><td class="desc">Captura de clics, validación de formularios simples y creación de interactividad real.</td><td class="dur"><span class="pill">3</span></td></tr>
-</tbody>
-</table>
-</div>
-<div class="tema">
-<h3 class="tema-title">Tema 3: Frameworks y Proyecto</h3>
-<table>
-<thead><tr><th>Subtema</th><th>Descripción</th><th class="dur-h">Duración</th></tr></thead>
-<tbody>
-<tr><td class="subtema">Introducción a Bootstrap</td><td class="desc">Uso de un framework CSS vía CDN para lograr que la página sea responsiva rápidamente.</td><td class="dur"><span class="pill">1</span></td></tr>
-<tr><td class="subtema">Proyecto Web Integrador</td><td class="desc">Creación de una página web funcional de varias secciones combinando HTML, CSS y JS.</td><td class="dur"><span class="pill">2</span></td></tr>
-</tbody>
-</table>
-</div>
-</div>
-
-<div class="modulo" style="--accent:#B5562F">
-<div class="modulo-head">
-<div class="modulo-badge" style="background:#B5562F">5</div>
-<div class="modulo-titles">
-<div class="eyebrow-mini">Módulo 5</div>
-<h2 class="modulo-title">Redes y Seguridad</h2>
-</div>
-<div class="modulo-weeks">4<span>semanas</span></div>
-</div>
-<div class="modulo-track"><div style="width:7.1%; background:#B5562F"></div></div>
-<div class="tema">
-<h3 class="tema-title">Tema 1: Conectividad y Soporte</h3>
-<table>
-<thead><tr><th>Subtema</th><th>Descripción</th><th class="dur-h">Duración</th></tr></thead>
-<tbody>
-<tr><td class="subtema">Redes Locales e IPs</td><td class="desc">Diferencia entre IP pública/privada, router vs switch y configuración básica de red.</td><td class="dur"><span class="pill">1</span></td></tr>
-<tr><td class="subtema">Soporte Remoto</td><td class="desc">Uso de herramientas como AnyDesk para brindar asistencia técnica a distancia.</td><td class="dur"><span class="pill">1</span></td></tr>
-</tbody>
-</table>
-</div>
-<div class="tema">
-<h3 class="tema-title">Tema 2: Ciberseguridad Básica</h3>
-<table>
-<thead><tr><th>Subtema</th><th>Descripción</th><th class="dur-h">Duración</th></tr></thead>
-<tbody>
-<tr><td class="subtema">Phishing y Malware</td><td class="desc">Identificación de sitios fraudulentos, manejo de contraseñas seguras y uso del firewall.</td><td class="dur"><span class="pill">1</span></td></tr>
-<tr><td class="subtema">Navegación Segura (VPN)</td><td class="desc">Concepto de túneles encriptados y pruebas prácticas de cambio de IP con extensiones VPN.</td><td class="dur"><span class="pill">1</span></td></tr>
-</tbody>
-</table>
-</div>
-</div>
-
-<div class="modulo" style="--accent:#6B8E4E">
-<div class="modulo-head">
-<div class="modulo-badge" style="background:#6B8E4E">6</div>
-<div class="modulo-titles">
-<div class="eyebrow-mini">Módulo 6</div>
-<h2 class="modulo-title">Multimedia</h2>
-</div>
-<div class="modulo-weeks">4<span>semanas</span></div>
-</div>
-<div class="modulo-track"><div style="width:7.1%; background:#6B8E4E"></div></div>
-<div class="tema">
-<h3 class="tema-title">Tema 1: Edición de Audio y Video</h3>
-<table>
-<thead><tr><th>Subtema</th><th>Descripción</th><th class="dur-h">Duración</th></tr></thead>
-<tbody>
-<tr><td class="subtema">Video Rápido para Web</td><td class="desc">Cortes, transiciones y exportación usando editores ligeros en navegador (ej. Clipchamp/CapCut).</td><td class="dur"><span class="pill">2</span></td></tr>
-<tr><td class="subtema">Tratamiento de Audio</td><td class="desc">Limpieza de ruido estático y mezcla de pistas utilizando Audacity.</td><td class="dur"><span class="pill">2</span></td></tr>
-</tbody>
-</table>
-</div>
-</div>
-
-<div class="modulo" style="--accent:#A33B3B">
-<div class="modulo-head">
-<div class="modulo-badge" style="background:#A33B3B">7</div>
-<div class="modulo-titles">
-<div class="eyebrow-mini">Módulo 7</div>
-<h2 class="modulo-title">Proyecto Final Móvil</h2>
-</div>
-<div class="modulo-weeks">9<span>semanas</span></div>
-</div>
-<div class="modulo-track"><div style="width:16.1%; background:#A33B3B"></div></div>
-<div class="tema">
-<h3 class="tema-title">Tema 1: Desarrollo Móvil Básico</h3>
-<table>
-<thead><tr><th>Subtema</th><th>Descripción</th><th class="dur-h">Duración</th></tr></thead>
-<tbody>
-<tr><td class="subtema">UI en Entornos Web</td><td class="desc">Diseño de interfaz de usuario utilizando plataformas como MIT App Inventor o Expo Snack (React Native).</td><td class="dur"><span class="pill">2</span></td></tr>
-<tr><td class="subtema">Lógica de la Aplicación</td><td class="desc">Programación de bloques o JS ligero para darle funcionalidad a los botones y sensores del móvil.</td><td class="dur"><span class="pill">2</span></td></tr>
-</tbody>
-</table>
-</div>
-<div class="tema">
-<h3 class="tema-title">Tema 2: Proyecto Integrador de Curso</h3>
-<table>
-<thead><tr><th>Subtema</th><th>Descripción</th><th class="dur-h">Duración</th></tr></thead>
-<tbody>
-<tr><td class="subtema">Planificación y Diseño</td><td class="desc">Definición del proyecto masivo final, creación de bocetos (wireframes) y asignación de tareas.</td><td class="dur"><span class="pill">2</span></td></tr>
-<tr><td class="subtema">Desarrollo y Pruebas</td><td class="desc">Programación activa del proyecto, conexión de lo aprendido (Web/Python/Móvil) y resolución de bugs.</td><td class="dur"><span class="pill">2</span></td></tr>
-<tr><td class="subtema">Presentación Final</td><td class="desc">Documentación del proyecto, exportación (APK o Web) y exposición final de los resultados obtenidos.</td><td class="dur"><span class="pill">1</span></td></tr>
-</tbody>
-</table>
-</div>
-</div>
-
-</div>
+<PlanEstudio
+  modulos={[
+    {
+      numero: 1,
+      titulo: "Fundamentos y Mantenimiento de Equipos de Cómputo",
+      color: "#0D9488",
+      semanas: 5,
+      progreso: 8.9,
+      temas: [
+        {
+          titulo: "Introducción a la Computación",
+          subtemas: [
+            {
+              nombre: "Hardware y Software",
+              descripcion:
+                "Definición de computadora, diferencia hardware/software, tipos de software, periféricos de entrada/salida.",
+              duracion: 1,
+            },
+            {
+              nombre: "El Sistema Operativo",
+              descripcion:
+                "Funciones del SO, interfaz gráfica vs línea de comandos, gestión de archivos y carpetas.",
+              duracion: 1,
+            },
+          ],
+        },
+        {
+          titulo: "Hardware y Mantenimiento",
+          subtemas: [
+            {
+              nombre: "Componentes Internos",
+              descripcion:
+                "Motherboard, CPU, RAM, almacenamiento (HDD/SSD), fuente de poder, tarjetas de expansión.",
+              duracion: 1,
+            },
+            {
+              nombre: "Mantenimiento y Formateo",
+              descripcion:
+                "Mantenimiento preventivo/correctivo, limpieza física, creación USB booteable, instalación del SO.",
+              duracion: 1,
+            },
+          ],
+        },
+        {
+          titulo: "Evaluación y Troubleshooting",
+          subtemas: [
+            {
+              nombre: "Evaluación y Resolución de Problemas",
+              descripcion:
+                "Examen Módulo 1, diagnóstico de problemas comunes, herramientas de diagnóstico del sistema.",
+              duracion: 1,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      numero: 2,
+      titulo: "Ofimática en la Nube",
+      color: "#D97706",
+      semanas: 4,
+      progreso: 7.1,
+      temas: [
+        {
+          titulo: "Google Docs y Sheets",
+          subtemas: [
+            {
+              nombre: "Google Docs: Procesamiento de Textos",
+              descripcion:
+                "Formato de texto, cartas formales, currículum, inserción de imágenes/tablas, compartir y comentar documentos.",
+              duracion: 1,
+            },
+            {
+              nombre: "Google Sheets: Hojas de Cálculo",
+              descripcion:
+                "Fórmulas básicas, funciones SUMA/PROMEDIO, presupuesto personal, control de calificaciones, gráficos básicos.",
+              duracion: 1,
+            },
+          ],
+        },
+        {
+          titulo: "Presentaciones y Proyecto",
+          subtemas: [
+            {
+              nombre: "Google Slides: Presentaciones",
+              descripcion:
+                "Diseño de presentaciones, temas, transiciones, inserción de multimedia, exposición y retroalimentación.",
+              duracion: 1,
+            },
+            {
+              nombre: "Proyecto Integrador de Ofimática",
+              descripcion:
+                "Negocio ficticio: plan en Docs, presupuesto en Sheets, pitch en Slides. Presentación final y evaluación.",
+              duracion: 1,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      numero: 3,
+      titulo: "Multimedia — Edición de Imagen",
+      color: "#7C3AED",
+      semanas: 4,
+      progreso: 7.1,
+      temas: [
+        {
+          titulo: "Fundamentos de GIMP",
+          subtemas: [
+            {
+              nombre: "Interfaz y Herramientas Básicas",
+              descripcion:
+                "Resolución y formatos de imagen, interfaz de GIMP, selecciones, recorte, redimensionar, collage simple.",
+              duracion: 1,
+            },
+            {
+              nombre: "Retoque y Corrección",
+              descripcion:
+                "Herramientas de clonado, ajustes de color (brillo/contraste/niveles), capas, retoque de retratos.",
+              duracion: 1,
+            },
+          ],
+        },
+        {
+          titulo: "Diseño y Efectos",
+          subtemas: [
+            {
+              nombre: "Diseño Gráfico Básico",
+              descripcion:
+                "Principios de composición, herramientas de dibujo, tipografía, diseño de logos, pósters y portadas.",
+              duracion: 1,
+            },
+            {
+              nombre: "Efectos Especiales y Montajes",
+              descripcion:
+                "Máscaras de capa, filtros, montajes fotográficos realistas, exportación para web e impresión.",
+              duracion: 1,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      numero: 4,
+      titulo: "Multimedia — Edición de Video",
+      color: "#E11D48",
+      semanas: 4,
+      progreso: 7.1,
+      temas: [
+        {
+          titulo: "Edición Básica de Video",
+          subtemas: [
+            {
+              nombre: "Introducción a la Edición de Video",
+              descripcion:
+                "Conceptos de video (resolución, framerate, codecs), interfaz de Shotcut/Kdenlive, cortes básicos, primer proyecto.",
+              duracion: 1,
+            },
+            {
+              nombre: "Transiciones y Efectos",
+              descripcion:
+                "Tipos de transiciones, efectos de color/velocidad, texto y títulos, mejorar ritmo y continuidad.",
+              duracion: 1,
+            },
+          ],
+        },
+        {
+          titulo: "Audio y Proyecto Final",
+          subtemas: [
+            {
+              nombre: "Audio en Video",
+              descripcion:
+                "Pistas de audio, música y narración, ajuste de volumen, sincronización, derechos de autor.",
+              duracion: 1,
+            },
+            {
+              nombre: "Proyecto Final de Video",
+              descripcion:
+                "Producción completa: guion, storyboard, grabación, edición, exportación para YouTube/redes.",
+              duracion: 1,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      numero: 5,
+      titulo: "Introducción a Redes e Internet",
+      color: "#0891B2",
+      semanas: 5,
+      progreso: 8.9,
+      temas: [
+        {
+          titulo: "Fundamentos de Redes",
+          subtemas: [
+            {
+              nombre: "Fundamentos de Redes",
+              descripcion:
+                "Tipos de redes (LAN/WAN/WLAN), topologías, componentes, modelo OSI conceptual, comandos ipconfig/ping.",
+              duracion: 1,
+            },
+            {
+              nombre: "Redes Inalámbricas y Conectividad",
+              descripcion:
+                "Estándares WiFi, seguridad WPA2/WPA3, tethering USB, diagnóstico de problemas de conectividad.",
+              duracion: 1,
+            },
+          ],
+        },
+        {
+          titulo: "Internet y Redes Prácticas",
+          subtemas: [
+            {
+              nombre: "Internet y Servicios en Línea",
+              descripcion:
+                "Protocolos HTTP/DNS/SMTP, navegación eficiente, búsqueda avanzada, almacenamiento en la nube, seguridad en línea.",
+              duracion: 1,
+            },
+            {
+              nombre: "Configuración de Red Práctica",
+              descripcion:
+                "Router doméstico, IP estática vs DHCP, compartición de archivos e impresoras en red local.",
+              duracion: 1,
+            },
+            {
+              nombre: "Ponchado de Cables y Evaluación",
+              descripcion:
+                "Estándares T568A/B, crimpadora y RJ45, ponchado de cable directo, prueba con tester, examen del módulo.",
+              duracion: 1,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      numero: 6,
+      titulo: "Seguridad Informática",
+      color: "#BE123C",
+      semanas: 4,
+      progreso: 7.1,
+      temas: [
+        {
+          titulo: "Amenazas y Protección",
+          subtemas: [
+            {
+              nombre: "Amenazas y Vulnerabilidades",
+              descripcion:
+                "Malware (virus, ransomware, spyware), ingeniería social, phishing, casos reales de ataques famosos.",
+              duracion: 1,
+            },
+            {
+              nombre: "Protección y Antivirus",
+              descripcion:
+                "Antivirus gratuitos, firewall del sistema, actualizaciones de seguridad, estrategias de backups.",
+              duracion: 1,
+            },
+          ],
+        },
+        {
+          titulo: "Privacidad y Evaluación",
+          subtemas: [
+            {
+              nombre: "Seguridad en Línea y Privacidad",
+              descripcion:
+                "Contraseñas seguras, gestores de contraseñas, autenticación 2FA, privacidad en redes sociales, huella digital.",
+              duracion: 1,
+            },
+            {
+              nombre: "Evaluación y Plan de Seguridad",
+              descripcion:
+                "Examen Módulo 6, proyecto de plan de seguridad personal, presentación y discusión grupal.",
+              duracion: 1,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      numero: 7,
+      titulo: "Programación — Fundamentos",
+      color: "#059669",
+      semanas: 8,
+      progreso: 14.3,
+      temas: [
+        {
+          titulo: "Introducción y Variables",
+          subtemas: [
+            {
+              nombre: "Introducción a la Programación",
+              descripcion:
+                "Algoritmos y pensamiento computacional, instalación de Python, Hola Mundo, operaciones básicas.",
+              duracion: 1,
+            },
+            {
+              nombre: "Variables y Tipos de Datos",
+              descripcion:
+                "Variables, tipos (int, float, string, bool), operadores, conversión de tipos, calculadora y conversor de unidades.",
+              duracion: 1,
+            },
+          ],
+        },
+        {
+          titulo: "Estructuras de Control",
+          subtemas: [
+            {
+              nombre: "Entrada de Datos y Condicionales",
+              descripcion:
+                "Función input(), if/elif/else, operadores lógicos, programas interactivos, juego de adivinanza.",
+              duracion: 1,
+            },
+            {
+              nombre: "Bucles e Iteraciones",
+              descripcion:
+                "Bucles while y for, rangos, break/continue, tablas de multiplicar, patrones con asteriscos.",
+              duracion: 1,
+            },
+          ],
+        },
+        {
+          titulo: "Colecciones y Funciones",
+          subtemas: [
+            {
+              nombre: "Listas y Colecciones",
+              descripcion:
+                "Listas, métodos (append, remove, sort), tuplas y diccionarios, lista de compras, sistema de calificaciones.",
+              duracion: 1,
+            },
+            {
+              nombre: "Funciones",
+              descripcion:
+                "Definición con def, parámetros y retorno, alcance de variables, refactorización, biblioteca de funciones matemáticas.",
+              duracion: 1,
+            },
+          ],
+        },
+        {
+          titulo: "Archivos y Proyecto",
+          subtemas: [
+            {
+              nombre: "Manejo de Errores y Archivos",
+              descripcion:
+                "Tipos de errores, try/except, lectura y escritura de archivos de texto, persistencia de datos.",
+              duracion: 1,
+            },
+            {
+              nombre: "Proyecto Integrador de Programación",
+              descripcion:
+                "Sistema de inventario, agenda de contactos o juego de trivia con manejo de archivos y presentación.",
+              duracion: 1,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      numero: 8,
+      titulo: "Programación Avanzada y Proyectos",
+      color: "#4F46E5",
+      semanas: 6,
+      progreso: 10.7,
+      temas: [
+        {
+          titulo: "Pygame y Juegos",
+          subtemas: [
+            {
+              nombre: "Introducción a Pygame",
+              descripcion:
+                "Bucle de juego, eventos de teclado, dibujar formas, mover objetos, mini-juego interactivo.",
+              duracion: 1,
+            },
+            {
+              nombre: "Sprites y Colisiones",
+              descripcion:
+                "Imágenes como sprites, detección de colisiones, puntuación, múltiples objetos en pantalla.",
+              duracion: 1,
+            },
+            {
+              nombre: "Proyecto de Juego Completo",
+              descripcion:
+                "Crear Pong, Snake o Space Invaders: diseño, implementación, puntuación, vidas y presentación.",
+              duracion: 1,
+            },
+          ],
+        },
+        {
+          titulo: "Desarrollo Web",
+          subtemas: [
+            {
+              nombre: "Introducción a HTML y CSS",
+              descripcion:
+                "Estructura HTML, etiquetas, listas, imágenes, enlaces, tablas, estilos CSS básicos, página personal.",
+              duracion: 1,
+            },
+            {
+              nombre: "Desarrollo Web Intermedio",
+              descripcion:
+                "Clases y selectores CSS, flexbox, formularios, navegación entre secciones, diseño responsivo.",
+              duracion: 1,
+            },
+            {
+              nombre: "Proyecto Web Final",
+              descripcion:
+                "Sitio web completo de 3-5 páginas (portafolio, tema de interés o negocio ficticio), pruebas y presentación.",
+              duracion: 1,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      numero: 9,
+      titulo: "Herramientas Digitales Avanzadas",
+      color: "#65A30D",
+      semanas: 4,
+      progreso: 7.1,
+      temas: [
+        {
+          titulo: "Productividad y Colaboración",
+          subtemas: [
+            {
+              nombre: "Productividad Digital",
+              descripcion:
+                "Calendarios digitales, Trello/Notion, toma de notas digital, sistema de organización personal.",
+              duracion: 1,
+            },
+            {
+              nombre: "Herramientas Colaborativas",
+              descripcion:
+                "Google Workspace, colaboración en tiempo real, correo profesional, videoconferencias y mejores prácticas.",
+              duracion: 1,
+            },
+          ],
+        },
+        {
+          titulo: "Bases de Datos y Evaluación",
+          subtemas: [
+            {
+              nombre: "Introducción a Bases de Datos",
+              descripcion:
+                "Conceptos de tablas/registros, SQLite, consultas SELECT/INSERT/UPDATE/DELETE, proyecto de base de datos.",
+              duracion: 1,
+            },
+            {
+              nombre: "Evaluación y Sistema de Productividad",
+              descripcion:
+                "Examen Módulo 9, actividad integradora: sistema personal de productividad combinando herramientas vistas.",
+              duracion: 1,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      numero: 10,
+      titulo: "Proyecto Final Integrador",
+      color: "#D946EF",
+      semanas: 6,
+      progreso: 10.7,
+      temas: [
+        {
+          titulo: "Planificación y Desarrollo",
+          subtemas: [
+            {
+              nombre: "Planificación del Proyecto",
+              descripcion:
+                "Metodología de proyectos, objetivos SMART, diagrama de Gantt, lluvia de ideas y selección.",
+              duracion: 1,
+            },
+            {
+              nombre: "Desarrollo — Fase 1",
+              descripcion:
+                "Configuración del entorno, estructura de archivos, desarrollo de funcionalidades básicas, documentación.",
+              duracion: 1,
+            },
+            {
+              nombre: "Desarrollo — Fase 2",
+              descripcion:
+                "Funcionalidades avanzadas, integración de componentes, pruebas de software, corrección de errores.",
+              duracion: 1,
+            },
+            {
+              nombre: "Desarrollo — Fase 3",
+              descripcion:
+                "UX/UI básica, documentación completa, pruebas finales, preparación de presentación.",
+              duracion: 1,
+            },
+          ],
+        },
+        {
+          titulo: "Presentación y Cierre",
+          subtemas: [
+            {
+              nombre: "Presentación de Proyectos",
+              descripcion:
+                "Exposición individual (10-15 min): demostración, aspectos técnicos, aprendizajes, retroalimentación.",
+              duracion: 1,
+            },
+            {
+              nombre: "Evaluación Final y Cierre",
+              descripcion:
+                "Examen final escrito, reflexión grupal, entrega de constancias, orientación sobre carreras tecnológicas.",
+              duracion: 1,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      numero: 11,
+      titulo: "Talleres Especializados y Refuerzo",
+      color: "#14B8A6",
+      semanas: 6,
+      progreso: 10.7,
+      temas: [
+        {
+          titulo: "Talleres Técnicos",
+          subtemas: [
+            {
+              nombre: "Taller de Linux",
+              descripcion:
+                "Comandos básicos de terminal, gestión de archivos y permisos, instalación de software, configuración del sistema.",
+              duracion: 1,
+            },
+            {
+              nombre: "Taller de Hardware Avanzado",
+              descripcion:
+                "Compatibilidad de componentes, ensamble de PC, configuración BIOS/UEFI, diagnóstico avanzado de fallas.",
+              duracion: 1,
+            },
+            {
+              nombre: "Taller de Ciberseguridad",
+              descripcion:
+                "Hacking ético defensivo, análisis de vulnerabilidades, pruebas de contraseñas, políticas de seguridad.",
+              duracion: 1,
+            },
+          ],
+        },
+        {
+          titulo: "Proyectos y Cierre",
+          subtemas: [
+            {
+              nombre: "Taller de Emprendimiento Digital",
+              descripcion:
+                "Plataformas freelance, creación de portafolio en línea, CV digital, plan de negocio tecnológico.",
+              duracion: 1,
+            },
+            {
+              nombre: "Proyecto Colaborativo",
+              descripcion:
+                "Scrum básico, trabajo en equipo, creación de producto digital (web, app o campaña) en grupos.",
+              duracion: 1,
+            },
+            {
+              nombre: "Presentación Final y Graduación",
+              descripcion:
+                "Presentación de proyectos colaborativos, reflexión final del curso, entrega de reconocimientos, celebración.",
+              duracion: 1,
+            },
+          ],
+        },
+      ],
+    },
+  ]}
+/>
