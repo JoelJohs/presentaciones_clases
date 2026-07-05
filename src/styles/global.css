@@ -357,13 +357,18 @@ h1, h2, h3, h4, h5, h6 {
   color: #fff;
   line-height: 1;
 }
+.module-badge-m0 { background: #78716C; }
 .module-badge-m1 { background: #0D9488; }
 .module-badge-m2 { background: #D97706; }
 .module-badge-m3 { background: #7C3AED; }
-.module-badge-m4 { background: #0891B2; }
-.module-badge-m5 { background: #BE123C; }
-.module-badge-m6 { background: #4F46E5; }
+.module-badge-m4 { background: #E11D48; }
+.module-badge-m5 { background: #0891B2; }
+.module-badge-m6 { background: #BE123C; }
 .module-badge-m7 { background: #059669; }
+.module-badge-m8 { background: #4F46E5; }
+.module-badge-m9 { background: #65A30D; }
+.module-badge-m10 { background: #D946EF; }
+.module-badge-m11 { background: #14B8A6; }
 
 /* ─── Indicador de Lección Activa ─── */
 .active-lesson-indicator {
