@@ -1,0 +1,472 @@
+---
+title: "Mantenimiento y Limpieza Física"
+moduleTitle: "2 - Fundamentos y Mantenimiento"
+topicTitle: "Tema 2: Hardware y Mantenimiento"
+subtopicTitle: "Mantenimiento y Formateo"
+fecha: "11-07-2026"
+---
+
+import { Icon } from "astro-icon/components";
+
+---
+
+## Preventivo vs. Correctivo
+
+Dos enfoques, mismo objetivo: que la PC funcione.
+
+<table>
+  <thead>
+    <tr>
+      <th>Preventivo</th>
+      <th>Correctivo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Limpias antes de que falle</td>
+      <td>Reparas después de que se rompa</td>
+    </tr>
+    <tr>
+      <td>Cuesta tiempo (30 min c/6 meses)</td>
+      <td>Cuesta dinero (reemplazo de piezas)</td>
+    </tr>
+    <tr>
+      <td>Polvo, pasta térmica, contactos</td>
+      <td>Ventilador quemado, RAM muerta</td>
+    </tr>
+  </tbody>
+</table>
+
+El polvo bloquea el flujo de aire. Suben las temperaturas. Los componentes se dañan. Una limpieza a tiempo evita reemplazos.
+
+![PC con mantenimiento vs. PC descuidada](@assets/images/lecciones/01-fundamentos-mantenimiento/01-introduccion-informatica/02-gestion-del-sistema-operativo/02-hardware-mantenimiento/preventivo_vs_correctivo.png)
+
+---
+
+## Daño Térmico
+
+El polvo acumulado actúa como aislante. Atrapa el calor en vez de dejarlo escapar.
+
+### Thermal Throttling (Regulación Térmica)
+
+Cuando un componente detecta temperatura peligrosa, reduce su velocidad para no quemarse. El usuario siente la PC lenta y asume que ya está vieja, cuando solo necesita limpieza.
+
+<table>
+  <thead>
+    <tr>
+      <th>Estado</th>
+      <th>Temperatura</th>
+      <th>Rendimiento</th>
+      <th>Síntoma</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Normal</td>
+      <td>40-70 °C</td>
+      <td>100%</td>
+      <td>Todo fluido</td>
+    </tr>
+    <tr>
+      <td>Precaución</td>
+      <td>70-85 °C</td>
+      <td>80-90%</td>
+      <td>Ventiladores al máximo</td>
+    </tr>
+    <tr>
+      <td>Regulación térmica</td>
+      <td>85-95 °C</td>
+      <td>40-60%</td>
+      <td>PC lenta, tirones en juegos</td>
+    </tr>
+    <tr>
+      <td>Crítico</td>
+      <td>95-105 °C</td>
+      <td>Apagado</td>
+      <td>PC se apaga sola</td>
+    </tr>
+  </tbody>
+</table>
+
+![Diagrama de sobrecalentamiento del CPU](@assets/images/lecciones/01-fundamentos-mantenimiento/01-introduccion-informatica/02-gestion-del-sistema-operativo/02-hardware-mantenimiento/sobrecalentamiento_cpu.png)
+
+Una PC de 8 años bien cuidada rinde como el primer día. Una PC de 2 años sin limpiar puede estar en regulación térmica permanente.
+
+---
+
+## Pasta Térmica
+
+Rellena los microhuecos entre el CPU y el disipador. Sin ella, quedan burbujas de aire que atrapan el calor.
+
+<table>
+  <thead>
+    <tr>
+      <th>Estado</th>
+      <th>Apariencia</th>
+      <th>Conductividad</th>
+      <th>Acción</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Nueva</td>
+      <td>Gris brillante, suave</td>
+      <td>Excelente</td>
+      <td>Dejar así</td>
+    </tr>
+    <tr>
+      <td>Usada (1-2 años)</td>
+      <td>Gris opaco, uniforme</td>
+      <td>Buena</td>
+      <td>Dejar así</td>
+    </tr>
+    <tr>
+      <td>Seca (+3 años)</td>
+      <td>Grietas, dura, quebradiza</td>
+      <td>Mala</td>
+      <td>Cambiar</td>
+    </tr>
+  </tbody>
+</table>
+
+![Aplicación correcta de pasta térmica](@assets/images/lecciones/01-fundamentos-mantenimiento/01-introduccion-informatica/02-gestion-del-sistema-operativo/02-hardware-mantenimiento/pasta_termica.png)
+
+### Reglas de aplicación
+
+- **Cantidad:** Tamaño de un chícharo
+- **Posición:** Centro del CPU
+- **Presión:** El disipador la esparce solo al apretar
+- **No** esparcirla manualmente con tarjeta o dedo (mete burbujas de aire)
+
+---
+
+## Preventivo Lógico: Desfragmentación
+
+El mantenimiento también es por dentro. No todo es polvo.
+
+<table>
+  <thead>
+    <tr>
+      <th>HDD (Disco Duro Mecánico)</th>
+      <th>SSD (Estado Sólido)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Tiene un disco girando y una aguja</td>
+      <td>Chips de memoria, sin partes móviles</td>
+    </tr>
+    <tr>
+      <td>Los archivos se fragmentan físicamente</td>
+      <td>Los archivos se escriben donde hay espacio</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Sí se desfragmenta</strong>
+      </td>
+      <td>
+        <strong>No se desfragmenta nunca</strong>
+      </td>
+    </tr>
+    <tr>
+      <td>Mejora velocidad de lectura</td>
+      <td>Reduce la vida útil del SSD</td>
+    </tr>
+  </tbody>
+</table>
+
+![Comparación HDD vs SSD](@assets/images/lecciones/01-fundamentos-mantenimiento/01-introduccion-informatica/02-gestion-del-sistema-operativo/02-hardware-mantenimiento/desfragmentación.png)
+
+---
+
+## Preventivo Lógico: Limpieza del Sistema
+
+Tres tareas básicas que todo técnico hace periódicamente.
+
+<table>
+  <thead>
+    <tr>
+      <th>Tarea</th>
+      <th>Herramienta</th>
+      <th>Frecuencia</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <strong>Liberador de espacio</strong>
+      </td>
+      <td>Windows: Liberador de espacio en disco</td>
+      <td>Mensual</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Actualizaciones</strong>
+      </td>
+      <td>Windows Update</td>
+      <td>Mensual</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Antivirus</strong>
+      </td>
+      <td>Windows Defender</td>
+      <td>Automático</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Inicio automático</strong>
+      </td>
+      <td>Administrador de tareas / Inicio</td>
+      <td>Cada 3 meses</td>
+    </tr>
+  </tbody>
+</table>
+
+Cada programa instalado deja archivos temporales. Cada navegador guarda caché. Las actualizaciones viejas de Windows pueden pesar 10-20 GB. El Liberador de espacio los borra. Revisar el inicio automático evita que la PC arranque con 20 programas que no necesitas.
+
+---
+
+## Kit del Técnico
+
+Cada herramienta resuelve un problema específico.
+
+<table>
+  <thead>
+    <tr>
+      <th>Herramienta</th>
+      <th>Para qué</th>
+      <th>Por qué esa y no otra</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <strong>Alcohol isopropílico 90%+</strong>
+      </td>
+      <td>Limpiar pasta térmica, contactos</td>
+      <td>
+        Se evapora, no deja residuo. El alcohol común tiene agua y conduce.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Aire comprimido</strong>
+      </td>
+      <td>Soplar polvo de ventiladores, disipadores, PSU</td>
+      <td>
+        Llega donde los dedos no. Sujeta las aspas: si giran libres, generan
+        corriente y queman el controlador.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Brocha antiestática</strong>
+      </td>
+      <td>Polvo superficial en ranuras y PCBs</td>
+      <td>No genera estática. Una brocha normal sí.</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Borrador blanco</strong>
+      </td>
+      <td>Limpiar contactos dorados de RAM</td>
+      <td>
+        La goma arrastra óxido sin rayarlos. El óxido es causa #1 de que la PC
+        no dé video.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Pulsera antiestática</strong>
+      </td>
+      <td>Mantenerte al mismo potencial que la PC</td>
+      <td>
+        Sin ella, una descarga de 30V imperceptible para ti mata un componente.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Paño de microfibra</strong>
+      </td>
+      <td>Secar, limpiar superficies</td>
+      <td>
+        No suelta pelusa. Los trapitos comunes dejan hebras que hacen corto.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+![Kit de herramientas para mantenimiento](@assets/images/lecciones/01-fundamentos-mantenimiento/01-introduccion-informatica/02-gestion-del-sistema-operativo/02-hardware-mantenimiento/limpieza.png)
+
+---
+
+## Windows Update y Drivers
+
+<table>
+  <thead>
+    <tr>
+      <th>Sin drivers</th>
+      <th>Con drivers correctos</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Resolución estirada (1024x768)</td>
+      <td>Resolución nativa (1920x1080)</td>
+    </tr>
+    <tr>
+      <td>Sin sonido (icono con X)</td>
+      <td>Sonido funcional</td>
+    </tr>
+    <tr>
+      <td>Internet lento o inexistente</td>
+      <td>Conexión estable</td>
+    </tr>
+    <tr>
+      <td>Hardware no reconocido</td>
+      <td>Todos los componentes funcionando</td>
+    </tr>
+  </tbody>
+</table>
+
+Una PC recién formateada tiene drivers genéricos. Sin el driver de video la resolución se ve estirada. Sin driver de red no hay internet. Los drivers se consiguen en la página del fabricante de la placa madre o GPU.
+
+---
+
+## Software Esencial
+
+Cinco herramientas que toda PC necesita después de formatear.
+
+<table>
+  <thead>
+    <tr>
+      <th>Herramienta</th>
+      <th>Para qué</th>
+      <th>Alternativa libre</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <strong>Navegador</strong>
+      </td>
+      <td>Navegar y descargar</td>
+      <td>Chrome / Firefox</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Lector PDF</strong>
+      </td>
+      <td>Abrir documentos</td>
+      <td>Adobe Reader</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Ofimática</strong>
+      </td>
+      <td>Documentos y hojas de cálculo</td>
+      <td>LibreOffice</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Compresor</strong>
+      </td>
+      <td>Comprimir / descomprimir</td>
+      <td>7-Zip</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Reproductor</strong>
+      </td>
+      <td>Reproducir cualquier video</td>
+      <td>VLC</td>
+    </tr>
+  </tbody>
+</table>
+
+![Software esencial post-instalación](@assets/images/lecciones/01-fundamentos-mantenimiento/01-introduccion-informatica/02-gestion-del-sistema-operativo/02-hardware-mantenimiento/software_escencial.png)
+
+---
+
+## Instalación en Lote con Ninite
+
+[Ninite.com](https://ninite.com) descarga e instala varios programas con un solo instalador. Sin publicidad, sin bloatware.
+
+1. Abrir navegador, ir a [Ninite.com](https://ninite.com)
+2. Seleccionar los programas (Chrome, VLC, 7-Zip, etc.)
+3. Descargar el instalador único
+4. Ejecutarlo. Todo se instala en segundo plano
+
+![Instalación con Ninite](@assets/images/lecciones/01-fundamentos-mantenimiento/01-introduccion-informatica/02-gestion-del-sistema-operativo/02-hardware-mantenimiento/descargas.png)
+
+---
+
+## Post-Installation Checklist
+
+Antes de entregar una PC, verifica estos cuatro puntos.
+
+<table>
+  <thead>
+    <tr>
+      <th>Verificación</th>
+      <th>Cómo probar</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <strong>Internet funcionando</strong>
+      </td>
+      <td>Abrir navegador y cargar una página</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Sonido funcional</strong>
+      </td>
+      <td>Reproducir un video</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Software esencial instalado</strong>
+      </td>
+      <td>Revisar en el menú de inicio</td>
+    </tr>
+    <tr>
+      <td>
+        <strong>Windows actualizado</strong>
+      </td>
+      <td>Windows Update sin pendientes</td>
+    </tr>
+  </tbody>
+</table>
+
+![Checklist de verificación post-instalación](@assets/images/lecciones/01-fundamentos-mantenimiento/01-introduccion-informatica/02-gestion-del-sistema-operativo/02-hardware-mantenimiento/verificacion_postinstallacion.png)
+
+---
+
+## Tareas
+
+### Tarea 1: Pasta Térmica
+
+Investiga y anota en tu cuaderno:
+
+- ¿Qué es la pasta térmica y de qué materiales está hecha?
+- ¿Cuál es su función exacta entre el procesador y el disipador de metal?
+- ¿Cada cuánto recomiendan los fabricantes cambiarla?
+
+### Tarea 2: Códigos de Pitidos (Beep Codes)
+
+Los códigos de pitidos de la BIOS ayudan a diagnosticar fallas. Busca qué significa cada sonido en una BIOS genérica o AMI:
+
+- 1 pitido corto
+- 3 pitidos cortos
+- 1 pitido largo y continuo (o repetitivo)
+
+### Tarea 3: Sistemas Operativos Ligeros
+
+Busca 3 distribuciones de Linux diseñadas para computadoras viejas o de bajos recursos. Para cada una anota:
+
+- Nombre del sistema operativo
+- Memoria RAM mínima que necesita
+- Espacio en disco que requiere la instalación

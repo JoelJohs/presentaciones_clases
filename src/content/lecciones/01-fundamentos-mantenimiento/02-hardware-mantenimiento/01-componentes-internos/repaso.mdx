@@ -6,6 +6,136 @@ subtopicTitle: "Componentes Internos"
 fecha: "04-07-2026"
 ---
 
+import { Icon } from "astro-icon/components";
+
 # Repaso: Componentes Internos
 
-Preguntas de repaso para la sesión de Componentes Internos.
+Preguntas y respuestas para coordinar la dinámica en clase.
+
+---
+
+## 1. Seguridad y Estática <Icon name="lucide:zap" class="inline w-6 h-6 align-text-bottom text-yellow-600" />
+
+### 1. El enemigo invisible
+
+¿Cuál es el principal peligro al manipular componentes internos?
+
+<details>
+  <summary><Icon name="lucide:search" class="inline w-5 h-5 align-text-bottom text-blue-600" /> Ver respuesta</summary>
+  <blockquote>
+
+    La **electricidad estática**. Tu cuerpo acumula carga al caminar o rozar ropa sintética. Al tocar un componente sin descargarte, esa energía quema el circuito.
+
+  </blockquote>
+</details>
+
+### 2. Lo que nunca debes abrir
+
+¿Qué componente de la PC nunca se debe abrir, incluso si está desconectada?
+
+<details>
+  <summary><Icon name="lucide:search" class="inline w-5 h-5 align-text-bottom text-blue-600" /> Ver respuesta</summary>
+  <blockquote>
+
+    La **fuente de poder (PSU)**. Sus capacitores almacenan voltajes peligrosos incluso días después de desconectarla.
+
+  </blockquote>
+</details>
+
+### 3. Pulsera casera
+
+¿Cómo te proteges de la estática si no tienes una pulsera antiestática?
+
+<details>
+  <summary><Icon name="lucide:search" class="inline w-5 h-5 align-text-bottom text-blue-600" /> Ver respuesta</summary>
+  <blockquote>
+
+    Toca el **gabinete metálico sin pintar** antes de tocar cualquier placa o componente. También puedes fabricar una pulsera casera con cable, pinzas caimán y una resistencia de 1 MΩ.
+
+  </blockquote>
+</details>
+
+---
+
+## 2. Identificación de Componentes <Icon name="lucide:search" class="inline w-6 h-6 align-text-bottom text-blue-600" />
+
+### 1. La placa que conecta todo
+
+Es una placa grande al fondo del gabinete, llena de circuitos y conectores. ¿Qué componente es y qué hace?
+
+<details>
+  <summary><Icon name="lucide:search" class="inline w-5 h-5 align-text-bottom text-blue-600" /> Ver respuesta</summary>
+  <blockquote>
+
+    Es la **tarjeta madre (motherboard)**. Conecta todos los componentes entre sí para que se comuniquen.
+
+  </blockquote>
+</details>
+
+### 2. El cerebro cuadrado
+
+Es un chip cuadrado bajo un ventilador con disipador de metal. ¿Qué componente es?
+
+<details>
+  <summary><Icon name="lucide:search" class="inline w-5 h-5 align-text-bottom text-blue-600" /> Ver respuesta</summary>
+  <blockquote>
+
+    El **procesador (CPU)**. Ejecuta cálculos e instrucciones. No se retira para no dañar la pasta térmica.
+
+  </blockquote>
+</details>
+
+### 3. La memoria que se olvida
+
+Si enciendes la PC y no da video, puede faltar este componente. ¿Cuál es?
+
+<details>
+  <summary><Icon name="lucide:search" class="inline w-5 h-5 align-text-bottom text-blue-600" /> Ver respuesta</summary>
+  <blockquote>
+
+    La **memoria RAM**. Sin RAM la PC enciende pero no da video. Almacena datos temporales de los programas activos.
+
+  </blockquote>
+</details>
+
+### 4. ¿HDD o SSD?
+
+Tu amigo dice que su disco duro no tiene partes móviles. ¿Tiene razón?
+
+<details>
+  <summary><Icon name="lucide:search" class="inline w-5 h-5 align-text-bottom text-blue-600" /> Ver respuesta</summary>
+  <blockquote>
+
+    Sí, si es un **SSD**. El SSD no tiene partes móviles, a diferencia del HDD que tiene discos giratorios y un cabezal mecánico.
+
+  </blockquote>
+</details>
+
+### 5. Voltajes de colores
+
+La fuente de poder convierte la corriente de la pared a tres voltajes. ¿Cuáles son?
+
+<details>
+  <summary><Icon name="lucide:search" class="inline w-5 h-5 align-text-bottom text-blue-600" /> Ver respuesta</summary>
+  <blockquote>
+
+    12V, 5V y 3.3V. Cada componente usa uno o varios de estos voltajes para funcionar.
+
+  </blockquote>
+</details>
+
+---
+
+## 3. Pregunta abierta <Icon name="lucide:edit" class="inline w-6 h-6 align-text-bottom text-green-600" />
+
+Explica por qué la estática puede dañar los componentes de la computadora y cómo evitarlo. Menciona al menos dos métodos de protección.
+
+<details>
+  <summary><Icon name="lucide:search" class="inline w-5 h-5 align-text-bottom text-blue-600" /> Ver guía de respuesta</summary>
+  <blockquote>
+
+    La estática daña porque tu cuerpo acumula carga eléctrica y al tocar un componente esa energía se descarga a través del circuito, quemándolo.
+    - **Cómo evitarlo:** usar pulsera antiestática, tocar el gabinete metálico antes de manipular, desconectar el cable de corriente, trabajar en superficie antiestática.
+
+  </blockquote>
+</details>

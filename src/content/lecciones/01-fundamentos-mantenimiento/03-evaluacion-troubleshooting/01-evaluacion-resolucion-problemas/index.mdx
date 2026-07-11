@@ -1,0 +1,175 @@
+---
+title: "Evaluación y Resolución de Problemas"
+moduleTitle: "2 - Fundamentos y Mantenimiento"
+topicTitle: "Tema 3: Evaluación y Troubleshooting"
+subtopicTitle: "Evaluación y Resolución de Problemas"
+fecha: "18-07-2026"
+---
+
+import { Icon } from "astro-icon/components";
+
+# Evaluación y Resolución de Problemas
+
+Cierre del Módulo 1: examen, diagnóstico de problemas comunes y herramientas de diagnóstico del sistema.
+
+---
+
+## 1. Examen Módulo 1
+
+Examen escrito que cubre los tres temas del módulo:
+
+### Tema 1: Introducción a la Informática (semanas 1-2)
+- Hardware vs Software, periféricos de entrada/salida
+- Sistema Operativo: funciones, kernel, BIOS
+- Gestión de archivos: rutas, extensiones, explorador
+- Terminal CMD: `dir`, `cd`, `mkdir`, `color`
+
+### Tema 2: Hardware y Mantenimiento (semanas 3-4)
+- Componentes internos: motherboard, CPU, RAM, HDD/SSD, PSU
+- Seguridad: estática, PSU, pulsera antiestática
+- Mantenimiento preventivo: limpieza, optimización, monitoreo
+- Mantenimiento correctivo: diagnóstico, reemplazo, restauración
+- USB booteable: ISO, Rufus, Ventoy
+- Formateo e instalación del SO
+
+### Formato del examen
+
+| Tipo | Preguntas |
+|---|---|
+| Opción múltiple | 10 preguntas |
+| Verdadero / Falso | 5 preguntas |
+| Pregunta abierta | 2 preguntas |
+
+> El banco de preguntas completo está en `docs/examen-m1.md`.
+
+---
+
+## 2. Diagnóstico de Problemas Comunes
+
+Escenarios reales que los estudiantes deben resolver aplicando lo aprendido:
+
+### Caso 1: La PC no enciende
+
+Presionas el botón de encendido y no pasa nada. No hay luces, no hay ventiladores, no hay sonido.
+
+<details>
+  <summary><Icon name="lucide:search" class="inline w-5 h-5 align-text-bottom text-blue-600" /> Posibles causas y soluciones</summary>
+  <blockquote>
+
+    **Causas:**
+    - Cable de corriente desconectado o dañado
+    - Fuente de poder (PSU) muerta
+    - Botón de encendido del gabinete desconectado de la motherboard
+
+    **Soluciones:**
+    1. Verifica que el cable de corriente esté bien conectado en ambos extremos.
+    2. Prueba la PSU: puentea los pines verde y negro del conector de 24 pines con un clip. Si el ventilador de la PSU gira, la fuente funciona.
+    3. Revisa la conexión del botón de encendido (Power SW) en la motherboard.
+
+  </blockquote>
+</details>
+
+### Caso 2: PC enciende pero no hay video
+
+Los ventiladores giran, se escuchan los discos, pero la pantalla queda en negro.
+
+<details>
+  <summary><Icon name="lucide:search" class="inline w-5 h-5 align-text-bottom text-blue-600" /> Posibles causas y soluciones</summary>
+  <blockquote>
+
+    **Causas:**
+    - RAM mal insertada o sucia
+    - Cable de video conectado al puerto equivocado (conectar al motherboard en vez de la GPU)
+    - Monitor apagado o mal configurado
+
+    **Soluciones:**
+    1. Verifica que el monitor esté encendido y en la entrada correcta (HDMI/VGA/DP).
+    2. Revisa dónde está conectado el cable de video (si hay GPU, debe ir a la GPU).
+    3. Limpia contactos de la RAM con alcohol isopropílico, reinserta firmemente.
+
+  </blockquote>
+</details>
+
+### Caso 3: Pantalla azul (BSOD)
+
+Windows muestra una pantalla azul con texto blanco y se reinicia.
+
+<details>
+  <summary><Icon name="lucide:search" class="inline w-5 h-5 align-text-bottom text-blue-600" /> Posibles causas y soluciones</summary>
+  <blockquote>
+
+    **Causas:**
+    - Driver corrupto o incompatible
+    - Memoria RAM defectuosa
+    - Disco duro con sectores dañados
+    - Sobrecalentamiento
+
+    **Soluciones:**
+    1. Anota el código de error (ej: `PAGE_FAULT_IN_NONPAGED_AREA`).
+    2. Busca el código en internet o usa el visor de eventos de Windows.
+3. Prueba la RAM con [MemTest86](https://www.memtest86.com).
+4. Revisa temperaturas con [HWMonitor](https://www.cpuid.com/softwares/hwmonitor.html).
+    5. Restaura el sistema o usa `sfc /scannow`.
+
+  </blockquote>
+</details>
+
+### Caso 4: La computadora va muy lenta
+
+El sistema tarda en abrir programas, el explorador se congela, el inicio es muy lento.
+
+<details>
+  <summary><Icon name="lucide:search" class="inline w-5 h-5 align-text-bottom text-blue-600" /> Posibles causas y soluciones</summary>
+  <blockquote>
+
+    **Causas:**
+    - Demasiados programas en inicio
+    - Disco HDD fragmentado o casi lleno
+    - Poca memoria RAM
+    - Virus o malware
+
+    **Soluciones:**
+    1. Administrador de Tareas → Inicio: deshabilita programas innecesarios.
+    2. Libera espacio: `cleanmgr`, desinstala programas que no uses.
+    3. Agrega más RAM o cambia a SSD.
+    4. Escanea con antivirus (Windows Defender o [Malwarebytes](https://www.malwarebytes.com)).
+
+  </blockquote>
+</details>
+
+---
+
+## 3. Herramientas de Diagnóstico del Sistema
+
+### Windows
+
+| Herramienta | Cómo acceder | Para qué sirve |
+|---|---|---|
+| Administrador de Tareas | Ctrl + Shift + Esc | Ver uso de CPU/RAM/disco, cerrar programas, gestionar inicio |
+| Visor de Eventos | `eventvwr.msc` | Ver registros detallados de errores del sistema |
+| Monitor de Rendimiento | `perfmon` | Gráficas detalladas de rendimiento |
+| Información del Sistema | `msinfo32` | Resumen completo del hardware y software |
+| Comprobación de Memoria | `mdsched.exe` | Prueba la RAM en busca de errores |
+| Símbolo del sistema | `cmd` | `sfc /scannow`, `chkdsk`, `diskpart` |
+| Administración de Discos | `diskmgmt.msc` | Ver y gestionar particiones |
+
+### Linux
+
+| Herramienta | Comando | Para qué sirve |
+|---|---|---|
+| Monitor del sistema | `gnome-system-monitor` | Ver uso de recursos |
+| Discos | `gnome-disks` | Gestionar particiones y ver salud del disco |
+| Logs del sistema | `journalctl -xe` | Ver registros de errores |
+| Memoria | `free -h` | Ver uso de RAM |
+| Disco | `df -h` | Ver espacio en discos |
+| SMART | `smartctl -a /dev/sda` | Ver salud del disco |
+
+### Hardware
+
+| Herramienta | Para qué sirve |
+|---|---|
+| [HWMonitor](https://www.cpuid.com/softwares/hwmonitor.html) / [Core Temp](https://www.alcpu.com/CoreTemp/) | Monitorear temperaturas de CPU y GPU |
+| [CrystalDiskInfo](https://crystalmark.info/en/software/crystaldiskinfo/) | Revisar salud de SSD/HDD (SMART) |
+| [MemTest86](https://www.memtest86.com) | Prueba exhaustiva de memoria RAM |
+| Multímetro | Medir voltajes de la fuente de poder |
+| POST Tester (tarjeta de diagnóstico) | Identificar fallas con códigos POST |
