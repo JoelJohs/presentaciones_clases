@@ -1,18 +1,23 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import { getNavigationStructure } from '../utils/navigation';
 import Layout from '../layouts/Layout.astro';
+import Dashboard from '../components/Dashboard.astro';
 
 const lecciones = await getCollection('lecciones');
 const nav = getNavigationStructure(lecciones);
 const firstLesson = nav.allLessonsOrdered.length > 0 ? nav.allLessonsOrdered[0] : null;
-const allGroups = [...nav.modules, ...nav.extras];
+
+const mensajes = await getCollection('mensajes');
+const sortedMensajes = mensajes.sort((a, b) => b.data.fecha.localeCompare(a.data.fecha));
+const latestMensaje = sortedMensajes.length > 0 ? sortedMensajes[0] : null;
+const MensajeContent = latestMensaje ? (await render(latestMensaje)).Content : null;
 ---
 
 <Layout title="Inicio">
-  <div class="max-w-4xl mx-auto">
+  <div class="max-w-2xl mx-auto">
     <!-- Header compacto -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 pb-6 border-b border-brand-border">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 pb-6 border-b border-brand-border">
       <div>
         <h1 class="font-display font-extrabold text-3xl sm:text-4xl text-brand-navy dark:text-white tracking-tight">
           Plataforma de Estudios
@@ -32,7 +37,7 @@ const allGroups = [...nav.modules, ...nav.extras];
               href={`/${firstLesson.slug}`}
               class="inline-flex items-center gap-1.5 rounded-lg bg-brand-primary text-white px-4 py-2 font-semibold text-xs hover:bg-brand-accent transition-colors"
             >
-              Comenzar
+              Primera lección
               <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
               </svg>
@@ -42,33 +47,23 @@ const allGroups = [...nav.modules, ...nav.extras];
       </div>
     </div>
 
-    <!-- Grid de contenido -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      {allGroups.map((group) => {
-        const isExtra = !/^\d/.test(group.title);
-        const badgeNum = isExtra ? group.title.charAt(0) : (nav.modules.indexOf(group) + 1);
-        const badgeClass = isExtra ? 'module-badge-m0' : `module-badge-m${Math.min(nav.modules.indexOf(group) + 1, 7)}`;
-        const firstSlug = group.topics[0]?.lessons[0]?.slug || '#';
-        const lessonCount = group.topics.reduce((s, t) => s + t.lessons.length, 0);
+    <!-- Mensaje semanal -->
+    {latestMensaje && MensajeContent && (
+      <div class="rounded-xl border border-brand-amber/20 bg-brand-amber-bg dark:bg-amber-950/20 p-4 mb-6">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-sm">📢</span>
+          <span class="text-xs font-semibold uppercase tracking-wider text-brand-amber">
+            {latestMensaje.data.title || 'Mensaje del profesor'}
+          </span>
+          <span class="text-xs text-brand-muted ml-auto">{latestMensaje.data.fecha}</span>
+        </div>
+        <div class="text-sm text-brand-text dark:text-brand-text leading-relaxed prose-sm">
+          <MensajeContent />
+        </div>
+      </div>
+    )}
 
-        return (
-          <a
-            href={`/${firstSlug}`}
-            class={`card-hover flex items-center gap-4 rounded-xl border ${isExtra ? 'border-dashed border-brand-border' : 'border-brand-border'} bg-white dark:bg-brand-sidebar-bg p-4 ${isExtra ? '' : ''}`}
-          >
-            <span class={`module-badge ${badgeClass} shrink-0 text-xs font-bold`}>{badgeNum}</span>
-            <div class="min-w-0 flex-1">
-              <span class="block text-sm font-semibold text-brand-navy dark:text-white truncate">{group.title}</span>
-              <span class="block text-xs text-brand-muted mt-0.5">
-                {lessonCount} {lessonCount === 1 ? 'lección' : 'lecciones'}
-              </span>
-            </div>
-            <svg class="h-4 w-4 text-brand-muted shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-            </svg>
-          </a>
-        );
-      })}
-    </div>
+    <!-- Dashboard con Alpine (client-side) -->
+    <Dashboard nav={nav} />
   </div>
 </Layout>
