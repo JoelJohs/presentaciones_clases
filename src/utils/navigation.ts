@@ -18,6 +18,7 @@ export interface ModuleGroup {
 export interface NavigationResult {
   initialPages: LessonLink[];
   modules: ModuleGroup[];
+  extras: ModuleGroup[]; // Presentación, Recursos — shown on home only
   allLessonsOrdered: LessonLink[]; // Flat list to easily calculate Prev/Next links
 }
 
@@ -127,9 +128,23 @@ export function getNavigationStructure(entries: any[], currentDate: Date = new D
     }
   }
 
+  const allGroups = Array.from(modulesMap.values()).sort((a, b) => a.title.localeCompare(b.title));
+  const modules: ModuleGroup[] = [];
+  const extras: ModuleGroup[] = [];
+
+  for (const group of allGroups) {
+    // ponytail: digit-prefixed groups are "modules" (sidebar), others are "extras" (home only)
+    if (/^\d/.test(group.title)) {
+      modules.push(group);
+    } else {
+      extras.push(group);
+    }
+  }
+
   return {
     initialPages,
-    modules: Array.from(modulesMap.values()).sort((a, b) => a.title.localeCompare(b.title)),
+    modules,
+    extras,
     allLessonsOrdered,
   };
 }

@@ -9,7 +9,19 @@ const lecciones = defineCollection({
     topicTitle: z.string().optional(),
     subtopicTitle: z.string().optional(),
     fecha: z.string().optional(),
+    description: z.string().optional(),
+    duration: z.number().optional(),
+    objectives: z.array(z.string()).optional(),
   }),
 });
 
-export const collections = { lecciones };
+const mensajes = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: "./src/content/mensajes" }),
+  schema: z.object({
+    fecha: z.string(),
+    autor: z.string(),
+    title: z.string().optional(),
+  }),
+});
+
+export const collections = { lecciones, mensajes };

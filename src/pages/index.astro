@@ -4,60 +4,71 @@ import { getNavigationStructure } from '../utils/navigation';
 import Layout from '../layouts/Layout.astro';
 
 const lecciones = await getCollection('lecciones');
-const sorted = [...lecciones].sort((a, b) => a.id.localeCompare(b.id));
 const nav = getNavigationStructure(lecciones);
 const firstLesson = nav.allLessonsOrdered.length > 0 ? nav.allLessonsOrdered[0] : null;
+const allGroups = [...nav.modules, ...nav.extras];
 ---
 
 <Layout title="Inicio">
-  <div class="flex flex-col items-center justify-center min-h-[60vh] text-center">
-    <div class="w-16 h-16 rounded-2xl bg-brand-primary/10 flex items-center justify-center mb-6">
-      <svg class="h-8 w-8 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342" />
-      </svg>
+  <div class="max-w-4xl mx-auto">
+    <!-- Header compacto -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 pb-6 border-b border-brand-border">
+      <div>
+        <h1 class="font-display font-extrabold text-3xl sm:text-4xl text-brand-navy dark:text-white tracking-tight">
+          Plataforma de Estudios
+        </h1>
+        <p class="text-brand-muted text-sm mt-1">
+          Impartido por <span class="text-brand-primary font-semibold">Joel Josafat Hernandez Saucedo</span>
+        </p>
+      </div>
+      <div class="flex items-center gap-3 text-sm text-brand-muted">
+        <span>{nav.modules.length} módulo{nav.modules.length !== 1 ? 's' : ''}</span>
+        <span class="w-1 h-1 rounded-full bg-brand-border"></span>
+        <span>{nav.allLessonsOrdered.length} lecciones</span>
+        {firstLesson && (
+          <>
+            <span class="w-1 h-1 rounded-full bg-brand-border"></span>
+            <a
+              href={`/${firstLesson.slug}`}
+              class="inline-flex items-center gap-1.5 rounded-lg bg-brand-primary text-white px-4 py-2 font-semibold text-xs hover:bg-brand-accent transition-colors"
+            >
+              Comenzar
+              <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+              </svg>
+            </a>
+          </>
+        )}
+      </div>
     </div>
 
-    <h1 class="font-display font-extrabold text-4xl sm:text-5xl text-brand-navy tracking-tight mb-3">
-      Plataforma de Estudios
-    </h1>
-    <p class="text-brand-muted text-lg max-w-md mb-4">
-      Lecciones y material de clases de tecnología e informática.
-    </p>
+    <!-- Grid de contenido -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      {allGroups.map((group) => {
+        const isExtra = !/^\d/.test(group.title);
+        const badgeNum = isExtra ? group.title.charAt(0) : (nav.modules.indexOf(group) + 1);
+        const badgeClass = isExtra ? 'module-badge-m0' : `module-badge-m${Math.min(nav.modules.indexOf(group) + 1, 7)}`;
+        const firstSlug = group.topics[0]?.lessons[0]?.slug || '#';
+        const lessonCount = group.topics.reduce((s, t) => s + t.lessons.length, 0);
 
-    <p class="text-sm text-brand-muted mb-8 font-medium">
-      Impartido por <span class="text-brand-primary">Joel Josafat Hernandez Saucedo</span>
-    </p>
-
-    {firstLesson && (
-      <a
-        href={`/${firstLesson.slug}`}
-        class="inline-flex items-center gap-2 rounded-xl bg-brand-primary text-white px-6 py-3 font-semibold text-sm hover:bg-brand-accent transition-all duration-200 shadow-lg shadow-brand-primary/20 hover:shadow-brand-primary/30 hover:-translate-y-0.5"
-      >
-        Comenzar
-        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-        </svg>
-      </a>
-    )}
-
-    {nav.modules.length > 0 && (
-      <div class="mt-12 w-full max-w-lg">
-        <h2 class="text-xs font-semibold uppercase tracking-widest text-brand-muted mb-4">Módulos</h2>
-        <div class="space-y-2">
-          {nav.modules.map((mod, i) => (
-            <a
-              href={`/${mod.topics[0]?.lessons[0]?.slug || '#'}`}
-              class="flex items-center gap-3 rounded-xl border border-brand-border p-4 text-left hover:border-brand-primary/30 hover:bg-brand-hover-bg transition-all duration-200"
-            >
-              <span class={`module-badge module-badge-m${Math.min(i + 1, 7)}`}>{i + 1}</span>
-              <div>
-                <span class="block text-sm font-semibold text-brand-navy">{mod.title}</span>
-                <span class="block text-xs text-brand-muted mt-0.5">{mod.topics.length} temas</span>
-              </div>
-            </a>
-          ))}
-        </div>
-      </div>
-    )}
+        return (
+          <a
+            href={`/${firstSlug}`}
+            class={`card-hover flex items-center gap-4 rounded-xl border ${isExtra ? 'border-dashed border-brand-border' : 'border-brand-border'} bg-white dark:bg-brand-sidebar-bg p-4 ${isExtra ? '' : ''}`}
+          >
+            <span class={`module-badge ${badgeClass} shrink-0 text-xs font-bold`}>{badgeNum}</span>
+            <div class="min-w-0 flex-1">
+              <span class="block text-sm font-semibold text-brand-navy dark:text-white truncate">{group.title}</span>
+              <span class="block text-xs text-brand-muted mt-0.5">
+                {lessonCount} {lessonCount === 1 ? 'lección' : 'lecciones'}
+              </span>
+            </div>
+            <svg class="h-4 w-4 text-brand-muted shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+            </svg>
+          </a>
+        );
+      })}
+    </div>
   </div>
 </Layout>
