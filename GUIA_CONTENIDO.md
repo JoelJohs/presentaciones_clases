@@ -85,7 +85,7 @@ Cualquier archivo colocado dentro de `public/` se sirve de manera directa desde 
    `public/images/lecciones/[nombre-del-modulo]/[nombre-del-tema]/imagen.png`
 2. En tu archivo `.mdx`, haz referencia con una ruta absoluta:
    ```markdown
-   ![Texto alternativo](/images/lecciones/01-fundamentos-mantenimiento/01-introduccion-informatica/imagen.png)
+   ![Texto alternativo](/images/lecciones/01-fundamentos-mantenimiento/01-introduccion-computacion/imagen.png)
    ```
 
 ### Opción B: Usando el alias `@assets/` (Recomendado con optimización automática)
@@ -95,7 +95,7 @@ Astro procesará y optimizará las imágenes automáticamente. Para evitar escri
    `src/assets/images/lecciones/[nombre-del-modulo]/[nombre-del-tema]/imagen.png`
 2. En tu archivo `.mdx`, haz referencia usando el alias:
    ```markdown
-   ![Texto alternativo](@assets/images/lecciones/01-fundamentos-mantenimiento/01-introduccion-informatica/imagen.png)
+   ![Texto alternativo](@assets/images/lecciones/01-fundamentos-mantenimiento/01-introduccion-computacion/imagen.png)
    ```
 
 ---

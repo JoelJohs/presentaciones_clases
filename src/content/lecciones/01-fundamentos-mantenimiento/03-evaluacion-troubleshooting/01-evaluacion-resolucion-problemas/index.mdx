@@ -1,6 +1,6 @@
 ---
 title: "Evaluación y Resolución de Problemas"
-moduleTitle: "1 - Fundamentos de Mantenimiento"
+moduleTitle: "1 - Fundamentos y Mantenimiento de Equipos de Cómputo"
 topicTitle: "Tema 3: Evaluación y Troubleshooting"
 subtopicTitle: "Evaluación y Resolución de Problemas"
 fecha: "18-07-2026"
@@ -40,11 +40,28 @@ Examen escrito que cubre los tres temas del módulo:
 
 ### Formato del examen
 
-| Tipo | Preguntas |
-|---|---|
-| Opción múltiple | 10 preguntas |
-| Verdadero / Falso | 5 preguntas |
-| Pregunta abierta | 2 preguntas |
+<table>
+  <thead>
+    <tr>
+      <th>Tipo</th>
+      <th>Preguntas</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Opción múltiple</td>
+      <td>10 preguntas</td>
+    </tr>
+    <tr>
+      <td>Verdadero / Falso</td>
+      <td>5 preguntas</td>
+    </tr>
+    <tr>
+      <td>Pregunta abierta</td>
+      <td>2 preguntas</td>
+    </tr>
+  </tbody>
+</table>
 
 > El banco de preguntas completo está en `docs/examen-m1.md`.
 
@@ -112,9 +129,9 @@ Windows muestra una pantalla azul con texto blanco y se reinicia.
 
     **Soluciones:**
     1. Anota el código de error (ej: `PAGE_FAULT_IN_NONPAGED_AREA`).
-    2. Busca el código en internet o usa el visor de eventos de Windows.
-3. Prueba la RAM con [MemTest86](https://www.memtest86.com).
-4. Revisa temperaturas con [HWMonitor](https://www.cpuid.com/softwares/hwmonitor.html).
+     2. Busca el código en internet o usa el visor de eventos de Windows.
+     3. Prueba la RAM con [MemTest86](https://www.memtest86.com).
+     4. Revisa temperaturas con [HWMonitor](https://www.cpuid.com/softwares/hwmonitor.html).
     5. Restaura el sistema o usa `sfc /scannow`.
 
   </blockquote>
@@ -149,33 +166,126 @@ El sistema tarda en abrir programas, el explorador se congela, el inicio es muy 
 
 ### Windows
 
-| Herramienta | Cómo acceder | Para qué sirve |
-|---|---|---|
-| Administrador de Tareas | Ctrl + Shift + Esc | Ver uso de CPU/RAM/disco, cerrar programas, gestionar inicio |
-| Visor de Eventos | `eventvwr.msc` | Ver registros detallados de errores del sistema |
-| Monitor de Rendimiento | `perfmon` | Gráficas detalladas de rendimiento |
-| Información del Sistema | `msinfo32` | Resumen completo del hardware y software |
-| Comprobación de Memoria | `mdsched.exe` | Prueba la RAM en busca de errores |
-| Símbolo del sistema | `cmd` | `sfc /scannow`, `chkdsk`, `diskpart` |
-| Administración de Discos | `diskmgmt.msc` | Ver y gestionar particiones |
+<table>
+  <thead>
+    <tr>
+      <th>Herramienta</th>
+      <th>Cómo acceder</th>
+      <th>Para qué sirve</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Administrador de Tareas</td>
+      <td><code>Ctrl + Shift + Esc</code></td>
+      <td>Ver uso de CPU/RAM/disco, cerrar programas, gestionar inicio</td>
+    </tr>
+    <tr>
+      <td>Visor de Eventos</td>
+      <td><code>eventvwr.msc</code></td>
+      <td>Ver registros detallados de errores del sistema</td>
+    </tr>
+    <tr>
+      <td>Monitor de Rendimiento</td>
+      <td><code>perfmon</code></td>
+      <td>Gráficas detalladas de rendimiento</td>
+    </tr>
+    <tr>
+      <td>Información del Sistema</td>
+      <td><code>msinfo32</code></td>
+      <td>Resumen completo del hardware y software</td>
+    </tr>
+    <tr>
+      <td>Comprobación de Memoria</td>
+      <td><code>mdsched.exe</code></td>
+      <td>Prueba la RAM en busca de errores</td>
+    </tr>
+    <tr>
+      <td>Símbolo del sistema</td>
+      <td><code>cmd</code></td>
+      <td><code>sfc /scannow</code>, <code>chkdsk</code>, <code>diskpart</code></td>
+    </tr>
+    <tr>
+      <td>Administración de Discos</td>
+      <td><code>diskmgmt.msc</code></td>
+      <td>Ver y gestionar particiones</td>
+    </tr>
+  </tbody>
+</table>
 
 ### Linux
 
-| Herramienta | Comando | Para qué sirve |
-|---|---|---|
-| Monitor del sistema | `gnome-system-monitor` | Ver uso de recursos |
-| Discos | `gnome-disks` | Gestionar particiones y ver salud del disco |
-| Logs del sistema | `journalctl -xe` | Ver registros de errores |
-| Memoria | `free -h` | Ver uso de RAM |
-| Disco | `df -h` | Ver espacio en discos |
-| SMART | `smartctl -a /dev/sda` | Ver salud del disco |
+<table>
+  <thead>
+    <tr>
+      <th>Herramienta</th>
+      <th>Comando</th>
+      <th>Para qué sirve</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Monitor del sistema</td>
+      <td><code>gnome-system-monitor</code></td>
+      <td>Ver uso de recursos</td>
+    </tr>
+    <tr>
+      <td>Discos</td>
+      <td><code>gnome-disks</code></td>
+      <td>Gestionar particiones y ver salud del disco</td>
+    </tr>
+    <tr>
+      <td>Logs del sistema</td>
+      <td><code>journalctl -xe</code></td>
+      <td>Ver registros de errores</td>
+    </tr>
+    <tr>
+      <td>Memoria</td>
+      <td><code>free -h</code></td>
+      <td>Ver uso de RAM</td>
+    </tr>
+    <tr>
+      <td>Disco</td>
+      <td><code>df -h</code></td>
+      <td>Ver espacio en discos</td>
+    </tr>
+    <tr>
+      <td>SMART</td>
+      <td><code>smartctl -a /dev/sda</code></td>
+      <td>Ver salud del disco</td>
+    </tr>
+  </tbody>
+</table>
 
 ### Hardware
 
-| Herramienta | Para qué sirve |
-|---|---|
-| [HWMonitor](https://www.cpuid.com/softwares/hwmonitor.html) / [Core Temp](https://www.alcpu.com/CoreTemp/) | Monitorear temperaturas de CPU y GPU |
-| [CrystalDiskInfo](https://crystalmark.info/en/software/crystaldiskinfo/) | Revisar salud de SSD/HDD (SMART) |
-| [MemTest86](https://www.memtest86.com) | Prueba exhaustiva de memoria RAM |
-| Multímetro | Medir voltajes de la fuente de poder |
-| POST Tester (tarjeta de diagnóstico) | Identificar fallas con códigos POST |
+<table>
+  <thead>
+    <tr>
+      <th>Herramienta</th>
+      <th>Para qué sirve</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="https://www.cpuid.com/softwares/hwmonitor.html">HWMonitor</a> / <a href="https://www.alcpu.com/CoreTemp/">Core Temp</a></td>
+      <td>Monitorear temperaturas de CPU y GPU</td>
+    </tr>
+    <tr>
+      <td><a href="https://crystalmark.info/en/software/crystaldiskinfo/">CrystalDiskInfo</a></td>
+      <td>Revisar salud de SSD/HDD (SMART)</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.memtest86.com">MemTest86</a></td>
+      <td>Prueba exhaustiva de memoria RAM</td>
+    </tr>
+    <tr>
+      <td>Multímetro</td>
+      <td>Medir voltajes de la fuente de poder</td>
+    </tr>
+    <tr>
+      <td>POST Tester (tarjeta de diagnóstico)</td>
+      <td>Identificar fallas con códigos POST</td>
+    </tr>
+  </tbody>
+</table>

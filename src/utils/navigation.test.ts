@@ -9,7 +9,7 @@ describe('Navigation Logic', () => {
         filePath: 'src/content/lecciones/01-modulo-fundamentos/01-conceptos/01-hardware-software.mdx',
         data: {
           title: 'Hardware y Software',
-          moduleTitle: '1 - Fundamentos de Mantenimiento',
+          moduleTitle: '1 - Fundamentos y Mantenimiento de Equipos de Cómputo',
           topicTitle: 'Tema 1: Conceptos Generales',
           fecha: '20-06-2026'
         }
@@ -41,7 +41,7 @@ describe('Navigation Logic', () => {
 
     // Digit-prefixed groups are modules, letter-prefixed are extras
     expect(result.modules.length).toBe(1);
-    expect(result.modules[0].title).toBe('1 - Fundamentos de Mantenimiento');
+    expect(result.modules[0].title).toBe('1 - Fundamentos y Mantenimiento de Equipos de Cómputo');
     expect(result.extras.length).toBe(2);
     expect(result.extras[0].title).toBe('P - Presentación');
     expect(result.extras[1].title).toBe('R - Recursos');
@@ -80,7 +80,7 @@ describe('Navigation Logic', () => {
         id: '01-modulo-fundamentos/01-conceptos/01-hardware-software.mdx',
         data: {
           title: 'Hardware y Software',
-          moduleTitle: '1 - Fundamentos de Mantenimiento',
+          moduleTitle: '1 - Fundamentos y Mantenimiento de Equipos de Cómputo',
           topicTitle: 'Tema 1: Conceptos Generales',
           fecha: '20-06-2026'
         }
@@ -89,7 +89,7 @@ describe('Navigation Logic', () => {
         id: '01-modulo-fundamentos/01-conceptos/02-exploracion-so.mdx',
         data: {
           title: 'Exploración del SO',
-          moduleTitle: '1 - Fundamentos de Mantenimiento',
+          moduleTitle: '1 - Fundamentos y Mantenimiento de Equipos de Cómputo',
           topicTitle: 'Tema 1: Conceptos Generales',
           fecha: '27-06-2026'
         }
@@ -117,7 +117,7 @@ describe('Navigation Logic', () => {
       expect(result.extras.find(m => m.title === 'P - Presentación')).toBeDefined();
 
       // Module 1 has 1 visible lesson (L1 released, L2 future)
-      const mod1 = result.modules.find(m => m.title === '1 - Fundamentos de Mantenimiento')!;
+      const mod1 = result.modules.find(m => m.title === '1 - Fundamentos y Mantenimiento de Equipos de Cómputo')!;
       expect(mod1.topics[0].lessons.length).toBe(1);
       expect(mod1.topics[0].lessons[0].title).toBe('Hardware y Software');
       
@@ -133,65 +133,65 @@ describe('Navigation Logic', () => {
   it('should strip /index suffix from entry IDs to generate clean slugs', () => {
     const mockEntries = [
       {
-        id: '01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software/index.mdx',
+        id: '01-fundamentos-mantenimiento/01-introduccion-computacion/01-hardware-y-software/index.mdx',
         data: {
           title: 'Hardware y Software',
-          moduleTitle: '1 - Fundamentos de Mantenimiento',
-          topicTitle: 'Tema 1: Introducción a la Informática',
+          moduleTitle: '1 - Fundamentos y Mantenimiento de Equipos de Cómputo',
+          topicTitle: 'Tema 1: Introducción a la Computación',
           fecha: '20-06-2026'
         }
       },
       {
-        id: '01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software/repaso.mdx',
+        id: '01-fundamentos-mantenimiento/01-introduccion-computacion/01-hardware-y-software/repaso.mdx',
         data: {
           title: 'Repaso: Hardware y Software',
-          moduleTitle: '1 - Fundamentos de Mantenimiento',
-          topicTitle: 'Tema 1: Introducción a la Informática',
+          moduleTitle: '1 - Fundamentos y Mantenimiento de Equipos de Cómputo',
+          topicTitle: 'Tema 1: Introducción a la Computación',
           fecha: '20-06-2026'
         }
       }
     ];
 
     const result = getNavigationStructure(mockEntries as any);
-    expect(result.allLessonsOrdered[0].slug).toBe('01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software');
-    expect(result.allLessonsOrdered[1].slug).toBe('01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software/repaso');
+    expect(result.allLessonsOrdered[0].slug).toBe('01-fundamentos-mantenimiento/01-introduccion-computacion/01-hardware-y-software');
+    expect(result.allLessonsOrdered[1].slug).toBe('01-fundamentos-mantenimiento/01-introduccion-computacion/01-hardware-y-software/repaso');
   });
 
   it('should sort entries within the same folder placing index first, repaso last, and others alphabetically', () => {
     const mockEntries = [
       {
-        id: '01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software/repaso.mdx',
+        id: '01-fundamentos-mantenimiento/01-introduccion-computacion/01-hardware-y-software/repaso.mdx',
         data: {
           title: 'Repaso: Hardware y Software',
-          moduleTitle: '1 - Fundamentos de Mantenimiento',
-          topicTitle: 'Tema 1: Introducción a la Informática',
+          moduleTitle: '1 - Fundamentos y Mantenimiento de Equipos de Cómputo',
+          topicTitle: 'Tema 1: Introducción a la Computación',
           fecha: '20-06-2026'
         }
       },
       {
-        id: '01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software/detalles.mdx',
+        id: '01-fundamentos-mantenimiento/01-introduccion-computacion/01-hardware-y-software/detalles.mdx',
         data: {
           title: 'Detalles de la práctica',
-          moduleTitle: '1 - Fundamentos de Mantenimiento',
-          topicTitle: 'Tema 1: Introducción a la Informática',
+          moduleTitle: '1 - Fundamentos y Mantenimiento de Equipos de Cómputo',
+          topicTitle: 'Tema 1: Introducción a la Computación',
           fecha: '20-06-2026'
         }
       },
       {
-        id: '01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software/index.mdx',
+        id: '01-fundamentos-mantenimiento/01-introduccion-computacion/01-hardware-y-software/index.mdx',
         data: {
           title: 'Hardware y Software',
-          moduleTitle: '1 - Fundamentos de Mantenimiento',
-          topicTitle: 'Tema 1: Introducción a la Informática',
+          moduleTitle: '1 - Fundamentos y Mantenimiento de Equipos de Cómputo',
+          topicTitle: 'Tema 1: Introducción a la Computación',
           fecha: '20-06-2026'
         }
       },
       {
-        id: '01-fundamentos-mantenimiento/01-introduccion-informatica/01-hardware-y-software/contenido-audiovisual.mdx',
+        id: '01-fundamentos-mantenimiento/01-introduccion-computacion/01-hardware-y-software/contenido-audiovisual.mdx',
         data: {
           title: 'Contenido Audiovisual',
-          moduleTitle: '1 - Fundamentos de Mantenimiento',
-          topicTitle: 'Tema 1: Introducción a la Informática',
+          moduleTitle: '1 - Fundamentos y Mantenimiento de Equipos de Cómputo',
+          topicTitle: 'Tema 1: Introducción a la Computación',
           fecha: '20-06-2026'
         }
       }

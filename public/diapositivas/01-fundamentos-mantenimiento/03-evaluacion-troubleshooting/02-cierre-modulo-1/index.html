@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cierre Módulo 1 — Presentación</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0C0A09;
+      color: #E7E5E4;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      overflow: hidden;
+      font-size: clamp(16px, 2vw, 22px);
+    }
+    .slide-deck {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    @media (min-width: 769px) {
+      .slide-deck {
+        max-width: calc(100vh * 16 / 9);
+        max-height: calc(100vw * 9 / 16);
+        margin: auto;
+        position: absolute;
+        inset: 0;
+      }
+    }
+    .slide {
+      position: absolute;
+      width: 100%; height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 60px 60px 80px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s;
+      background: #0C0A09;
+      overflow-y: auto;
+    }
+    .slide.active { opacity: 1; visibility: visible; }
+    .slide-content {
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex: 1;
+      gap: 12px;
+    }
+    h1 {
+      font-family: 'Outfit', 'Inter', sans-serif;
+      font-size: clamp(36px, 6vw, 72px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+    h1.gradient {
+      background: linear-gradient(135deg, #2DD4BF, #14B8A6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    h2 {
+      font-family: 'Outfit', 'Inter', sans-serif;
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 700;
+      color: #2DD4BF;
+      margin-bottom: 8px;
+    }
+    h3 {
+      font-family: 'Outfit', 'Inter', sans-serif;
+      font-size: clamp(20px, 2.5vw, 32px);
+      font-weight: 600;
+      color: #14B8A6;
+    }
+    p { line-height: 1.7; color: #D6D3D1; }
+    ul, ol { padding-left: 1.5em; line-height: 1.8; }
+    li { margin: 4px 0; color: #D6D3D1; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85em;
+      margin: 8px 0;
+    }
+    th {
+      background: rgba(45, 212, 191, 0.15);
+      color: #2DD4BF;
+      font-weight: 700;
+      padding: 10px 14px;
+      border-bottom: 2px solid #2DD4BF;
+      text-align: left;
+    }
+    td {
+      padding: 8px 14px;
+      border-bottom: 1px solid rgba(41, 37, 36, 0.8);
+      color: #D6D3D1;
+    }
+    tr:hover td { background: rgba(45, 212, 191, 0.04); }
+    code {
+      background: rgba(45, 212, 191, 0.1);
+      color: #2DD4BF;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.85em;
+    }
+    pre {
+      background: #1C1917;
+      padding: 16px 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 0.85em;
+      line-height: 1.6;
+      border-left: 3px solid #2DD4BF;
+    }
+    pre code { background: none; padding: 0; }
+    .tagline {
+      font-size: clamp(18px, 2vw, 28px);
+      color: #A8A29E;
+      margin-top: 8px;
+    }
+    .subtitle {
+      font-size: clamp(16px, 1.8vw, 24px);
+      color: #78716C;
+      margin-top: 4px;
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(45, 212, 191, 0.15);
+      color: #2DD4BF;
+      padding: 4px 16px;
+      border-radius: 20px;
+      font-size: 0.75em;
+      font-weight: 600;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin: 8px 0;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 8px 0;
+    }
+    .card {
+      background: #1C1917;
+      border: 1px solid #292524;
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.2s;
+    }
+    .card:hover { border-color: #2DD4BF; }
+    .card h3 { font-size: clamp(16px, 1.8vw, 24px); margin-bottom: 8px; }
+    .card p { font-size: 0.85em; }
+    .card .label {
+      display: inline-block;
+      background: rgba(45, 212, 191, 0.12);
+      color: #2DD4BF;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 0.7em;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+    .big-number {
+      font-size: clamp(48px, 8vw, 96px);
+      font-weight: 800;
+      color: #2DD4BF;
+      line-height: 1;
+    }
+    .link-list a {
+      color: #2DD4BF;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: all 0.2s;
+    }
+    .link-list a:hover {
+      border-bottom-color: #2DD4BF;
+    }
+    .warning {
+      background: rgba(217, 119, 6, 0.12);
+      border-left: 4px solid #D97706;
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 8px 0;
+      font-size: 0.9em;
+    }
+    .tip {
+      background: rgba(45, 212, 191, 0.08);
+      border-left: 4px solid #2DD4BF;
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 8px 0;
+      font-size: 0.9em;
+    }
+    .qa-section {
+      text-align: center;
+      padding: 40px 0;
+    }
+    .qa-section .big-icon {
+      font-size: clamp(60px, 10vw, 120px);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .slide { padding: 24px 20px 70px; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+
+    .progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #2DD4BF, #14B8A6);
+      transition: width 0.3s;
+      z-index: 1000;
+    }
+    .nav-controls {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      z-index: 1000;
+    }
+    .nav-btn {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #fff;
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover { background: rgba(45, 212, 191, 0.3); border-color: #2DD4BF; }
+    .slide-counter { color: rgba(255,255,255,0.4); font-size: 13px; font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body>
+  <div class="progress-bar" id="progressBar"></div>
+
+  <div class="slide-deck">
+
+    <!-- 1: PORTADA -->
+    <div class="slide active">
+      <div class="slide-content" style="text-align:center">
+        <h1 class="gradient">Cierre del Módulo 1</h1>
+        <p class="tagline">Fundamentos y Mantenimiento de Equipos de Cómputo</p>
+        <p class="subtitle">Arquitecturas · Firmware · USBs booteables · SO para legacy</p>
+        <div style="margin-top:24px">
+          <span class="badge">Última clase</span>
+        </div>
+        <p style="margin-top:40px;font-size:0.75em;color:#78716C">Navega con ← → o clic</p>
+      </div>
+    </div>
+
+    <!-- 2: AGENDA -->
+    <div class="slide">
+      <div class="slide-content">
+        <h2>Agenda</h2>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
+          <div style="display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:8px;background:#1C1917">
+            <span style="color:#2DD4BF;font-weight:700;font-size:1.2em">1</span>
+            <span>32 vs 64 bits — ¿qué significa y cómo identificarlo?</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:8px;background:#1C1917">
+            <span style="color:#2DD4BF;font-weight:700;font-size:1.2em">2</span>
+            <span>Legacy BIOS vs UEFI — firmware y tablas de partición</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:8px;background:#1C1917">
+            <span style="color:#2DD4BF;font-weight:700;font-size:1.2em">3</span>
+            <span>USB booteable — por qué falló Ventoy y cómo usar <code>dd</code></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:8px;background:#1C1917">
+            <span style="color:#2DD4BF;font-weight:700;font-size:1.2em">4</span>
+            <span>SO para equipos legacy — Tiny10, Tiny11 y Linux ligeros</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:8px;background:#1C1917">
+            <span style="color:#2DD4BF;font-weight:700;font-size:1.2em">5</span>
+            <span>Repaso rápido del Módulo 1 + Q&A</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3: 32 VS 64 BITS -->
+    <div class="slide">
+      <div class="slide-content">
+        <h2>32 vs 64 bits</h2>
+        <p>El procesador maneja X bytes <strong>por ciclo de reloj</strong>. Eso define la arquitectura.</p>
+        <table>
+          <thead>
+            <tr><th></th><th>32 bits (x86 / i686)</th><th>64 bits (x86_64 / amd64)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Datos por ciclo</strong></td><td>4 bytes</td><td>8 bytes</td></tr>
+            <tr><td><strong>RAM máxima</strong></td><td>~3.5 GB</td><td>Terabytes</td></tr>
+            <tr><td><strong>Ejecuta programas 64b</strong></td><td>No</td><td>—</td></tr>
+            <tr><td><strong>Ejecuta programas 32b</strong></td><td>—</td><td>Sí (modo compatible)</td></tr>
+          </tbody>
+        </table>
+        <div class="tip">
+          <strong>64 bits puede ejecutar 32 bits, pero 32 bits NO puede ejecutar 64 bits.</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4: CÓMO IDENTIFICAR -->
+    <div class="slide">
+      <div class="slide-content">
+        <h2>¿Cómo identificar?</h2>
+        <div class="grid-2">
+          <div class="card">
+            <h3>🐧 Linux</h3>
+            <pre><code>lscpu | grep Architecture</code></pre>
+            <p><code>x86_64</code> = 64 bits · <code>i686</code> = 32 bits</p>
+            <pre><code>uname -m</code></pre>
+            <p>Más conciso, mismo resultado</p>
+          </div>
+          <div class="card">
+            <h3>🪟 Windows</h3>
+            <p style="margin-top:8px">Abrir <strong>msinfo32</strong>:</p>
+            <p>Inicio → "Información del sistema"</p>
+            <p>Buscar: <strong>"Tipo de sistema"</strong></p>
+            <p style="margin-top:12px">→ <code>PC basada en x64</code><br>→ <code>PC basada en x86</code></p>
+          </div>
+        </div>
+        <div class="tip">
+          Si arrancas con un live USB de Linux, puedes correr <code>lscpu</code> antes de instalar nada.
+        </div>
+      </div>
+    </div>
+
+    <!-- 5: LEGACY BIOS VS UEFI -->
+    <div class="slide">
+      <div class="slide-content">
+        <h2>Legacy BIOS vs UEFI</h2>
+        <p>Firmware grabado en la motherboard. Arranca la PC.</p>
+        <table>
+          <thead>
+            <tr><th></th><th>Legacy BIOS</th><th>UEFI</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Tabla de particiones</strong></td><td>MBR</td><td>GPT</td></tr>
+            <tr><td><strong>Disco máximo</strong></td><td>2 TB</td><td>9.4 ZB</td></tr>
+            <tr><td><strong>Particiones primarias</strong></td><td>4 máximo</td><td>128</td></tr>
+            <tr><td><strong>Interfaz</strong></td><td>Solo texto</td><td>Gráfica + mouse</td></tr>
+            <tr><td><strong>Secure Boot</strong></td><td>No</td><td>Sí</td></tr>
+            <tr><td><strong>Modo del CPU</strong></td><td>16 bits (modo real)</td><td>32/64 bits</td></tr>
+          </tbody>
+        </table>
+        <div class="warning">
+          <strong>Problema real:</strong> Ventoy no funciona en BIOS legacy antiguas porque su bootloader no las soporta.
+        </div>
+      </div>
+    </div>
+
+    <!-- 6: MBR VS GPT -->
+    <div class="slide">
+      <div class="slide-content">
+        <h2>MBR vs GPT</h2>
+        <p>Le dice al firmware dónde vive cada partición.</p>
+        <div class="grid-2">
+          <div class="card">
+            <h3>MBR</h3>
+            <p><em>Master Boot Record</em> — 1983</p>
+            <ul style="margin-top:8px">
+              <li>4 particiones primarias máximo</li>
+              <li>Discos hasta 2 TB</li>
+              <li>El boot code vive en el primer sector (512 bytes)</li>
+              <li>Usado por Legacy BIOS</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>GPT</h3>
+            <p><em>GUID Partition Table</em> — 2010</p>
+            <ul style="margin-top:8px">
+              <li>128 particiones primarias</li>
+              <li>Discos hasta 9.4 ZB</li>
+              <li>Redundante (copia al final del disco)</li>
+              <li>Requiere UEFI (o BIOS con parche)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7: USB BOOTEABLE -->
+    <div class="slide">
+      <div class="slide-content">
+        <h2>USB Booteable para Legacy</h2>
+        <p style="margin-bottom:8px">Ventoy falló → <code>dd</code> es la alternativa.</p>
+        <pre><code># 1. Identificar el USB (CUIDADO con el dispositivo)
+lsblk
+
+# 2. Desmontar si está montado
+sudo umount /dev/sdX1
+
+# 3. Escribir ISO directo al dispositivo
+sudo dd if=tu-iso.iso of=/dev/sdX bs=4M status=progress
+
+# 4. Sincronizar
+sync</code></pre>
+        <div class="warning">
+          ⚠️ <code>of=/dev/sdX</code> = dispositivo completo (sin número).<br>
+          Si pones <code>sda</code> en vez de <code>sdb</code>, borras tu disco principal.
+        </div>
+        <div class="tip">
+          <strong>¿Por qué dd sí?</strong> Copia bit por bit, MBR incluido. Ventoy instala su propio bootloader y las BIOS viejas no lo reconocen.
+        </div>
+      </div>
+    </div>
+
+    <!-- 8: SO PARA LEGACY -->
+    <div class="slide">
+      <div class="slide-content">
+        <h2>SO para equipos legacy</h2>
+        <p>2-4 GB RAM. Primero hay que identificar la arquitectura.</p>
+        <div class="grid-2">
+          <div class="card">
+            <h3>🖥️ Si son 32 bits</h3>
+            <table>
+              <tr><td><strong>Tiny10 32-bit</strong></td><td>Win 10 recortado</td><td>1 GB</td></tr>
+              <tr><td><strong>Antix Linux</strong></td><td>Linux ultraligero</td><td>256 MB</td></tr>
+              <tr><td><strong>Puppy Linux</strong></td><td>Corre en RAM</td><td>256 MB</td></tr>
+              <tr><td><strong>Debian + LXDE</strong></td><td>Estable</td><td>512 MB</td></tr>
+              <tr><td><strong>Q4OS Trinity</strong></td><td>Tipo XP</td><td>256 MB</td></tr>
+            </table>
+          </div>
+          <div class="card">
+            <h3>💻 Si son 64 bits</h3>
+            <table>
+              <tr><td><strong>Tiny11</strong></td><td>Win 11 recortado</td><td>2 GB</td></tr>
+              <tr><td><strong>Mint XFCE</strong></td><td>Linux ligero</td><td>1 GB</td></tr>
+              <tr><td><strong>MX Linux</strong></td><td>Popular old HW</td><td>1 GB</td></tr>
+              <tr><td><strong>Lubuntu</strong></td><td>LXQt</td><td>1 GB</td></tr>
+              <tr><td><strong>Zorin OS Lite</strong></td><td>Parecido a Win</td><td>1 GB</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9: TINY10 / TINY11 -->
+    <div class="slide">
+      <div class="slide-content">
+        <h2>¿Dónde conseguir las ISOs?</h2>
+        <div class="grid-2">
+          <div class="card">
+            <h3>🗄️ Tiny10 / Tiny11 (NTDev)</h3>
+            <p style="margin-top:8px;font-size:0.85em">ISOs de Windows recortadas, sin bloatware.</p>
+            <table style="margin-top:8px">
+              <tr><td><strong>Tiny10 32-bit</strong></td><td><a href="https://archive.org/details/tiny-10-2303-x-32" target="_blank" style="color:#2DD4BF">archive.org</a></td></tr>
+              <tr><td><strong>Tiny10 64-bit</strong></td><td><a href="https://archive.org/details/tiny-10-23-h-2" target="_blank" style="color:#2DD4BF">archive.org</a></td></tr>
+              <tr><td><strong>Tiny11 23H2</strong></td><td><a href="https://archive.org/details/tiny-11-23-h-2" target="_blank" style="color:#2DD4BF">archive.org</a></td></tr>
+            </table>
+          </div>
+          <div class="card">
+            <h3>🐧 Linux ligeros</h3>
+            <table style="margin-top:8px">
+              <tr><td><strong>Antix Linux</strong></td><td><a href="https://antixlinux.com/" target="_blank" style="color:#2DD4BF">antixlinux.com</a></td></tr>
+              <tr><td><strong>MX Linux</strong></td><td><a href="https://mxlinux.org/" target="_blank" style="color:#2DD4BF">mxlinux.org</a></td></tr>
+              <tr><td><strong>Lubuntu</strong></td><td><a href="https://lubuntu.me/" target="_blank" style="color:#2DD4BF">lubuntu.me</a></td></tr>
+              <tr><td><strong>Puppy Linux</strong></td><td><a href="http://puppylinux.com/" target="_blank" style="color:#2DD4BF">puppylinux.com</a></td></tr>
+            </table>
+          </div>
+        </div>
+        <div style="margin-top:12px">
+          <div class="tip">
+            <strong>Herramientas:</strong>
+            <a href="https://ninite.com" target="_blank" style="color:#2DD4BF">Ninite</a> ·
+            <a href="https://rufus.ie" target="_blank" style="color:#2DD4BF">Rufus</a> ·
+            <a href="https://www.ventoy.net" target="_blank" style="color:#2DD4BF">Ventoy</a> ·
+            <a href="https://www.memtest86.com" target="_blank" style="color:#2DD4BF">MemTest86</a> ·
+            <a href="https://www.cpuid.com/softwares/hwmonitor.html" target="_blank" style="color:#2DD4BF">HWMonitor</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10: REPASO M1 -->
+    <div class="slide">
+      <div class="slide-content">
+        <h2>Repaso Rápido — Módulo 1</h2>
+        <div class="grid-2">
+          <div>
+            <div class="card" style="margin-bottom:8px">
+              <span class="label">Tema 1</span>
+              <h3 style="margin-top:4px">Introducción</h3>
+              <p style="font-size:0.85em">HW vs SW · SO · Archivos · Extensiones · CMD</p>
+            </div>
+            <div class="card" style="margin-bottom:8px">
+              <span class="label">Tema 2</span>
+              <h3 style="margin-top:4px">Hardware y Mantenimiento</h3>
+              <p style="font-size:0.85em">Componentes · Preventivo vs Correctivo · Pasta térmica · USB booteable · Drivers · Ninite</p>
+            </div>
+          </div>
+          <div>
+            <div class="card" style="margin-bottom:8px">
+              <span class="label">Tema 3</span>
+              <h3 style="margin-top:4px">Troubleshooting</h3>
+              <p style="font-size:0.85em">Diagnóstico · PC no enciende · No da video · BSOD · PC lenta</p>
+            </div>
+            <div class="card" style="margin-bottom:8px">
+              <span class="label">Hoy</span>
+              <h3 style="margin-top:4px">Cierre</h3>
+              <p style="font-size:0.85em">32/64 bits · BIOS/UEFI · USBs legacy · SO ligeros</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11: Q&A -->
+    <div class="slide">
+      <div class="slide-content">
+        <div class="qa-section">
+          <div class="big-icon">❓</div>
+          <h2>Preguntas y Respuesta</h2>
+          <p class="tagline" style="margin-top:16px">Dudas del módulo, formateo, USBs, instalación, 32/64 bits...</p>
+          <div style="margin-top:32px">
+            <span class="badge" style="font-size:1em;padding:8px 24px">🙋‍♂️ Espacio abierto</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12: GRACIAS -->
+    <div class="slide">
+      <div class="slide-content" style="text-align:center">
+        <div style="font-size:clamp(32px,5vw,60px);margin-bottom:16px">🎯</div>
+        <h1 class="gradient">¡Buena suerte en el examen!</h1>
+        <p class="tagline" style="margin-top:16px">Cierre del Módulo 1 — Semana que viene arrancamos Ofimática en la Nube ☁️</p>
+        <p style="margin-top:32px;color:#78716C">Las diapositivas están en:</p>
+        <code style="font-size:1.1em">/diapositivas/01-fundamentos-mantenimiento/03-evaluacion-troubleshooting/02-cierre-modulo-1/</code>
+      </div>
+    </div>
+
+  </div><!-- /.slide-deck -->
+
+  <div class="nav-controls">
+    <button class="nav-btn" onclick="prevSlide()">←</button>
+    <span class="slide-counter"><span id="current">1</span> / <span id="total">12</span></span>
+    <button class="nav-btn" onclick="nextSlide()">→</button>
+  </div>
+
+  <script>
+    let current = 1;
+    const total = document.querySelectorAll('.slide').length;
+    document.getElementById('total').textContent = total;
+
+    function showSlide(n) {
+      if (n < 1) n = 1;
+      if (n > total) n = total;
+      current = n;
+      document.querySelectorAll('.slide').forEach((s, i) => {
+        s.classList.toggle('active', i === n - 1);
+      });
+      document.getElementById('current').textContent = n;
+      document.getElementById('progressBar').style.width = (n / total * 100) + '%';
+    }
+
+    function nextSlide() { showSlide(current + 1); }
+    function prevSlide() { showSlide(current - 1); }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.nav-controls')) nextSlide();
+    });
+
+    showSlide(1);
+  </script>
+</body>
+</html>

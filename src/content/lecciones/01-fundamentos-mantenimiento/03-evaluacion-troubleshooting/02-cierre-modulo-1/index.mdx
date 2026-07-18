@@ -1,0 +1,247 @@
+---
+title: "Cierre del Módulo 1"
+moduleTitle: "1 - Fundamentos y Mantenimiento de Equipos de Cómputo"
+topicTitle: "Tema 3: Evaluación y Troubleshooting"
+subtopicTitle: "Cierre del Módulo 1"
+fecha: "18-07-2026"
+description: "Clase de cierre del módulo 1: arquitecturas 32/64 bits, Legacy BIOS vs UEFI, creación de USBs booteables, y opciones de SO para equipos legacy."
+duration: 120
+objectives:
+  - "Comprender la diferencia entre arquitecturas 32 y 64 bits"
+  - "Distinguir entre Legacy BIOS y UEFI"
+  - "Aprender a crear USBs booteables para BIOS legacy desde Linux"
+  - "Conocer opciones de SO ligeros para equipos con recursos limitados"
+---
+
+import { Icon } from "astro-icon/components";
+
+# Cierre del Módulo 1
+
+Última clase. Repaso + temas extras: arquitecturas, firmware, formateo en equipos legacy.
+
+---
+
+## 1. Arquitecturas: 32 vs 64 bits
+
+El procesador maneja X bytes por ciclo de reloj. Eso define si es 32 o 64 bits.
+
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th>32 bits (x86 / i686)</th>
+      <th>64 bits (x86_64 / amd64)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Datos por ciclo</strong></td>
+      <td>4 bytes</td>
+      <td>8 bytes</td>
+    </tr>
+    <tr>
+      <td><strong>RAM máxima</strong></td>
+      <td>~3.5 GB utilizables</td>
+      <td>Terabytes</td>
+    </tr>
+    <tr>
+      <td><strong>SO compatibles</strong></td>
+      <td>Windows 10 32b, Linux 32b</td>
+      <td>Windows 10/11, Linux 64b, macOS</td>
+    </tr>
+    <tr>
+      <td><strong>Ejecuta programas de 64 bits</strong></td>
+      <td>No</td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td><strong>Ejecuta programas de 32 bits</strong></td>
+      <td>—</td>
+      <td>Sí (modo compatible)</td>
+    </tr>
+  </tbody>
+</table>
+
+### Cómo identificar la arquitectura
+
+```bash
+# Linux
+lscpu | grep Architecture
+# x86_64 → 64 bits | i686 → 32 bits
+
+uname -m
+# Mismo resultado, más conciso
+
+# Windows
+msinfo32  →  buscar "Tipo de sistema"
+```
+
+---
+
+## 2. Legacy BIOS vs UEFI
+
+Dos estándares de firmware grabado en la motherboard:
+
+<table>
+  <thead>
+    <tr>
+      <th>Característica</th>
+      <th>Legacy BIOS</th>
+      <th>UEFI</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Tabla de particiones</strong></td>
+      <td>MBR</td>
+      <td>GPT</td>
+    </tr>
+    <tr>
+      <td><strong>Disco máximo</strong></td>
+      <td>2 TB</td>
+      <td>9.4 ZB</td>
+    </tr>
+    <tr>
+      <td><strong>Particiones primarias</strong></td>
+      <td>4 máximo</td>
+      <td>128</td>
+    </tr>
+    <tr>
+      <td><strong>Interfaz</strong></td>
+      <td>Texto, teclado</td>
+      <td>Gráfica, mouse</td>
+    </tr>
+    <tr>
+      <td><strong>Velocidad de arranque</strong></td>
+      <td>Lenta</td>
+      <td>Rápida</td>
+    </tr>
+    <tr>
+      <td><strong>Secure Boot</strong></td>
+      <td>No</td>
+      <td>Sí</td>
+    </tr>
+    <tr>
+      <td><strong>Arquitectura</strong></td>
+      <td>16 bits (modo real)</td>
+      <td>32/64 bits</td>
+    </tr>
+  </tbody>
+</table>
+
+### Problemas comunes en equipos legacy
+- **Ventoy no funciona** en BIOS muy antiguas porque su bootloader espera UEFI o BIOS moderno
+- **Windows 11 requiere UEFI + Secure Boot** oficialmente, pero Tiny11 omite ese requisito
+- **Discos >2 TB en BIOS:** No se pueden usar como disco de arranque con MBR
+
+---
+
+## 3. Creación de USB Booteable para Legacy
+
+En esas máquinas Ventoy no funcionó. `dd` es el método universal.
+
+### Paso a paso desde Linux
+
+```bash
+# 1. Identificar el USB (SIN confundirte)
+lsblk
+
+# 2. Si está montado, desmontarlo
+sudo umount /dev/sdX1
+
+# 3. Escribir la ISO directo al dispositivo (sin número)
+sudo dd if=tu-iso.iso of=/dev/sdX bs=4M status=progress
+
+# 4. Esperar que termine y sincronizar
+sync
+```
+
+> ⚠️ **CUIDADO:** `of=/dev/sdX` es el dispositivo completo (sin número de partición). Si pones `sda` en vez de `sdb`, borras tu disco principal.
+
+### ¿Por qué `dd` sí funciona?
+`dd` copia la ISO bit por bit, boot sector MBR incluido. La ISO ya trae código de arranque legacy. Ventoy instala su propio bootloader y las BIOS viejas no lo reconocen.
+
+---
+
+## 4. Opciones de SO para Equipos Legacy
+
+Máquinas con 2-4 GB de RAM. La arquitectura decide qué puedes instalar.
+
+### Si son 32 bits
+
+| SO | RAM mínima | Tipo |
+|---|---|---|
+| **Tiny10 32-bit** (NTDev) | 1 GB | Windows 10 recortado |
+| **Antix Linux** | 256 MB | Linux ultraligero |
+| **Puppy Linux** | 256 MB | Corre desde RAM |
+| **Debian + LXDE** | 512 MB | Linux estable |
+| **Q4OS** (Trinity) | 256 MB | Linux tipo XP |
+
+### Si son 64 bits
+
+| SO | RAM mínima | Tipo |
+|---|---|---|
+| **Tiny11** (NTDev) | 2 GB | Windows 11 recortado |
+| **Linux Mint XFCE** | 1 GB | Linux, más ligero que Cinnamon |
+| **MX Linux** | 1 GB | Linux popular para equipos viejos |
+| **Lubuntu** | 1 GB | Linux con LXQt |
+| **Zorin OS Lite** | 1 GB | Linux parecido a Windows |
+
+---
+
+## 5. Recursos y Descargas
+
+### ISOs Windows modificadas (NTDev)
+
+| Nombre | Bits | Link |
+|--------|------|------|
+| **Tiny10 32-bit** (2303) | 32 | [archive.org/details/tiny-10-2303-x-32](https://archive.org/details/tiny-10-2303-x-32) |
+| **Tiny10 64-bit** (23H2) | 64 | [archive.org/details/tiny-10-23-h-2](https://archive.org/details/tiny-10-23-h-2) |
+| **Tiny11** (23H2) | 64 | [archive.org/details/tiny-11-23-h-2](https://archive.org/details/tiny-11-23-h-2) |
+
+> NTDev publica en Twitter/X: [@NTDev_](https://x.com/NTDev_)
+
+### Linux ligeros
+
+| SO | Link |
+|----|------|
+| **Antix Linux** | [antixlinux.com](https://antixlinux.com/) |
+| **MX Linux** | [mxlinux.org](https://mxlinux.org/) |
+| **Lubuntu** | [lubuntu.me](https://lubuntu.me/) |
+| **Puppy Linux** | [puppylinux.com](http://puppylinux.com/) |
+
+### Herramientas
+
+| Herramienta | Link | Para qué |
+|-------------|------|----------|
+| **Ventoy** | [ventoy.net](https://www.ventoy.net/) | Multi-ISO en un USB (UEFI/BIOS moderno) |
+| **Rufus** | [rufus.ie](https://rufus.ie/) | Creador de USBs booteables (Windows) |
+| **Ninite** | [ninite.com](https://ninite.com/) | Instalar varios programas a la vez |
+| **MemTest86** | [memtest86.com](https://www.memtest86.com) | Probar RAM |
+| **HWMonitor** | [cpuid.com](https://www.cpuid.com/softwares/hwmonitor.html) | Monitorear temperaturas |
+
+---
+
+## 6. Repaso Rápido del Módulo 1
+
+### Conceptos clave que vimos
+1. **Hardware vs Software** — Lo físico vs lo digital. Si lo tocas es hardware.
+2. **Sistema Operativo** — Traductor entre hardware y usuario. Gestión de procesos, memoria, archivos, dispositivos.
+3. **Componentes internos** — CPU (chef), RAM (mesa), SSD/HDD (mochila), PSU, Motherboard
+4. **Periféricos** — Entrada (teclado, mouse), Salida (monitor, bocinas), Mixtos (pantalla táctil)
+5. **Archivos y extensiones** — `.pdf`, `.mp3`, `.mp4`, `.exe`. Peligro: extensiones ocultas
+6. **Terminal CMD** — `dir`, `cd`, `mkdir`, `color`, `tree`, `ver`
+7. **Mantenimiento Preventivo** — Limpieza, pasta térmica, desfragmentación (solo HDD)
+8. **Mantenimiento Correctivo** — Diagnóstico, reemplazo, restauración
+9. **USB Booteable** — ISO, Rufus/Ventoy/`dd`, formateo e instalación del SO
+10. **Troubleshooting** — No enciende, no da video, BSOD, PC lenta
+
+---
+
+## 7. Preguntas y Respuesta
+
+Dudas del módulo:
+- **Formateo y USBs** en equipos legacy
+- **Instalación de SO** en máquinas con recursos limitados
+- **32 vs 64 bits, BIOS vs UEFI**
+- Cualquier tema pendiente
