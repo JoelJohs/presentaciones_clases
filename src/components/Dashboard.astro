@@ -43,34 +43,61 @@ const dashboardData = JSON.stringify({ modules: processedModules, extras: proces
 <div id="dashboard-data" class="hidden">{dashboardData}</div>
 
 <div x-data="dashboard" class="space-y-4">
-  <!-- Instrucción -->
-  <p class="text-xs text-brand-muted leading-relaxed">
-    Completa las lecciones en orden. Tu progreso se guarda automáticamente en este dispositivo.
-  </p>
+  <!-- Tarjeta de Bienvenida / Instrucción -->
+  <div class="rounded-xl border border-brand-border bg-brand-surface dark:bg-brand-sidebar-bg p-4 flex items-center justify-between gap-4">
+    <div class="space-y-1">
+      <h2 class="text-sm font-bold text-brand-navy dark:text-white flex items-center gap-2">
+        <span>👋</span>
+        <span>Panel de Avance Curricular</span>
+      </h2>
+      <p class="text-xs text-brand-muted leading-relaxed">
+        Completa las lecciones principales en orden. Tu progreso se guarda automáticamente en este dispositivo.
+      </p>
+    </div>
+  </div>
 
-  <!-- Barra de progreso -->
-  <div class="rounded-xl border border-brand-border bg-white dark:bg-brand-sidebar-bg p-4">
+  <!-- Barra de progreso Global -->
+  <div class="rounded-xl border border-brand-border bg-white dark:bg-brand-sidebar-bg p-5 shadow-sm">
     <div class="flex items-center justify-between mb-2">
       <span class="text-sm font-semibold text-brand-navy dark:text-white">
-        <span x-text="completedCount"></span> de <span x-text="totalCount"></span> lecciones
+        Progreso Global: <span x-text="completedCount"></span> de <span x-text="totalCount"></span> lecciones
       </span>
-      <span class="text-sm font-bold text-brand-primary" x-text="percent + '%'"></span>
+      <span class="text-base font-bold text-brand-primary" x-text="percent + '%'"></span>
     </div>
-    <div class="h-2 rounded-full bg-brand-border overflow-hidden">
+    <div class="h-2.5 rounded-full bg-brand-border overflow-hidden">
       <div class="h-full rounded-full bg-brand-primary transition-all duration-500" :style="'width:' + percent + '%'"></div>
     </div>
   </div>
 
-  <!-- Continuar -->
-  <template x-if="nextLesson">
+  <!-- Estado 1: Sin progreso (0%) -->
+  <template x-if="completedCount === 0 && totalCount > 0">
+    <div class="rounded-xl border border-brand-primary/40 bg-brand-callout-bg dark:bg-brand-sidebar-bg p-5 text-center space-y-3">
+      <div class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-brand-primary/10 text-brand-primary font-bold text-xl">🚀</div>
+      <h3 class="text-base font-bold text-brand-navy dark:text-white">¡Comienza tu ruta de aprendizaje!</h3>
+      <p class="text-xs text-brand-muted max-w-md mx-auto">
+        Aún no has completado ninguna lección. Inicia con el primer módulo para registrar tu progreso.
+      </p>
+      <template x-if="nextLesson">
+        <a :href="'/' + nextLesson.slug" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-primary text-white text-xs font-semibold hover:bg-brand-accent transition-colors shadow-sm">
+          <span>Comenzar primera lección</span>
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+          </svg>
+        </a>
+      </template>
+    </div>
+  </template>
+
+  <!-- Estado 2: En progreso (Continuar) -->
+  <template x-if="completedCount > 0 && nextLesson">
     <a :href="'/' + nextLesson.slug"
        class="flex items-center justify-between gap-4 rounded-xl border border-brand-primary/40 bg-brand-callout-bg dark:bg-brand-hover-bg p-5 hover:border-brand-primary hover:shadow-lg hover:shadow-brand-primary/5 transition-all duration-200 group min-h-[72px]">
       <div class="min-w-0">
         <span class="text-xs font-semibold uppercase tracking-wider text-brand-primary flex items-center gap-1.5">
           <span class="w-2 h-2 rounded-full bg-brand-primary animate-pulse"></span>
-          Continuar
+          Siguiente lección recomendada
         </span>
-        <p class="text-sm font-semibold text-brand-navy dark:text-white mt-1 truncate" x-text="nextLesson.title"></p>
+        <p class="text-base font-semibold text-brand-navy dark:text-white mt-1 truncate" x-text="nextLesson.title"></p>
       </div>
       <svg class="h-5 w-5 shrink-0 text-brand-primary transition-transform duration-200 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
@@ -78,22 +105,23 @@ const dashboardData = JSON.stringify({ modules: processedModules, extras: proces
     </a>
   </template>
 
-  <!-- Todo completado -->
-  <template x-if="!nextLesson && totalCount > 0">
-    <div class="rounded-xl border border-brand-border bg-white dark:bg-brand-sidebar-bg p-5 text-center">
-      <p class="text-lg font-bold text-brand-primary">¡Completaste todas las lecciones!</p>
-      <p class="text-sm text-brand-muted mt-1">Vuelve pronto para más contenido.</p>
+  <!-- Estado 3: Todo completado (100%) -->
+  <template x-if="!nextLesson && totalCount > 0 && completedCount === totalCount">
+    <div class="rounded-xl border border-emerald-500/30 bg-emerald-50 dark:bg-emerald-950/40 p-6 text-center space-y-2">
+      <div class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold text-2xl">🎉</div>
+      <p class="text-lg font-bold text-emerald-800 dark:text-emerald-200">¡Felicidades! Completaste el 100% de las lecciones</p>
+      <p class="text-xs text-emerald-700 dark:text-emerald-300">Has finalizado todas las lecciones del curso. Puedes repasar los contenidos en cualquier momento.</p>
     </div>
   </template>
 
   <!-- Módulos curriculares -->
-  <div class="space-y-2">
+  <div class="space-y-2.5">
     <template x-for="(mod, i) in modules" :key="mod.title">
       <details class="group rounded-xl border border-brand-border bg-white dark:bg-brand-sidebar-bg overflow-hidden" :open="modDone(mod) < modTotal(mod)">
         <summary class="list-none flex items-center gap-3 p-4 cursor-pointer select-none hover:bg-brand-hover-bg/50 transition-colors">
           <span class="module-badge shrink-0" :class="'module-badge-m' + Math.min(i + 1, 7)" x-text="mod.badge"></span>
           <span class="flex-1 text-sm font-semibold text-brand-navy dark:text-white truncate" x-text="mod.title"></span>
-          <span class="text-xs font-mono font-medium shrink-0" :class="modAllDone(mod) ? 'text-brand-primary' : 'text-brand-muted'" x-text="modDone(mod) + '/' + modTotal(mod)"></span>
+          <span class="text-xs font-mono font-medium shrink-0" :class="modAllDone(mod) ? 'text-brand-primary font-bold' : 'text-brand-muted'" x-text="modDone(mod) + '/' + modTotal(mod)"></span>
           <svg class="h-4 w-4 shrink-0 text-brand-muted transition-transform duration-200 group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
           </svg>
@@ -104,16 +132,17 @@ const dashboardData = JSON.stringify({ modules: processedModules, extras: proces
               <input type="checkbox"
                      :checked="done(lesson.slug)"
                      @change="toggle(lesson.slug)"
+                     aria-label="Marcar lección completada"
                      class="h-5 w-5 shrink-0 rounded border-brand-border text-brand-primary focus:ring-brand-primary cursor-pointer dark:bg-brand-sidebar-bg dark:checked:bg-brand-primary">
               <a :href="'/' + lesson.slug"
-                 class="flex-1 text-sm min-w-0"
+                 class="flex-1 text-sm min-w-0 flex items-center gap-2"
                  :class="done(lesson.slug) ? 'line-through opacity-60 text-brand-muted' : 'text-brand-text hover:text-brand-primary'">
                 <template x-if="lesson.isRepaso">
-                  <span class="text-brand-amber font-medium">Repaso: </span>
+                  <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 shrink-0">Repaso</span>
                 </template>
-                <span x-text="lesson.title"></span>
+                <span x-text="lesson.title" class="truncate"></span>
               </a>
-              <a :href="'/' + lesson.slug" class="shrink-0 text-brand-muted hover:text-brand-primary transition-colors p-1">
+              <a :href="'/' + lesson.slug" aria-label="Abrir lección" class="shrink-0 text-brand-muted hover:text-brand-primary transition-colors p-1">
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                 </svg>
@@ -122,8 +151,13 @@ const dashboardData = JSON.stringify({ modules: processedModules, extras: proces
           </template>
           <!-- Módulo completado -->
           <template x-if="modDone(mod) === modTotal(mod) && modTotal(mod) > 0">
-            <div class="px-4 py-3 text-center">
-              <span class="text-xs font-semibold text-brand-primary">✓ Módulo completado</span>
+            <div class="px-4 py-3 text-center bg-brand-hover-bg/20">
+              <span class="text-xs font-semibold text-brand-primary flex items-center justify-center gap-1">
+                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+                <span>Módulo completado</span>
+              </span>
             </div>
           </template>
         </div>
@@ -131,13 +165,13 @@ const dashboardData = JSON.stringify({ modules: processedModules, extras: proces
     </template>
   </div>
 
-  <!-- Plan de Estudio -->
-  <a href="/00-inicio/03-plan-de-estudio" class="flex items-center justify-between rounded-xl border border-brand-border bg-white dark:bg-brand-sidebar-bg px-4 py-3 hover:border-brand-primary transition-colors group">
+  <!-- Plan de Estudio Link -->
+  <a href="/00-inicio/03-plan-de-estudio" class="flex items-center justify-between rounded-xl border border-brand-border bg-white dark:bg-brand-sidebar-bg px-4 py-3 hover:border-brand-primary transition-colors group shadow-sm">
     <div class="flex items-center gap-3">
       <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-primary/10 text-brand-primary font-bold text-xs">📋</span>
       <div>
-        <p class="text-sm font-semibold text-brand-navy dark:text-white group-hover:text-brand-primary transition-colors">Plan de Estudio</p>
-        <p class="text-xs text-brand-muted">Temario, fechas y evaluación</p>
+        <p class="text-sm font-semibold text-brand-navy dark:text-white group-hover:text-brand-primary transition-colors">Plan de Estudio Completo</p>
+        <p class="text-xs text-brand-muted">Ver temario detallado, ponderaciones y actividades</p>
       </div>
     </div>
     <svg class="h-4 w-4 shrink-0 text-brand-muted transition-transform duration-200 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -148,68 +182,73 @@ const dashboardData = JSON.stringify({ modules: processedModules, extras: proces
 
 <script>
   import Alpine from 'alpinejs';
+  import {
+    initializeProgress,
+    toggleLessonCompleted,
+    subscribeToProgress,
+    calculateDashboardProgress,
+  } from '../features/progress';
+
+  interface DashboardLesson {
+    slug: string;
+    title: string;
+    isRepaso?: boolean;
+  }
+
+  interface DashboardModule {
+    title: string;
+    badge: number | string;
+    lessons: DashboardLesson[];
+  }
 
   Alpine.data('dashboard', () => ({
-    completed: [],
-    modules: [],
-    extras: [],
-    lessons: [],
+    completed: [] as string[],
+    modules: [] as DashboardModule[],
+    extras: [] as DashboardModule[],
+    lessons: [] as DashboardLesson[],
     percent: 0,
     completedCount: 0,
     totalCount: 0,
-    nextLesson: null,
+    nextLesson: null as DashboardLesson | null,
 
     init() {
-      var data = JSON.parse(document.getElementById('dashboard-data').textContent);
-      this.modules = data.modules;
-      this.extras = data.extras;
-      this.lessons = data.lessons;
+      const dataEl = document.getElementById('dashboard-data');
+      const dataText = dataEl?.textContent ?? '{}';
+      const data = JSON.parse(dataText);
+      this.modules = data.modules ?? [];
+      this.extras = data.extras ?? [];
+      this.lessons = data.lessons ?? [];
       this.totalCount = this.lessons.length;
-      this.load();
+
+      this.completed = initializeProgress();
       this.recalc();
+
+      subscribeToProgress((state) => {
+        this.completed = state;
+        this.recalc();
+      });
     },
 
-    load() {
-      try {
-        var raw = localStorage.getItem('progress_completed');
-        this.completed = raw ? JSON.parse(raw) : [];
-      } catch (e) {
-        this.completed = [];
-      }
-    },
-
-    save() {
-      localStorage.setItem('progress_completed', JSON.stringify(this.completed));
-    },
-
-    done(slug) {
+    done(slug: string): boolean {
       return this.completed.indexOf(slug) !== -1;
     },
 
-    toggle(slug) {
-      var idx = this.completed.indexOf(slug);
-      if (idx === -1) {
-        this.completed = this.completed.concat([slug]);
-      } else {
-        var arr = [];
-        for (var i = 0; i < this.completed.length; i++) {
-          if (this.completed[i] !== slug) arr.push(this.completed[i]);
-        }
-        this.completed = arr;
-      }
-      this.save();
+    toggle(slug: string) {
+      this.completed = toggleLessonCompleted(slug);
       this.recalc();
     },
 
     recalc() {
-      var done = 0;
-      for (var i = 0; i < this.lessons.length; i++) {
-        if (this.done(this.lessons[i].slug)) done++;
-      }
-      this.completedCount = done;
-      this.percent = this.totalCount > 0 ? Math.round(done / this.totalCount * 100) : 0;
+      const validCompleted = this.lessons
+        .map((l) => l.slug)
+        .filter((slug) => this.done(slug));
+
+      const { percent, completedCount } = calculateDashboardProgress(validCompleted, this.totalCount);
+      this.completedCount = completedCount;
+      this.percent = percent;
+
       this.nextLesson = null;
-      for (var j = 0; j < this.lessons.length; j++) {
+      for (let j = 0; j < this.lessons.length; j++) {
         if (!this.done(this.lessons[j].slug)) {
           this.nextLesson = this.lessons[j];
           break;
@@ -217,22 +256,31 @@ const dashboardData = JSON.stringify({ modules: processedModules, extras: proces
       }
     },
 
-    modDone(mod) {
-      var count = 0;
-      for (var i = 0; i < mod.lessons.length; i++) {
+    modDone(mod: DashboardModule): number {
+      let count = 0;
+      for (let i = 0; i < mod.lessons.length; i++) {
         if (this.done(mod.lessons[i].slug)) count++;
       }
       return count;
     },
 
-    modTotal(mod) {
+    modTotal(mod: DashboardModule): number {
       return mod.lessons.length;
     },
 
-    modAllDone(mod) {
+    modAllDone(mod: DashboardModule): boolean {
       return this.modDone(mod) === this.modTotal(mod);
     },
   }));
 
-  Alpine.start();
+  declare global {
+    interface Window {
+      Alpine?: typeof Alpine;
+    }
+  }
+
+  if (!window.Alpine) {
+    window.Alpine = Alpine;
+    Alpine.start();
+  }
 </script>

@@ -8,6 +8,7 @@
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-display: 'Outfit', sans-serif;
 
+  /* Brand Base Tokens */
   --color-brand-bg: #FAFAF8;
   --color-brand-sidebar-bg: #F0EFEB;
   --color-brand-text: #292524;
@@ -20,6 +21,20 @@
   --color-brand-navy: #1C1917;
   --color-brand-amber: #D97706;
   --color-brand-amber-bg: #FFFBEB;
+
+  /* Semantic Function Tokens (Fase 4B) */
+  --color-surface: #FAFAF8;
+  --color-surface-muted: #F0EFEB;
+  --color-surface-elevated: #FFFFFF;
+  --color-text-main: #292524;
+  --color-text-muted: #78716C;
+  --color-text-subtle: #A8A29E;
+  --color-border-subtle: #E7E5E4;
+  --color-border-strong: #D6D3D1;
+  --color-focus: #0D9488;
+  --color-success: #059669;
+  --color-warning: #D97706;
+  --color-danger: #BE123C;
 }
 
 .dark {
@@ -35,6 +50,20 @@
   --color-brand-navy: #FAFAF9;
   --color-brand-amber: #F59E0B;
   --color-brand-amber-bg: #422006;
+
+  /* Semantic Function Tokens Dark (Fase 4B) */
+  --color-surface: #0C0A09;
+  --color-surface-muted: #1C1917;
+  --color-surface-elevated: #292524;
+  --color-text-main: #E7E5E4;
+  --color-text-muted: #A8A29E;
+  --color-text-subtle: #78716C;
+  --color-border-subtle: #292524;
+  --color-border-strong: #44403C;
+  --color-focus: #2DD4BF;
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-danger: #F43F5E;
 }
 
 @theme {
@@ -50,6 +79,19 @@
   --color-brand-muted: var(--color-brand-muted);
   --color-brand-amber: var(--color-brand-amber);
   --color-brand-amber-bg: var(--color-brand-amber-bg);
+
+  --color-surface: var(--color-surface);
+  --color-surface-muted: var(--color-surface-muted);
+  --color-surface-elevated: var(--color-surface-elevated);
+  --color-text-main: var(--color-text-main);
+  --color-text-muted: var(--color-text-muted);
+  --color-text-subtle: var(--color-text-subtle);
+  --color-border-subtle: var(--color-border-subtle);
+  --color-border-strong: var(--color-border-strong);
+  --color-focus: var(--color-focus);
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-danger: var(--color-danger);
 }
 
 body {
@@ -473,6 +515,55 @@ h1, h2, h3, h4, h5, h6 {
 .sidebar-progress-dot.completed {
   background: var(--color-brand-primary);
   border-color: var(--color-brand-primary);
+}
+
+/* ─── Fase 4B: Wrapper de Tablas MDX Responsive (RESP-001) ─── */
+.prose-table-wrapper {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--color-brand-border);
+  border-radius: 0.75rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  background: var(--color-brand-bg);
+}
+.prose-table-wrapper table {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  width: 100%;
+}
+/* Pista visual de scroll lateral para móviles */
+.prose-table-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 20px;
+  background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.08));
+  pointer-events: none;
+  border-radius: 0 0.75rem 0.75rem 0;
+}
+.dark .prose-table-wrapper::after {
+  background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.4));
+}
+
+/* ─── Fase 4B: Estado de foco accesible uniforme ─── */
+:focus-visible {
+  outline: 2px solid var(--color-focus, #0D9488);
+  outline-offset: 2px;
+}
+
+/* ─── Fase 4B: Movimiento Reducido (Section 25) ─── */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 

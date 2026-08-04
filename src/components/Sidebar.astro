@@ -18,8 +18,8 @@ function moduleBadgeClass(title: string): string {
 ---
 
 <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-72 -translate-x-full border-r border-brand-border bg-brand-sidebar-bg transition-transform duration-300 lg:translate-x-0 overflow-y-auto flex flex-col">
-  <div class="p-5 border-b border-brand-border">
-    <a href="/" class="flex items-center gap-2 font-display font-bold text-brand-navy text-lg tracking-tight hover:text-brand-primary transition-colors duration-200">
+  <div class="p-5 border-b border-brand-border flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2 font-display font-bold text-brand-navy dark:text-white text-lg tracking-tight hover:text-brand-primary transition-colors duration-200">
       <svg class="h-6 w-6 text-brand-primary flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342" />
       </svg>
@@ -33,12 +33,12 @@ function moduleBadgeClass(title: string): string {
       const isModuleActive = allLessons.some(l => l.slug === activeSlug);
 
       return (
-        <details class="group" open={isModuleActive}>
-          <summary class="list-none cursor-pointer flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-semibold uppercase tracking-wider text-brand-muted hover:text-brand-primary hover:bg-brand-hover-bg select-none transition-all duration-200">
+        <details class="group mb-1" open={isModuleActive}>
+          <summary class="list-none cursor-pointer flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-semibold uppercase tracking-wider text-brand-muted hover:text-brand-primary hover:bg-brand-hover-bg select-none transition-all duration-200">
             <span class={`module-badge ${moduleBadgeClass(mod.title)}`}>{moduleNumber(mod.title)}</span>
-            <span class="flex-1 truncate">{mod.title}</span>
+            <span class="flex-1 truncate text-left">{mod.title}</span>
             <span class="text-[10px] font-mono font-normal text-brand-muted/60 shrink-0">{allLessons.length}</span>
-            <svg class="h-3.5 w-3.5 transition-transform duration-200 group-open:rotate-180 text-brand-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <svg class="h-3.5 w-3.5 transition-transform duration-200 group-open:rotate-180 text-brand-muted shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
             </svg>
           </summary>
@@ -51,18 +51,31 @@ function moduleBadgeClass(title: string): string {
                 <li>
                   <a
                     href={`/${lesson.slug}`}
-                    class={`flex items-center gap-2 rounded-md px-3 py-1.5 text-xs font-medium border-l-[3px] transition-all duration-200 ${
+                    data-sidebar-slug={lesson.slug}
+                    data-is-repaso={isRepaso ? 'true' : 'false'}
+                    class={`flex items-center gap-2 rounded-md px-2.5 py-1.5 text-xs font-medium border-l-[3px] transition-all duration-200 ${
                       isActive
                         ? 'bg-brand-hover-bg text-brand-primary border-brand-primary font-semibold'
                         : 'text-brand-muted hover:bg-brand-hover-bg hover:text-brand-primary border-transparent'
-                    } ${isRepaso ? 'pl-9' : 'pl-6'}`}
+                    } ${isRepaso ? 'pl-8' : 'pl-5'}`}
                   >
-                    {isRepaso ? (
-                      <svg class="h-3 w-3 flex-shrink-0 text-brand-amber" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    {!isRepaso ? (
+                      <span
+                        class="sidebar-progress-dot shrink-0"
+                        data-dot-slug={lesson.slug}
+                        title="Estado de lección"
+                      ></span>
+                    ) : (
+                      <svg class="h-3 w-3 shrink-0 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182" />
                       </svg>
-                    ) : null}
-                    <span>{isRepaso ? 'Repaso' : lesson.title}</span>
+                    )}
+                    <span class="truncate flex-1">{isRepaso ? 'Repaso' : lesson.title}</span>
+                    {isRepaso && (
+                      <span class="text-[9px] font-mono px-1 py-0.2 rounded bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 shrink-0">
+                        Práctica
+                      </span>
+                    )}
                   </a>
                 </li>
               );
@@ -73,6 +86,33 @@ function moduleBadgeClass(title: string): string {
     })}
   </nav>
 </aside>
+
+<script>
+  import { initializeProgress, subscribeToProgress } from '../features/progress';
+
+  (function () {
+    function updateSidebarProgressDots(completedSlugs: string[]) {
+      const dots = document.querySelectorAll<HTMLElement>('.sidebar-progress-dot[data-dot-slug]');
+      dots.forEach((dot) => {
+        const slug = dot.getAttribute('data-dot-slug');
+        if (slug && completedSlugs.includes(slug)) {
+          dot.classList.add('completed');
+          dot.setAttribute('title', 'Lección completada');
+        } else {
+          dot.classList.remove('completed');
+          dot.setAttribute('title', 'Lección pendiente');
+        }
+      });
+    }
+
+    const initialCompleted = initializeProgress();
+    updateSidebarProgressDots(initialCompleted);
+
+    subscribeToProgress((completedSlugs) => {
+      updateSidebarProgressDots(completedSlugs);
+    });
+  })();
+</script>
 
 <style>
   summary::-webkit-details-marker {

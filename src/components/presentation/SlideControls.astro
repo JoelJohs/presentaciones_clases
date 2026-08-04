@@ -1,0 +1,124 @@
+---
+---
+
+<div
+  id="slide-controls-container"
+  class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 hidden transition-all duration-300 pointer-events-auto"
+>
+  <div
+    class="flex items-center gap-1 sm:gap-2 px-3 py-2 rounded-2xl bg-stone-900/90 text-white backdrop-blur-md shadow-2xl border border-stone-700/60"
+    role="region"
+    aria-label="Controles de Diapositiva"
+  >
+    <!-- Anuncio aria-live para lectores de pantalla -->
+    <div id="slide-live-announcer" class="sr-only" aria-live="polite"></div>
+
+    <!-- Botón Anterior -->
+    <button
+      id="btn-slide-prev"
+      type="button"
+      class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-stone-800 hover:bg-teal-600 text-stone-200 hover:text-white transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400"
+      aria-label="Diapositiva anterior"
+      title="Diapositiva anterior (Flecha Izquierda)"
+    >
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+      </svg>
+    </button>
+
+    <!-- Indicador de Diapositiva (ej. 3 / 12) -->
+    <div class="flex items-center gap-1.5 px-2 text-xs font-mono font-bold tracking-wider text-stone-200 select-none">
+      <span id="slide-current-num">1</span>
+      <span class="text-stone-500">/</span>
+      <span id="slide-total-num">1</span>
+    </div>
+
+    <!-- Botón Siguiente -->
+    <button
+      id="btn-slide-next"
+      type="button"
+      class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-stone-800 hover:bg-teal-600 text-stone-200 hover:text-white transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400"
+      aria-label="Siguiente diapositiva"
+      title="Siguiente diapositiva (Flecha Derecha / Espacio)"
+    >
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+      </svg>
+    </button>
+
+    <div class="h-4 w-px bg-stone-700/80 mx-0.5"></div>
+
+    <!-- Botón Pantalla Completa -->
+    <button
+      id="btn-slide-fullscreen"
+      type="button"
+      class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-stone-800 hover:bg-teal-600 text-stone-200 hover:text-white transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400"
+      aria-label="Alternar pantalla completa"
+      title="Pantalla completa (F)"
+    >
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+      </svg>
+    </button>
+
+    <!-- Botón Salir de Diapositivas -->
+    <button
+      id="btn-slide-exit"
+      type="button"
+      class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-stone-800 hover:bg-rose-600 text-stone-200 hover:text-white transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-400"
+      aria-label="Salir de modo diapositivas"
+      title="Salir de diapositivas (Escape)"
+    >
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  import { presentationStore } from '../../features/presentation';
+
+  (function () {
+    const controlsContainer = document.getElementById('slide-controls-container');
+    const currentNumEl = document.getElementById('slide-current-num');
+    const totalNumEl = document.getElementById('slide-total-num');
+    const liveAnnouncer = document.getElementById('slide-live-announcer');
+
+    const btnPrev = document.getElementById('btn-slide-prev');
+    const btnNext = document.getElementById('btn-slide-next');
+    const btnFullscreen = document.getElementById('btn-slide-fullscreen');
+    const btnExit = document.getElementById('btn-slide-exit');
+
+    btnPrev?.addEventListener('click', () => presentationStore.previousSlide());
+    btnNext?.addEventListener('click', () => presentationStore.nextSlide());
+    btnFullscreen?.addEventListener('click', () => presentationStore.toggleFullscreen());
+    btnExit?.addEventListener('click', () => presentationStore.setMode('reading'));
+
+    presentationStore.subscribe((state) => {
+      if (!controlsContainer) return;
+
+      if (state.mode === 'presentation-slides') {
+        controlsContainer.classList.remove('hidden');
+      } else {
+        controlsContainer.classList.add('hidden');
+      }
+
+      if (currentNumEl) currentNumEl.textContent = String(state.currentSlide + 1);
+      if (totalNumEl) totalNumEl.textContent = String(state.totalSlides);
+
+      if (liveAnnouncer) {
+        liveAnnouncer.textContent = `Diapositiva ${state.currentSlide + 1} de ${state.totalSlides}: ${state.slideTitle}`;
+      }
+
+      if (btnPrev instanceof HTMLButtonElement) {
+        btnPrev.disabled = state.currentSlide <= 0;
+        btnPrev.classList.toggle('opacity-40', state.currentSlide <= 0);
+      }
+      if (btnNext instanceof HTMLButtonElement) {
+        btnNext.disabled = state.currentSlide >= state.totalSlides - 1;
+        btnNext.classList.toggle('opacity-40', state.currentSlide >= state.totalSlides - 1);
+      }
+    });
+  })();
+</script>

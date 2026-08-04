@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Sidebar from '../components/Sidebar.astro';
 import Header from '../components/Header.astro';
+import SlideControls from '../components/presentation/SlideControls.astro';
 import type { NavigationResult } from '../utils/navigation';
 
 interface Props {
@@ -27,7 +28,7 @@ const {
     <meta name="generator" content={Astro.generator} />
     <title>{title} | Plataforma de Estudios</title>
 
-    <!-- Dark Mode & Layout Settings Initial Script to Prevent Flashing -->
+    <!-- Dark Mode & Layout Settings Initial Script with Legacy Mode Migration -->
     <script is:inline>
       if (
         localStorage.getItem('color-theme') === 'dark' ||
@@ -43,8 +44,20 @@ const {
         document.documentElement.classList.add('sidebar-collapsed');
       }
 
-      const viewMode = localStorage.getItem('view-mode') || 'reading';
-      document.documentElement.classList.add(`${viewMode}-mode`);
+      let rawMode = localStorage.getItem('view-mode') || 'reading';
+      if (rawMode === 'presentation') {
+        rawMode = 'presentation-scroll';
+        localStorage.setItem('view-mode', 'presentation-scroll');
+      }
+
+      document.documentElement.classList.remove('reading-mode', 'presentation-mode', 'presentation-scroll-mode', 'presentation-slides-mode');
+      if (rawMode === 'presentation-slides') {
+        document.documentElement.classList.add('presentation-mode', 'presentation-slides-mode');
+      } else if (rawMode === 'presentation-scroll') {
+        document.documentElement.classList.add('presentation-mode', 'presentation-scroll-mode');
+      } else {
+        document.documentElement.classList.add('reading-mode');
+      }
     </script>
   </head>
   <body class="bg-brand-bg text-brand-text antialiased">
@@ -65,13 +78,18 @@ const {
       </div>
     </div>
 
+    <!-- Controles de Diapositiva Flotantes -->
+    <SlideControls />
+
     <!-- Scripts: Sidebar, Theme, Mode -->
     <script>
+      import { presentationStore, type ViewMode } from '../features/presentation';
+
       const menuToggle = document.getElementById('menu-toggle');
       const sidebar = document.getElementById('sidebar');
       const backdrop = document.getElementById('sidebar-backdrop');
 
-      function toggleMobileSidebar(open) {
+      function toggleMobileSidebar(open: boolean) {
         if (!sidebar || !backdrop) return;
         if (open) {
           sidebar.classList.remove('-translate-x-full');
@@ -136,36 +154,26 @@ const {
       });
 
       const btnReading = document.getElementById('btn-reading-mode');
-      const btnPresentation = document.getElementById('btn-presentation-mode');
+      const btnScroll = document.getElementById('btn-presentation-scroll-mode');
+      const btnSlides = document.getElementById('btn-presentation-slides-mode');
 
-      function updateModeUI(mode) {
-        const isPres = mode === 'presentation';
-        document.documentElement.classList.toggle('presentation-mode', isPres);
-        document.documentElement.classList.toggle('reading-mode', !isPres);
+      function updateModeHeaderButtons(mode: ViewMode) {
+        btnReading?.classList.toggle('mode-btn-active', mode === 'reading');
+        btnReading?.setAttribute('aria-checked', String(mode === 'reading'));
 
-        btnReading?.classList.toggle('mode-btn-active', !isPres);
-        btnPresentation?.classList.toggle('mode-btn-active', isPres);
+        btnScroll?.classList.toggle('mode-btn-active', mode === 'presentation-scroll');
+        btnScroll?.setAttribute('aria-checked', String(mode === 'presentation-scroll'));
 
-        if (isPres) {
-          btnReading?.classList.remove('text-brand-muted');
-          btnPresentation?.classList.remove('text-brand-muted');
-        } else {
-          btnPresentation?.classList.add('text-brand-muted');
-          btnReading?.classList.add('text-brand-muted');
-        }
+        btnSlides?.classList.toggle('mode-btn-active', mode === 'presentation-slides');
+        btnSlides?.setAttribute('aria-checked', String(mode === 'presentation-slides'));
       }
 
-      const currentMode = document.documentElement.classList.contains('presentation-mode') ? 'presentation' : 'reading';
-      updateModeUI(currentMode);
+      btnReading?.addEventListener('click', () => presentationStore.setMode('reading'));
+      btnScroll?.addEventListener('click', () => presentationStore.setMode('presentation-scroll'));
+      btnSlides?.addEventListener('click', () => presentationStore.setMode('presentation-slides'));
 
-      btnReading?.addEventListener('click', () => {
-        localStorage.setItem('view-mode', 'reading');
-        updateModeUI('reading');
-      });
-
-      btnPresentation?.addEventListener('click', () => {
-        localStorage.setItem('view-mode', 'presentation');
-        updateModeUI('presentation');
+      presentationStore.subscribe((state) => {
+        updateModeHeaderButtons(state.mode);
       });
     </script>
 

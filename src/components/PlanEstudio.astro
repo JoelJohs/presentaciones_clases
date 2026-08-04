@@ -1,4 +1,11 @@
 ---
+import {
+  translateLegacyId,
+  getRelationByStudyPlanId,
+  type StudyPlanItemKind,
+} from '../features/progress';
+import ContentTypeBadge from './ui/ContentTypeBadge.astro';
+
 interface Subtema {
   nombre: string;
   descripcion: string;
@@ -49,11 +56,11 @@ const totalSemanas = modulos.reduce(
         style={`--c: ${mod.color}`}
         data-mod={mod.numero}
       >
-        <div
-          class="plan-row"
-          role="button"
-          tabindex="0"
+        <button
+          type="button"
+          class="plan-row w-full text-left"
           aria-expanded="false"
+          aria-controls={`plan-body-${mod.numero}`}
         >
           <span class="plan-num">{String(mod.numero).padStart(2, '0')}</span>
           <span class="plan-title">{mod.titulo}</span>
@@ -64,9 +71,9 @@ const totalSemanas = modulos.reduce(
           <svg class="plan-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
           </svg>
-        </div>
+        </button>
 
-        <div class="plan-body hidden">
+        <div id={`plan-body-${mod.numero}`} class="plan-body hidden">
           <div class="plan-body-inner">
             {
               mod.temas.map((tema, ti) => (
@@ -77,11 +84,25 @@ const totalSemanas = modulos.reduce(
                   </h3>
                   <div class="plan-subtemas">
                     {tema.subtemas.map((st, si) => {
-                      const id = `m${mod.numero}-${ti + 1}-${si + 1}`;
+                      const legacyId = `m${mod.numero}-${ti + 1}-${si + 1}`;
+                      const progressId = translateLegacyId(legacyId);
+                      const rel = getRelationByStudyPlanId(progressId);
+                      const kind: StudyPlanItemKind = rel?.kind ?? 'lesson';
+                      const lessonSlug = rel?.lessonSlug ?? '';
                       return (
-                        <div class="plan-subtema">
-                          <input type="checkbox" id={id} class="plan-cb" />
-                          <label for={id} class="plan-st-name">{st.nombre}</label>
+                        <div class="plan-subtema flex-wrap sm:flex-nowrap">
+                          <input
+                            type="checkbox"
+                            id={legacyId}
+                            class="plan-cb"
+                            data-progress-id={progressId}
+                            data-kind={kind}
+                            data-lesson-slug={lessonSlug}
+                          />
+                          <div class="flex items-center gap-2 flex-wrap min-w-0">
+                            <label for={legacyId} class="plan-st-name">{st.nombre}</label>
+                            <ContentTypeBadge kind={kind} size="sm" />
+                          </div>
                           <span class="plan-st-desc">{st.descripcion}</span>
                           <span class="plan-st-dur">{st.duracion} sem</span>
                         </div>
@@ -99,87 +120,148 @@ const totalSemanas = modulos.reduce(
 </div>
 
 <script>
+  import {
+    initializeProgress,
+    setLessonCompleted,
+    subscribeToProgress,
+    calculateStudyPlanMetrics,
+    getLegacyNonCanonicalState,
+    saveLegacyNonCanonicalState,
+  } from '../features/progress';
+
   (function () {
-    var STORAGE_KEY = 'plan-estudio-progress';
-    var wrapper = document.getElementById('plan-estudio');
+    type ProgressState = Record<string, boolean>;
+    const wrapper = document.getElementById('plan-estudio');
     if (!wrapper) return;
 
-    function allCbs() {
-      return wrapper.querySelectorAll('.plan-cb');
+    function allCbs(): NodeListOf<HTMLInputElement> {
+      if (!wrapper) return document.querySelectorAll<HTMLInputElement>('none');
+      return wrapper.querySelectorAll<HTMLInputElement>('.plan-cb');
     }
 
-    function update() {
-      var total = allCbs().length;
-      if (total === 0) return;
-      var checked = wrapper.querySelectorAll('.plan-cb:checked').length;
-      var pct = Math.round(checked / total * 100);
+    function syncCheckboxesFromStore(completedSlugs: string[]) {
+      if (!wrapper) return;
+      const cbs = allCbs();
+      for (let i = 0; i < cbs.length; i++) {
+        const cb = cbs[i];
+        const kind = cb.getAttribute('data-kind');
+        const slug = cb.getAttribute('data-lesson-slug');
 
-      var globalCount = document.getElementById('plan-global-count');
-      var globalFill = document.getElementById('plan-global-fill');
-      if (globalCount) globalCount.textContent = checked + '/' + total;
-      if (globalFill) globalFill.style.width = pct + '%';
-
-      var mods = wrapper.querySelectorAll('.plan-modulo');
-      for (var i = 0; i < mods.length; i++) {
-        var mod = mods[i];
-        var num = mod.getAttribute('data-mod');
-        var cbs = mod.querySelectorAll('.plan-cb');
-        var checkedMod = mod.querySelectorAll('.plan-cb:checked').length;
-        var totalMod = cbs.length;
-        var pctMod = totalMod > 0 ? Math.round(checkedMod / totalMod * 100) : 0;
-
-        var wEl = document.getElementById('plan-w-' + num);
-        var pEl = document.getElementById('plan-p-' + num);
-        if (wEl) wEl.textContent = checkedMod + '/' + totalMod;
-        if (pEl) pEl.style.width = pctMod + '%';
-      }
-    }
-
-    function save() {
-      var state = {};
-      var cbs = allCbs();
-      for (var i = 0; i < cbs.length; i++) {
-        state[cbs[i].id] = cbs[i].checked;
-      }
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
-    }
-
-    function load() {
-      try {
-        var raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return;
-        var state = JSON.parse(raw);
-        if (!state) return;
-        var cbs = allCbs();
-        for (var i = 0; i < cbs.length; i++) {
-          if (state[cbs[i].id] === true) cbs[i].checked = true;
+        if (kind === 'lesson' && slug) {
+          cb.checked = completedSlugs.includes(slug);
         }
-      } catch (e) {}
+      }
     }
 
-    wrapper.addEventListener('change', function (e) {
-      if (e.target && e.target.classList.contains('plan-cb')) {
-        save();
-        update();
+    function loadNonCanonicalState() {
+      if (!wrapper) return;
+      try {
+        const state = getLegacyNonCanonicalState();
+        const cbs = allCbs();
+        for (let i = 0; i < cbs.length; i++) {
+          const cb = cbs[i];
+          const kind = cb.getAttribute('data-kind');
+          if (kind !== 'lesson' && cb.id && state[cb.id] === true) {
+            cb.checked = true;
+          }
+        }
+      } catch {}
+    }
+
+    function saveNonCanonicalState() {
+      if (!wrapper) return;
+      const state: ProgressState = {};
+      const cbs = allCbs();
+      for (let i = 0; i < cbs.length; i++) {
+        const cb = cbs[i];
+        const kind = cb.getAttribute('data-kind');
+        if (kind !== 'lesson' && cb.id) {
+          state[cb.id] = cb.checked;
+        }
+      }
+      saveLegacyNonCanonicalState(state);
+    }
+
+    function updateMetrics() {
+      if (!wrapper) return;
+      const cbs = wrapper.querySelectorAll<HTMLInputElement>('.plan-cb[data-kind="lesson"]');
+      const total = cbs.length;
+      if (total === 0) return;
+
+      const checked = wrapper.querySelectorAll<HTMLInputElement>('.plan-cb[data-kind="lesson"]:checked').length;
+      const { percent, checkedCount, totalItems } = calculateStudyPlanMetrics(total, checked);
+
+      const globalCount = document.getElementById('plan-global-count');
+      const globalFill = document.getElementById('plan-global-fill');
+      if (globalCount) globalCount.textContent = `${checkedCount}/${totalItems}`;
+      if (globalFill) globalFill.style.width = `${percent}%`;
+
+      const mods = wrapper.querySelectorAll<HTMLElement>('.plan-modulo');
+      for (let i = 0; i < mods.length; i++) {
+        const mod = mods[i];
+        const num = mod.getAttribute('data-mod');
+        const modLessonCbs = mod.querySelectorAll<HTMLInputElement>('.plan-cb[data-kind="lesson"]');
+        const totalMod = modLessonCbs.length > 0 ? modLessonCbs.length : mod.querySelectorAll<HTMLInputElement>('.plan-cb').length;
+        const checkedMod = modLessonCbs.length > 0
+          ? mod.querySelectorAll<HTMLInputElement>('.plan-cb[data-kind="lesson"]:checked').length
+          : mod.querySelectorAll<HTMLInputElement>('.plan-cb:checked').length;
+
+        const { percent: pctMod, checkedCount: checkedCountMod, totalItems: totalModItems } = calculateStudyPlanMetrics(totalMod, checkedMod);
+
+        const wEl = document.getElementById(`plan-w-${num}`);
+        const pEl = document.getElementById(`plan-p-${num}`);
+        if (wEl) wEl.textContent = `${checkedCountMod}/${totalModItems}`;
+        if (pEl) pEl.style.width = `${pctMod}%`;
+      }
+    }
+
+    const canonicalCompleted = initializeProgress();
+    loadNonCanonicalState();
+    syncCheckboxesFromStore(canonicalCompleted);
+    updateMetrics();
+
+    subscribeToProgress((state) => {
+      syncCheckboxesFromStore(state);
+      updateMetrics();
+    });
+
+    wrapper.addEventListener('change', function (e: Event) {
+      const target = e.target;
+      if (target instanceof HTMLInputElement && target.classList.contains('plan-cb')) {
+        const kind = target.getAttribute('data-kind');
+        const slug = target.getAttribute('data-lesson-slug');
+
+        if (kind === 'lesson' && slug) {
+          setLessonCompleted(slug, target.checked);
+        } else {
+          saveNonCanonicalState();
+        }
+        updateMetrics();
       }
     });
 
-    wrapper.addEventListener('click', function (e) {
-      var row = e.target.closest('.plan-row');
-      if (!row) return;
-      if (e.target.closest('.plan-cb, label')) return;
-      var modulo = row.closest('.plan-modulo');
-      if (!modulo) return;
-      var isOpen = row.getAttribute('aria-expanded') === 'true';
-      var body = modulo.querySelector('.plan-body');
-      var chevron = row.querySelector('.plan-chevron');
+    wrapper.addEventListener('click', function (e: MouseEvent) {
+      const target = e.target;
+      if (!(target instanceof Element)) return;
 
-      wrapper.querySelectorAll('.plan-row[aria-expanded="true"]').forEach(function (r) {
+      const row = target.closest<HTMLElement>('.plan-row');
+      if (!row) return;
+      if (target.closest('.plan-cb, label')) return;
+
+      const modulo = row.closest<HTMLElement>('.plan-modulo');
+      if (!modulo) return;
+
+      const isOpen = row.getAttribute('aria-expanded') === 'true';
+      const body = modulo.querySelector<HTMLElement>('.plan-body');
+      const chevron = row.querySelector<HTMLElement>('.plan-chevron');
+
+      if (!wrapper) return;
+      wrapper.querySelectorAll<HTMLElement>('.plan-row[aria-expanded="true"]').forEach(function (r) {
         if (r !== row) {
           r.setAttribute('aria-expanded', 'false');
-          var b = r.closest('.plan-modulo')?.querySelector('.plan-body');
+          const b = r.closest('.plan-modulo')?.querySelector<HTMLElement>('.plan-body');
           if (b) b.classList.add('hidden');
-          var ch = r.closest('.plan-modulo')?.querySelector('.plan-chevron');
+          const ch = r.closest('.plan-modulo')?.querySelector<HTMLElement>('.plan-chevron');
           if (ch) ch.classList.remove('open');
         }
       });
@@ -195,14 +277,17 @@ const totalSemanas = modulos.reduce(
       }
     });
 
-    wrapper.addEventListener('keydown', function (e) {
+    wrapper.addEventListener('keydown', function (e: KeyboardEvent) {
       if (e.key !== 'Enter' && e.key !== ' ') return;
-      var row = e.target.closest('.plan-row');
-      if (row) { e.preventDefault(); row.click(); }
+      const target = e.target;
+      if (target instanceof Element) {
+        const row = target.closest<HTMLElement>('.plan-row');
+        if (row) {
+          e.preventDefault();
+          row.click();
+        }
+      }
     });
-
-    load();
-    update();
   })();
 </script>
 
@@ -269,6 +354,8 @@ const totalSemanas = modulos.reduce(
     padding: 12px 8px 12px 0;
     cursor: pointer;
     user-select: none;
+    background: transparent;
+    border: 0;
     transition: background-color 0.15s;
     -webkit-tap-highlight-color: transparent;
   }
@@ -378,10 +465,10 @@ const totalSemanas = modulos.reduce(
 
   .plan-subtema {
     display: grid;
-    grid-template-columns: auto 160px 1fr auto;
+    grid-template-columns: auto 240px 1fr auto;
     gap: 10px;
     align-items: baseline;
-    padding: 3px 0;
+    padding: 4px 0;
   }
 
   .plan-cb {
@@ -425,7 +512,7 @@ const totalSemanas = modulos.reduce(
     cursor: pointer;
   }
 
-  .plan-cb:checked + .plan-st-name {
+  .plan-cb:checked + div .plan-st-name {
     text-decoration: line-through;
     text-decoration-color: var(--color-brand-muted);
     opacity: 0.6;

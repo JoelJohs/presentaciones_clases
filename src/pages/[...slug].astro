@@ -32,32 +32,33 @@ const nextLesson = currentIndex < nav.allLessonsOrdered.length - 1 ? nav.allLess
   <!-- Breadcrumb -->
   {leccion.data.moduleTitle && (
     <div class="mb-8">
-      <nav class="flex items-center gap-2 text-xs font-medium text-brand-muted mb-4">
-        <a href="/" class="hover:text-brand-primary transition-colors">
+      <nav aria-label="Navegación de lección" class="flex items-center gap-2 text-xs font-medium text-brand-muted mb-4 flex-wrap">
+        <a href="/" class="hover:text-brand-primary transition-colors flex items-center gap-1" aria-label="Inicio">
           <svg class="h-3.5 w-3.5 inline" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
           </svg>
+          <span>Inicio</span>
         </a>
-        <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <svg class="h-3 w-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
         </svg>
         <span class="font-semibold uppercase tracking-wider text-brand-primary">{leccion.data.moduleTitle}</span>
         {leccion.data.topicTitle && (
           <>
-            <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <svg class="h-3 w-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
             </svg>
-            <span>{leccion.data.topicTitle}</span>
+            <span class="truncate max-w-[200px]">{leccion.data.topicTitle}</span>
           </>
         )}
       </nav>
 
       <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-2">
-        <h1 class="font-display font-extrabold text-brand-navy text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-tight">
+        <h1 class="font-display font-extrabold text-brand-navy dark:text-white text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-tight">
           {leccion.data.title}
         </h1>
         {leccion.data.fecha && (
-          <span class="text-xs text-brand-muted font-mono whitespace-nowrap flex-shrink-0">
+          <span class="text-xs text-brand-muted font-mono whitespace-nowrap shrink-0">
             <svg class="h-3 w-3 inline mr-1" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
             </svg>
@@ -69,9 +70,34 @@ const nextLesson = currentIndex < nav.allLessonsOrdered.length - 1 ? nav.allLess
   )}
 
   <!-- Article Content -->
-  <article class="prose">
+  <article class="prose" data-lesson-content data-slug={activeSlug}>
     <Content />
   </article>
+
+  <!-- Script de Inicialización del Motor de Diapositivas y Tablas Responsive (Fase 4C) -->
+  <script>
+    import { presentationStore } from '../features/presentation';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const article = document.querySelector<HTMLElement>('article.prose[data-lesson-content]');
+      if (!article) return;
+
+      // 1. Envolver tablas MDX en .prose-table-wrapper (RESP-001)
+      const tables = article.querySelectorAll('table');
+      tables.forEach((table) => {
+        if (!table.parentElement?.classList.contains('prose-table-wrapper')) {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'prose-table-wrapper';
+          table.parentNode?.insertBefore(wrapper, table);
+          wrapper.appendChild(table);
+        }
+      });
+
+      // 2. Inicializar Motor de Diapositivas para esta lección
+      const slug = article.getAttribute('data-slug') || '';
+      presentationStore.init(slug, article);
+    });
+  </script>
 
   <!-- Prev/Next Navigation -->
   <div class="mt-16 flex flex-col sm:flex-row gap-3 border-t border-brand-border pt-8">
@@ -79,13 +105,14 @@ const nextLesson = currentIndex < nav.allLessonsOrdered.length - 1 ? nav.allLess
       <a
         href={`/${prevLesson.slug}`}
         class="nav-card-lift flex-1 inline-flex items-center gap-3 justify-start rounded-xl px-5 py-4 text-sm font-semibold min-h-[52px]"
+        aria-label={`Lección anterior: ${prevLesson.title}`}
       >
-        <svg class="h-5 w-5 flex-shrink-0 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <svg class="h-5 w-5 shrink-0 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
         </svg>
         <div class="text-left min-w-0">
-          <span class="block text-xs font-normal text-brand-muted uppercase tracking-wider">Anterior</span>
-          <span class="block truncate text-brand-text">{prevLesson.title}</span>
+          <span class="block text-xs font-normal text-brand-muted uppercase tracking-wider">Lección Anterior</span>
+          <span class="block truncate text-brand-text dark:text-white">{prevLesson.title}</span>
         </div>
       </a>
     ) : <div class="flex-1"></div>}
@@ -94,12 +121,13 @@ const nextLesson = currentIndex < nav.allLessonsOrdered.length - 1 ? nav.allLess
       <a
         href={`/${nextLesson.slug}`}
         class="nav-card-lift flex-1 inline-flex items-center gap-3 justify-end rounded-xl px-5 py-4 text-sm font-semibold min-h-[52px] text-right"
+        aria-label={`Siguiente lección: ${nextLesson.title}`}
       >
         <div class="text-right min-w-0">
-          <span class="block text-xs font-normal text-brand-muted uppercase tracking-wider">Siguiente</span>
-          <span class="block truncate text-brand-text">{nextLesson.title}</span>
+          <span class="block text-xs font-normal text-brand-muted uppercase tracking-wider">Siguiente Lección</span>
+          <span class="block truncate text-brand-text dark:text-white">{nextLesson.title}</span>
         </div>
-        <svg class="h-5 w-5 flex-shrink-0 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <svg class="h-5 w-5 shrink-0 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
         </svg>
       </a>

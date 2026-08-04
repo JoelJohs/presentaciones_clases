@@ -1,32 +1,31 @@
-const STORAGE_KEY = 'progress_completed';
+import {
+  getCompletedLessons,
+  isLessonCompleted,
+  toggleLessonCompleted,
+  calculateDashboardProgress,
+} from '../features/progress';
 
 export function getCompleted(): string[] {
-  if (typeof localStorage === 'undefined') return [];
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch { return []; }
+  return getCompletedLessons();
 }
 
 export function isCompleted(slug: string): boolean {
-  return getCompleted().includes(slug);
+  return isLessonCompleted(slug);
 }
 
 export function toggle(slug: string): string[] {
-  const set = getCompleted();
-  const idx = set.indexOf(slug);
-  if (idx === -1) set.push(slug);
-  else set.splice(idx, 1);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(set));
-  return set;
+  return toggleLessonCompleted(slug);
 }
 
 export function getPercent(allSlugs: string[]): number {
-  if (allSlugs.length === 0) return 0;
-  const done = getCompleted().filter(s => allSlugs.includes(s)).length;
-  return Math.round((done / allSlugs.length) * 100);
+  if (!Array.isArray(allSlugs) || allSlugs.length === 0) return 0;
+  const completed = getCompleted();
+  const validCompleted = completed.filter((s) => allSlugs.includes(s));
+  return calculateDashboardProgress(validCompleted, allSlugs.length).percent;
 }
 
 export function getNextLesson(allSlugs: string[]): string | null {
-  return allSlugs.find(s => !isCompleted(s)) || null;
+  if (!Array.isArray(allSlugs)) return null;
+  const completed = getCompleted();
+  return allSlugs.find((s) => !completed.includes(s)) || null;
 }

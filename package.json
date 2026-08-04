@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "test": "vitest run"
+    "test": "vitest run",
+    "check": "astro check"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.0",
@@ -21,8 +22,11 @@
     "astro-icon": "^1.1.5"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
     "@tailwindcss/vite": "^4.0.0",
+    "@types/alpinejs": "^3.13.11",
     "tailwindcss": "^4.0.0",
+    "typescript": "^5.9.3",
     "vitest": "^2.1.8"
   }
 }
