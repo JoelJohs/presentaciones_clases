@@ -101,13 +101,25 @@ npm run build
 
 Los archivos resultantes se generarán en la carpeta `./dist/` en formato HTML/CSS/JS estático optimizado.
 
+## Uso en aula
+
+1. Ejecuta `npm install` la primera vez y después inicia la plataforma con `npm run dev`.
+2. Abre la dirección indicada por Astro, normalmente `http://localhost:4321`.
+3. Desde los controles de visualización selecciona Lectura, Continuo o Diapositivas.
+4. En Diapositivas, usa las flechas o Espacio para navegar y `F` o el control de pantalla completa para proyectar.
+5. Si una diapositiva o el hardware presentan dificultades, cambia a Continuo; Lectura es el segundo fallback.
+6. Para generar la versión estática ejecuta `npm run build` y compruébala localmente con `npm run preview`.
+
 ## Persistencia local
-El progreso de lectura y los checkboxes completados por el estudiante:
+El progreso y las preferencias del docente:
 * se guardan directamente en el `localStorage` del navegador;
 * son de ámbito local al navegador utilizado;
 * no requieren ni utilizan base de datos remota;
-* no se sincronizan automáticamente entre múltiples dispositivos;
-* actualmente tienen dos implementaciones de estado en cliente pendientes de unificación.
+* no se sincronizan automáticamente entre múltiples dispositivos.
+
+## Alcance definitivo
+
+La plataforma es una herramienta personal del docente para preparar, organizar y presentar clases de informática. No administra cuentas de alumnos, calificaciones, grupos ni datos personales. Backend, autenticación, cuentas y base de datos son decisiones descartadas de alcance, no requisitos pendientes.
 
 ## Documentación adicional
 * [PROJECT_AUDIT_REPORT.md](PROJECT_AUDIT_REPORT.md) — Reporte técnico exhaustivo y plan de refactorización por fases.

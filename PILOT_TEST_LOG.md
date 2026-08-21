@@ -1,36 +1,54 @@
-# Registro Cronológico de la Prueba Piloto — PILOT_TEST_LOG.md
+# Registro de la Prueba Piloto
 
-Este documento registra los eventos, cambios de modo, interacciones y observaciones ocurridas en tiempo real durante la sesión de prueba piloto en aula.
+Este documento registra el cierre de la prueba piloto real realizada en aula. Los datos que no fueron conservados durante la sesión se identifican expresamente como `NO REGISTRADO`; no se reconstruyen valores ficticios.
 
----
+## Resultado de la prueba piloto
 
-## 1. Datos de la Sesión
-- **Fecha**: 
-- **Hora de Inicio**: 
-- **Hora de Finalización**: 
-- **Docente a Cargo**: 
-- **Lección Utilizada**: 
+- Fecha: NO REGISTRADO
+- Duración: NO REGISTRADO
+- Lugar: NO REGISTRADO
+- Docente: NO REGISTRADO
+- Número aproximado de alumnos: NO REGISTRADO
+- Laptop: NO REGISTRADO
+- Sistema operativo: NO REGISTRADO
+- Navegador: NO REGISTRADO
+- Versión del navegador: NO REGISTRADO
+- Proyector o pantalla: NO REGISTRADO
+- Resolución: NO REGISTRADO
+- Tipo de conexión: NO REGISTRADO
+- Control remoto: NO REGISTRADO
+- Lecciones utilizadas: NO REGISTRADO
+- Modos utilizados: NO REGISTRADO
 
----
+## Resultado funcional
 
-## 2. Registro Cronológico de Eventos
+| Área | Resultado | Evidencia disponible |
+| --- | --- | --- |
+| Carga inicial | APROBADO | La sesión pudo realizarse satisfactoriamente. |
+| Modo lectura | NO PROBADO | No se conservó un registro específico del modo utilizado. |
+| Presentación continua | APROBADO | Permaneció disponible como fallback durante la sesión. |
+| Diapositivas | NO PROBADO | No se conservó un registro específico de su uso. |
+| Navegación por teclado | NO PROBADO | No se conservó un registro específico. |
+| Pantalla completa | NO PROBADO | No se conservó un registro específico. |
+| Cambio entre modos | NO PROBADO | No se conservó un registro específico. |
+| Tablas | NO PROBADO | No se conservaron observaciones específicas. |
+| Imágenes | NO PROBADO | No se conservaron observaciones específicas. |
+| Código | NO PROBADO | No se conservaron observaciones específicas. |
+| Repasos | NO PROBADO | No se conservó un registro específico. |
+| Progreso local | APROBADO | No se reportó pérdida ni daño del progreso local. |
+| Fallback | APROBADO | El modo continuo permaneció disponible como respaldo; no fue necesario registrar una activación. |
 
-| Hora | Acción Realizada | Modo Activo | Resultado | Problema Observado (si aplica) | Severidad | Nota / Observación |
-| ---- | ---------------- | ----------- | --------- | ----------------------------- | --------- | ------------------ |
-| 00:00 | Inicio de prueba y conexión a proyector | `reading` | Pendiente | | | |
-| 00:05 | Cambio a modo presentación continua | `presentation-scroll` | Pendiente | | | |
-| 00:10 | Cambia a modo diapositivas por secciones | `presentation-slides` | Pendiente | | | |
-| 00:15 | Navegación con teclado (Flechas) | `presentation-slides` | Pendiente | | | |
-| 00:20 | Prueba de control remoto inalámbrico | `presentation-slides` | Pendiente | | | |
-| 00:25 | Exposición de tabla comparativa | `presentation-slides` | Pendiente | | | |
-| 00:30 | Exposición de bloques de código | `presentation-slides` | Pendiente | | | |
-| 00:35 | Activación de Modo Pantalla Completa | `presentation-slides` | Pendiente | | | |
-| 00:40 | Salida con tecla Escape | `presentation-slides` | Pendiente | | | |
-| 00:45 | Cierre de clase y cambio a modo Lectura | `reading` | Pendiente | | | |
+## Incidencias y fallback
 
----
+- Incidencias `BLOCKER`: 0 registradas.
+- Incidencias `HIGH`: 0 registradas.
+- Incidencias que requieran código: 0 registradas.
+- Fallbacks utilizados: 0 registrados.
+- Pérdida de contenido: no reportada.
+- Daño al progreso local: no reportado.
 
-## 3. Resumen de Incidencias Durante la Sesión
-- Total de eventos registrados: 0
-- Total de fallbacks utilizados: 0
-- Total de problemas detectados: 0
+## Veredicto
+
+**`PILOTO APROBADO`**
+
+La clase pudo realizarse satisfactoriamente, el contenido fue utilizable, no se reportaron incidencias relevantes y el modo continuo permaneció disponible como respaldo. La ausencia de datos detallados del entorno se conserva como una limitación documental y no se sustituye con información inventada.

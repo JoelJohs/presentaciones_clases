@@ -1520,8 +1520,140 @@ Ausencia de errores `BLOCKER`, lección impartida completamente y fallback funci
 ### 40.10 Estado de salida
 **Estado final**: `COMPLETADA`.
 
+---
 
+## 41. Cierre de las Fases 5B, 5C y 5D
 
+### 41.1 Resultado del piloto
+
+La prueba piloto real se realizó satisfactoriamente y la clase pudo completarse con contenido utilizable. No se reportaron incidencias `BLOCKER` o `HIGH`, pérdida de contenido ni daño al progreso local.
+
+**Veredicto**: `PILOTO APROBADO`.
+
+### 41.2 Entorno utilizado
+
+La sesión ocurrió en un aula real. Fecha, duración, lugar, número de alumnos, laptop, sistema operativo, navegador y versión, proyector, resolución, conexión y control remoto: `NO REGISTRADO`.
+
+Esta ausencia se conserva como limitación de la evidencia; no se reemplazó con valores ficticios.
+
+### 41.3 Funciones probadas
+
+| Área | Resultado |
+| --- | --- |
+| Carga inicial | APROBADO |
+| Modo lectura | NO PROBADO |
+| Presentación continua | APROBADO |
+| Diapositivas | NO PROBADO |
+| Navegación por teclado | NO PROBADO |
+| Pantalla completa | NO PROBADO |
+| Cambio entre modos | NO PROBADO |
+| Tablas | NO PROBADO |
+| Imágenes | NO PROBADO |
+| Código | NO PROBADO |
+| Repasos | NO PROBADO |
+| Progreso local | APROBADO |
+| Fallback | APROBADO |
+
+Las capacidades sin registro individual se mantienen como `NO PROBADO`; la aprobación general no se utiliza para fabricar evidencia granular.
+
+### 41.4 Incidencias
+
+No se registraron incidencias que requieran corrección antes del uso controlado en aula. El registro del piloto contiene cero incidencias `BLOCKER`, cero `HIGH` y cero correcciones de código requeridas.
+
+### 41.5 Estado de la Fase 5C
+
+**`FASE 5C — NO REQUERIDA`**
+
+No se modificó código ni se añadieron dependencias durante el cierre.
+
+### 41.6 Alcance definitivo
+
+La plataforma es una herramienta personal del docente para preparar, organizar y presentar clases de informática.
+
+No administra cuentas de alumnos, calificaciones, grupos ni datos personales. El progreso y las preferencias se conservan localmente en el navegador mediante `localStorage`.
+
+No se contempla backend en el roadmap actual porque no aporta valor suficiente para el caso de uso real.
+
+### 41.7 Decisiones descartadas
+
+| Funcionalidad | Decisión | Justificación |
+| --- | --- | --- |
+| Backend | Descartado | No requerido para presentación local. |
+| Autenticación | Descartada | Un único docente utiliza la herramienta. |
+| Cuentas de alumnos | Descartadas | No se realiza seguimiento individual. |
+| Base de datos | Descartada | `localStorage` cubre el estado requerido. |
+| Panel docente | Descartado | El Dashboard actual es suficiente. |
+| Sincronización remota | Descartada | Se utiliza principalmente una laptop. |
+| Datos personales | Fuera de alcance | No son necesarios. |
+
+Estas son decisiones deliberadas de alcance y no limitaciones accidentales.
+
+### 41.8 Readiness final
+
+| Fase | Estado |
+| --- | --- |
+| 0 | COMPLETADA |
+| 1A | COMPLETADA |
+| 1B | COMPLETADA |
+| 1C | COMPLETADA |
+| 2A | COMPLETADA |
+| 2B | COMPLETADA |
+| 3A | COMPLETADA |
+| 4A | COMPLETADA |
+| 4B | COMPLETADA |
+| 4C | COMPLETADA |
+| 4D | COMPLETADA |
+| 4E | COMPLETADA |
+| 5A | COMPLETADA |
+| 5B | COMPLETADA |
+| 5C | NO REQUERIDA |
+| 5D | CIERRE DOCUMENTAL COMPLETADO; VALIDACIÓN FINAL PENDIENTE |
+
+### 41.9 Roadmap ajustado
+
+**Prioridad alta**
+
+1. Crear contenido de los módulos pendientes.
+2. Garantizar funcionamiento offline confiable.
+3. Revisar cada nueva lección en modo diapositivas.
+
+**Prioridad media**
+
+4. Crear componentes pedagógicos MDX.
+5. Centralizar el catálogo académico cuando el volumen lo justifique.
+6. Añadir CI básica.
+7. Mejorar el diseño únicamente cuando aparezcan inconsistencias reales.
+
+**Prioridad baja**
+
+8. Crear un design system interno.
+9. Incorporar mejoras avanzadas del motor de presentación solo con evidencia de uso.
+10. Realizar limpiezas arquitectónicas sin impacto funcional únicamente cuando su costo esté justificado.
+
+**Descartado**
+
+11. Backend.
+12. Autenticación.
+13. Cuentas de alumnos.
+14. Base de datos.
+15. Panel administrativo.
+
+### 41.10 Estado de salida
+
+#### Validaciones de cierre
+
+| Comando | Código de salida | Suites | Pruebas | Resultado |
+| --- | ---: | ---: | ---: | --- |
+| `npm run check` | 127 | N/A | N/A | NO EJECUTADO: `npm` no está disponible en el entorno actual. |
+| `npm test` | 127 | N/A | N/A | NO EJECUTADO: `npm` no está disponible en el entorno actual. |
+| `npm run build` | 127 | N/A | N/A | NO EJECUTADO: `npm` no está disponible en el entorno actual. |
+| `npm run check` — segunda ejecución | 127 | N/A | N/A | NO EJECUTADO: `npm` no está disponible en el entorno actual. |
+
+Los cuatro comandos se invocaron en el orden solicitado, pero el shell respondió `npm: command not found`. Tampoco existe una instalación accesible de Node ni un directorio `node_modules` en este workspace. No se instalaron dependencias. El último baseline técnico documentado permanece en 143 pruebas y build limpio, pero no se presenta como una validación nueva.
+
+**`LISTO PARA USO CONTROLADO EN AULA`**
+
+La Fase 5B queda `COMPLETADA` y la Fase 5C queda `NO REQUERIDA`. La documentación de la Fase 5D está completa, pero su aceptación formal queda pendiente de repetir las cuatro validaciones en un entorno con Node y npm disponibles. El readiness funcional permanece en `LISTO PARA USO CONTROLADO EN AULA` por el piloto aprobado y el último baseline técnico limpio documentado.
 
 
 

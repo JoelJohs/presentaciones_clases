@@ -429,6 +429,15 @@ En la Fase 4E se reconcilió la evidencia de auditoría y se emitió el document
 - `npm run build`: **Exit Code 0** (16 páginas estáticas generadas).
 - `npm run check (2da ejec)`: **Exit Code 0**.
 
+---
+
+## 36. Cierre posterior a la prueba piloto
+
+La prueba piloto real en aula fue satisfactoria y permitió completar la clase sin incidencias `BLOCKER` o `HIGH` registradas. El veredicto de producto pasa a **`LISTO PARA USO CONTROLADO EN AULA`**.
+
+Los datos específicos de hardware, navegador, resolución y uso individual de cada función no fueron registrados. Por integridad de la evidencia, esos elementos permanecen como `NO REGISTRADO` o `NO PROBADO` en la bitácora y no sustituyen la validación visual detallada que pueda realizarse en futuros entornos.
+
+No surgieron correcciones UI/UX obligatorias del piloto; por tanto, **`FASE 5C — NO REQUERIDA`**. Las mejoras visuales futuras se priorizarán solo cuando el uso real revele inconsistencias concretas.
 
 
 

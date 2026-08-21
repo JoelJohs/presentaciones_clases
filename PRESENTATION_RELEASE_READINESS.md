@@ -76,9 +76,9 @@ Se recomienda su uso docente guiado mediante el checklist de pruebas en aula.
 
 ## 19. Veredicto
 
-**`LISTO PARA PRUEBA PILOTO`**
+**`LISTO PARA USO CONTROLADO EN AULA`**
 
-*Justificación*: La base estática de código, las pruebas unitarias y de resiliencia SSR, la compilación y la lógica del motor están completamente validadas. El estado conservador `LISTO PARA PRUEBA PILOTO` es el veredicto honesto a la espera de la prueba física docente en aula con proyector y hardware real.
+*Justificación*: La base técnica fue validada automáticamente y la prueba piloto real permitió impartir la clase satisfactoriamente, sin incidencias `BLOCKER` o `HIGH` registradas, pérdida de contenido ni daño al progreso local.
 
 ---
 
@@ -97,3 +97,84 @@ Se recomienda su uso docente guiado mediante el checklist de pruebas en aula.
   - `PILOT_ISSUES.md`: Plantilla y registro de problemas por severidad (`BLOCKER`, `HIGH`, `MEDIUM`, `LOW`, `INFO`).
 - **Estado previo de la suite**: 143 pruebas automatizadas pasadas al 100%, 0 errores en `npm run check` y build estático limpio.
 
+---
+
+## 21. Resultado de la prueba piloto
+
+### 21.1 Entorno
+
+La prueba se realizó en un aula real. La fecha, duración, lugar, navegador, versión y resolución no fueron conservados en el registro original y se documentan como `NO REGISTRADO` en `PILOT_TEST_LOG.md`.
+
+### 21.2 Lecciones utilizadas
+
+`NO REGISTRADO`. Las rutas previstas en el plan fueron las lecciones de hardware y software y componentes internos, pero no se afirma que ambas se utilizaran sin evidencia específica.
+
+### 21.3 Modos utilizados
+
+`NO REGISTRADO`. La plataforma mantuvo disponibles `reading`, `presentation-scroll` y `presentation-slides`; no se reconstruye cuáles se usaron efectivamente.
+
+### 21.4 Hardware
+
+Laptop, proyector o pantalla, conexión, resolución y control remoto: `NO REGISTRADO`.
+
+### 21.5 Resultado funcional
+
+| Área | Resultado |
+| --- | --- |
+| Carga inicial | APROBADO |
+| Modo lectura | NO PROBADO |
+| Presentación continua | APROBADO |
+| Diapositivas | NO PROBADO |
+| Navegación por teclado | NO PROBADO |
+| Pantalla completa | NO PROBADO |
+| Cambio entre modos | NO PROBADO |
+| Tablas | NO PROBADO |
+| Imágenes | NO PROBADO |
+| Código | NO PROBADO |
+| Repasos | NO PROBADO |
+| Progreso local | APROBADO |
+| Fallback | APROBADO |
+
+La aprobación se sustenta en que la clase pudo completarse, el contenido fue utilizable y no se reportó pérdida de contenido ni daño al progreso. Las funciones sin registro individual permanecen como `NO PROBADO` y no se presentan como verificadas.
+
+### 21.6 Incidencias
+
+No se registraron incidencias `BLOCKER`, `HIGH` ni problemas que requieran cambios de código. Por ello, **`FASE 5C — NO REQUERIDA`**.
+
+### 21.7 Fallback
+
+El fallback `presentation-slides` → `presentation-scroll` → `reading` permaneció disponible. No se registró la necesidad de activarlo durante la sesión.
+
+### 21.8 Riesgos aceptados
+
+- Los detalles de hardware y navegador del piloto no quedaron registrados.
+- Los controles remotos físicos y las funciones marcadas `NO PROBADO` deberán comprobarse antes de depender de ellos en un entorno distinto.
+- El progreso y las preferencias pertenecen al navegador y equipo utilizados; esta persistencia local es adecuada para el alcance del producto.
+
+### 21.9 Veredicto
+
+**`PILOTO APROBADO`**
+
+**`LISTO PARA USO CONTROLADO EN AULA`**
+
+## Alcance definitivo
+
+La plataforma es una herramienta personal del docente para preparar, organizar y presentar clases de informática.
+
+No administra cuentas de alumnos, calificaciones, grupos ni datos personales.
+
+El progreso y las preferencias se conservan localmente en el navegador mediante `localStorage`.
+
+No se contempla backend en el roadmap actual porque no aporta valor suficiente para el caso de uso real.
+
+## Decisiones de alcance
+
+| Funcionalidad | Decisión | Justificación |
+| --- | --- | --- |
+| Backend | Descartado | No requerido para presentación local. |
+| Autenticación | Descartada | Un único docente utiliza la herramienta. |
+| Cuentas de alumnos | Descartadas | No se realiza seguimiento individual. |
+| Base de datos | Descartada | `localStorage` cubre el estado requerido. |
+| Panel docente | Descartado | El Dashboard actual es suficiente. |
+| Sincronización remota | Descartada | Se utiliza principalmente una laptop. |
+| Datos personales | Fuera de alcance | No son necesarios. |
