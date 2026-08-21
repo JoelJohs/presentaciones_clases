@@ -1,12 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
-
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-display: 'Outfit', sans-serif;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
   /* Brand Base Tokens */
   --color-brand-bg: #FAFAF8;
@@ -96,6 +94,26 @@
 
 body {
   font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 1000;
+  transform: translateY(-200%);
+  border-radius: 0.5rem;
+  background: var(--color-brand-primary);
+  color: white;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  transition: transform 0.2s ease;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -546,6 +564,14 @@ h1, h2, h3, h4, h5, h6 {
   pointer-events: none;
   border-radius: 0 0.75rem 0.75rem 0;
 }
+
+.prose-table-wrapper:focus-within {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+.prose-table-wrapper.is-at-end::after {
+  display: none;
+}
 .dark .prose-table-wrapper::after {
   background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.4));
 }
@@ -565,5 +591,3 @@ h1, h2, h3, h4, h5, h6 {
     scroll-behavior: auto !important;
   }
 }
-
-

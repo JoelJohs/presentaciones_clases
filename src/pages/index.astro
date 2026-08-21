@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import { getNavigationStructure } from '../utils/navigation';
 import Layout from '../layouts/Layout.astro';
 import Dashboard from '../components/Dashboard.astro';
+import { Icon } from 'astro-icon/components';
 
 const lecciones = await getCollection('lecciones');
 const nav = getNavigationStructure(lecciones);
@@ -51,7 +52,7 @@ const MensajeContent = latestMensaje ? (await render(latestMensaje)).Content : n
     {latestMensaje && MensajeContent && (
       <div class="rounded-xl border border-brand-amber/20 bg-brand-amber-bg dark:bg-amber-950/20 p-4 mb-6">
         <div class="flex items-center gap-2 mb-2">
-          <span class="text-sm">📢</span>
+          <Icon name="lucide:megaphone" class="h-4 w-4 text-brand-amber" aria-hidden="true" />
           <span class="text-xs font-semibold uppercase tracking-wider text-brand-amber">
             {latestMensaje.data.title || 'Mensaje del profesor'}
           </span>

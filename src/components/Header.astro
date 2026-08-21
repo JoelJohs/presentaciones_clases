@@ -6,8 +6,10 @@
     <button
       id="menu-toggle"
       type="button"
-      class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 hover:bg-brand-hover-bg hover:text-brand-primary focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary lg:hidden transition-colors duration-200 shrink-0"
+      class="inline-flex h-11 w-11 items-center justify-center rounded-lg text-slate-500 hover:bg-brand-hover-bg hover:text-brand-primary focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary lg:hidden transition-colors duration-200 shrink-0"
       aria-label="Abrir Menú Lateral"
+      aria-controls="sidebar"
+      aria-expanded="false"
     >
       <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
@@ -17,7 +19,7 @@
     <button
       id="sidebar-toggle"
       type="button"
-      class="hidden lg:inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 hover:bg-brand-hover-bg hover:text-brand-primary focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary transition-colors duration-200 shrink-0"
+      class="hidden lg:inline-flex h-11 w-11 items-center justify-center rounded-lg text-slate-500 hover:bg-brand-hover-bg hover:text-brand-primary focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary transition-colors duration-200 shrink-0"
       aria-label="Alternar Temario Lateral"
     >
       <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -42,7 +44,7 @@
         type="button"
         role="radio"
         aria-checked="true"
-        class="mode-btn mode-btn-active flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all duration-200"
+        class="mode-btn mode-btn-active flex min-h-11 items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all duration-200"
         aria-label="Modo Lectura"
         title="Modo Lectura"
       >
@@ -58,7 +60,7 @@
         type="button"
         role="radio"
         aria-checked="false"
-        class="mode-btn flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 text-brand-muted hover:text-brand-primary"
+        class="mode-btn flex min-h-11 items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 text-brand-muted hover:text-brand-primary"
         aria-label="Modo Continuo"
         title="Modo Continuo (Scroll Ampliado)"
       >
@@ -74,7 +76,7 @@
         type="button"
         role="radio"
         aria-checked="false"
-        class="mode-btn flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 text-brand-muted hover:text-brand-primary"
+        class="mode-btn flex min-h-11 items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 text-brand-muted hover:text-brand-primary"
         aria-label="Modo Diapositivas"
         title="Modo Diapositivas por Secciones"
       >
@@ -89,7 +91,7 @@
     <button
       id="theme-toggle"
       type="button"
-      class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 hover:bg-brand-hover-bg hover:text-brand-primary focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary transition-colors duration-200 shrink-0"
+      class="inline-flex h-11 w-11 items-center justify-center rounded-lg text-slate-500 hover:bg-brand-hover-bg hover:text-brand-primary focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary transition-colors duration-200 shrink-0"
       aria-label="Alternar Tema Claro u Oscuro"
       title="Alternar Tema"
     >

@@ -7,20 +7,20 @@ export function getContentKindMetadata(kind: StudyPlanItemKind): {
 } {
   switch (kind) {
     case 'lesson':
-      return { label: 'Lección', isCanonical: true, icon: '📚' };
+      return { label: 'Lección', isCanonical: true, icon: 'lucide:book-open' };
     case 'review':
-      return { label: 'Repaso', isCanonical: false, icon: '🔄' };
+      return { label: 'Repaso', isCanonical: false, icon: 'lucide:rotate-ccw' };
     case 'activity':
-      return { label: 'Práctica', isCanonical: false, icon: '🛠️' };
+      return { label: 'Práctica', isCanonical: false, icon: 'lucide:wrench' };
     case 'assessment':
-      return { label: 'Evaluación', isCanonical: false, icon: '📝' };
+      return { label: 'Evaluación', isCanonical: false, icon: 'lucide:clipboard-pen-line' };
     case 'topic':
-      return { label: 'Tema', isCanonical: false, icon: '📂' };
+      return { label: 'Tema', isCanonical: false, icon: 'lucide:folder-open' };
     case 'module':
-      return { label: 'Módulo', isCanonical: false, icon: '📦' };
+      return { label: 'Módulo', isCanonical: false, icon: 'lucide:package' };
     case 'informational':
     default:
-      return { label: 'Recurso', isCanonical: false, icon: '📌' };
+      return { label: 'Recurso', isCanonical: false, icon: 'lucide:pin' };
   }
 }
 

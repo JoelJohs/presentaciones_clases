@@ -6,14 +6,14 @@ describe('Utilidades de Clasificación Visual y UI (Fase 4B)', () => {
     const meta = getContentKindMetadata('lesson');
     expect(meta.label).toBe('Lección');
     expect(meta.isCanonical).toBe(true);
-    expect(meta.icon).toBe('📚');
+    expect(meta.icon).toBe('lucide:book-open');
   });
 
   it('2. Retorna metadatos correctos para repasos (no canónico)', () => {
     const meta = getContentKindMetadata('review');
     expect(meta.label).toBe('Repaso');
     expect(meta.isCanonical).toBe(false);
-    expect(meta.icon).toBe('🔄');
+    expect(meta.icon).toBe('lucide:rotate-ccw');
   });
 
   it('3. Retorna metadatos correctos para actividades y evaluaciones', () => {

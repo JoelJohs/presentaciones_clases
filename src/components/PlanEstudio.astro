@@ -277,17 +277,6 @@ const totalSemanas = modulos.reduce(
       }
     });
 
-    wrapper.addEventListener('keydown', function (e: KeyboardEvent) {
-      if (e.key !== 'Enter' && e.key !== ' ') return;
-      const target = e.target;
-      if (target instanceof Element) {
-        const row = target.closest<HTMLElement>('.plan-row');
-        if (row) {
-          e.preventDefault();
-          row.click();
-        }
-      }
-    });
   })();
 </script>
 

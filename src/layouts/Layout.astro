@@ -61,6 +61,7 @@ const {
     </script>
   </head>
   <body class="bg-brand-bg text-brand-text antialiased">
+    <a href="#main-content" class="skip-link">Saltar al contenido</a>
     <div class="min-h-screen">
       <!-- Backdrop for mobile sidebar -->
       <div id="sidebar-backdrop" class="fixed inset-0 z-30 bg-black/30 backdrop-blur-sm transition-all duration-300 opacity-0 pointer-events-none lg:hidden"></div>
@@ -72,7 +73,7 @@ const {
       <div id="main-content-wrapper" class="lg:pl-72 flex flex-col min-h-screen transition-all duration-300">
         <Header />
 
-        <main class="flex-1 px-5 sm:px-8 py-10 max-w-3xl mx-auto w-full page-enter">
+        <main id="main-content" tabindex="-1" class="flex-1 px-5 sm:px-8 py-10 max-w-3xl mx-auto w-full page-enter">
           <slot />
         </main>
       </div>
@@ -91,6 +92,7 @@ const {
 
       function toggleMobileSidebar(open: boolean) {
         if (!sidebar || !backdrop) return;
+        menuToggle?.setAttribute('aria-expanded', String(open));
         if (open) {
           sidebar.classList.remove('-translate-x-full');
           backdrop.classList.remove('opacity-0', 'pointer-events-none');

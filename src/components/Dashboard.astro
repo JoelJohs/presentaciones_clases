@@ -1,5 +1,6 @@
 ---
 import type { NavigationResult } from '../utils/navigation';
+import { Icon } from 'astro-icon/components';
 
 interface Props {
   nav: NavigationResult;
@@ -22,22 +23,10 @@ const processedModules = nav.modules.map(mod => ({
   })),
 }));
 
-const processedExtras = nav.extras
-  .filter(mod => mod.title.charAt(0) !== 'P')
-  .map(mod => ({
-    title: mod.title,
-    badge: mod.title.charAt(0),
-    lessons: mod.topics.flatMap(t => t.lessons).map(l => ({
-      slug: l.slug,
-      title: l.title,
-      isRepaso: l.slug.endsWith('/repaso'),
-    })),
-  }));
-
 const allLessonsData = processedModules.flatMap(m =>
   m.lessons.map(l => ({ slug: l.slug, title: l.title }))
 );
-const dashboardData = JSON.stringify({ modules: processedModules, extras: processedExtras, lessons: allLessonsData });
+const dashboardData = JSON.stringify({ modules: processedModules, lessons: allLessonsData });
 ---
 
 <div id="dashboard-data" class="hidden">{dashboardData}</div>
@@ -47,7 +36,7 @@ const dashboardData = JSON.stringify({ modules: processedModules, extras: proces
   <div class="rounded-xl border border-brand-border bg-brand-surface dark:bg-brand-sidebar-bg p-4 flex items-center justify-between gap-4">
     <div class="space-y-1">
       <h2 class="text-sm font-bold text-brand-navy dark:text-white flex items-center gap-2">
-        <span>👋</span>
+        <Icon name="lucide:graduation-cap" class="h-4 w-4 text-brand-primary" aria-hidden="true" />
         <span>Panel de Avance Curricular</span>
       </h2>
       <p class="text-xs text-brand-muted leading-relaxed">
@@ -72,7 +61,9 @@ const dashboardData = JSON.stringify({ modules: processedModules, extras: proces
   <!-- Estado 1: Sin progreso (0%) -->
   <template x-if="completedCount === 0 && totalCount > 0">
     <div class="rounded-xl border border-brand-primary/40 bg-brand-callout-bg dark:bg-brand-sidebar-bg p-5 text-center space-y-3">
-      <div class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-brand-primary/10 text-brand-primary font-bold text-xl">🚀</div>
+      <div class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-brand-primary/10 text-brand-primary font-bold text-xl">
+        <Icon name="lucide:rocket" class="h-6 w-6" aria-hidden="true" />
+      </div>
       <h3 class="text-base font-bold text-brand-navy dark:text-white">¡Comienza tu ruta de aprendizaje!</h3>
       <p class="text-xs text-brand-muted max-w-md mx-auto">
         Aún no has completado ninguna lección. Inicia con el primer módulo para registrar tu progreso.
@@ -108,7 +99,9 @@ const dashboardData = JSON.stringify({ modules: processedModules, extras: proces
   <!-- Estado 3: Todo completado (100%) -->
   <template x-if="!nextLesson && totalCount > 0 && completedCount === totalCount">
     <div class="rounded-xl border border-emerald-500/30 bg-emerald-50 dark:bg-emerald-950/40 p-6 text-center space-y-2">
-      <div class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold text-2xl">🎉</div>
+      <div class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold text-2xl">
+        <Icon name="lucide:party-popper" class="h-6 w-6" aria-hidden="true" />
+      </div>
       <p class="text-lg font-bold text-emerald-800 dark:text-emerald-200">¡Felicidades! Completaste el 100% de las lecciones</p>
       <p class="text-xs text-emerald-700 dark:text-emerald-300">Has finalizado todas las lecciones del curso. Puedes repasar los contenidos en cualquier momento.</p>
     </div>
@@ -168,7 +161,9 @@ const dashboardData = JSON.stringify({ modules: processedModules, extras: proces
   <!-- Plan de Estudio Link -->
   <a href="/00-inicio/03-plan-de-estudio" class="flex items-center justify-between rounded-xl border border-brand-border bg-white dark:bg-brand-sidebar-bg px-4 py-3 hover:border-brand-primary transition-colors group shadow-sm">
     <div class="flex items-center gap-3">
-      <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-primary/10 text-brand-primary font-bold text-xs">📋</span>
+      <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-primary/10 text-brand-primary font-bold text-xs">
+        <Icon name="lucide:clipboard-list" class="h-4 w-4" aria-hidden="true" />
+      </span>
       <div>
         <p class="text-sm font-semibold text-brand-navy dark:text-white group-hover:text-brand-primary transition-colors">Plan de Estudio Completo</p>
         <p class="text-xs text-brand-muted">Ver temario detallado, ponderaciones y actividades</p>
@@ -204,7 +199,6 @@ const dashboardData = JSON.stringify({ modules: processedModules, extras: proces
   Alpine.data('dashboard', () => ({
     completed: [] as string[],
     modules: [] as DashboardModule[],
-    extras: [] as DashboardModule[],
     lessons: [] as DashboardLesson[],
     percent: 0,
     completedCount: 0,
@@ -216,7 +210,6 @@ const dashboardData = JSON.stringify({ modules: processedModules, extras: proces
       const dataText = dataEl?.textContent ?? '{}';
       const data = JSON.parse(dataText);
       this.modules = data.modules ?? [];
-      this.extras = data.extras ?? [];
       this.lessons = data.lessons ?? [];
       this.totalCount = this.lessons.length;
 

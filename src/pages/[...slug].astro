@@ -90,6 +90,15 @@ const nextLesson = currentIndex < nav.allLessonsOrdered.length - 1 ? nav.allLess
           wrapper.className = 'prose-table-wrapper';
           table.parentNode?.insertBefore(wrapper, table);
           wrapper.appendChild(table);
+
+          const updateTableScrollHint = () => {
+            wrapper.classList.toggle(
+              'is-at-end',
+              wrapper.scrollLeft + wrapper.clientWidth >= wrapper.scrollWidth - 1,
+            );
+          };
+          wrapper.addEventListener('scroll', updateTableScrollHint, { passive: true });
+          updateTableScrollHint();
         }
       });
 
