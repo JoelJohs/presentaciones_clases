@@ -137,10 +137,12 @@ describe('Progress Migration (src/utils/progress-migration.ts)', () => {
     expect(current).toEqual([]);
   });
 
-  it('19. Ignora entradas cuyo slug no corresponda a una lección declarada', () => {
-    const rawPlan = JSON.stringify({ 'mod-02.docs-sheets.google-sheets': true }); // SIN CORRESPONDENCIA
+  it('19. Migra una entrada del plan cuando ya tiene una lección declarada', () => {
+    const rawPlan = JSON.stringify({ 'mod-02.docs-sheets.google-sheets': true });
     const result = migrateLegacyProgress([], rawPlan);
-    expect(result).toEqual([]);
+    expect(result).toEqual([
+      '02-ofimatica-en-la-nube/01-google-docs-y-sheets/02-google-sheets',
+    ]);
   });
 
   it('20. Soporta múltiples IDs heredados apuntando al mismo slug sin duplicados', () => {

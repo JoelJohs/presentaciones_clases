@@ -27,9 +27,9 @@ describe('Progress Semantic Mapping (src/utils/progress-mapping.ts)', () => {
     expect(slug).toBe('01-fundamentos-mantenimiento/03-evaluacion-troubleshooting/01-evaluacion-resolucion-problemas');
   });
 
-  it('4. Maneja elementos sin lección asignada (SIN CORRESPONDENCIA)', () => {
+  it('4. Obtiene el slug de una lección generada posteriormente', () => {
     const slug = getLessonSlugForStudyPlanId('mod-02.docs-sheets.google-sheets');
-    expect(slug).toBeUndefined();
+    expect(slug).toBe('02-ofimatica-en-la-nube/01-google-docs-y-sheets/02-google-sheets');
   });
 
   it('5. Maneja ID inexistente o no válido', () => {
@@ -39,7 +39,7 @@ describe('Progress Semantic Mapping (src/utils/progress-mapping.ts)', () => {
 
   it('6. Verifica relación uno a uno entre ID y lección', () => {
     expect(isLessonBackedItem('mod-01.intro.hardware-software')).toBe(true);
-    expect(isLessonBackedItem('mod-02.docs-sheets.google-sheets')).toBe(false);
+    expect(isLessonBackedItem('mod-02.docs-sheets.google-sheets')).toBe(true);
   });
 
   it('7. Realiza búsqueda inversa de IDs del Plan por slug de lección', () => {
