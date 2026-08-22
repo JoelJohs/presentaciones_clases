@@ -1,18 +1,13 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection } from 'astro:content';
 import { getNavigationStructure } from '../utils/navigation';
 import Layout from '../layouts/Layout.astro';
 import Dashboard from '../components/Dashboard.astro';
-import { Icon } from 'astro-icon/components';
 
 const lecciones = await getCollection('lecciones');
 const nav = getNavigationStructure(lecciones);
 const firstLesson = nav.allLessonsOrdered.length > 0 ? nav.allLessonsOrdered[0] : null;
 
-const mensajes = await getCollection('mensajes');
-const sortedMensajes = mensajes.sort((a, b) => b.data.fecha.localeCompare(a.data.fecha));
-const latestMensaje = sortedMensajes.length > 0 ? sortedMensajes[0] : null;
-const MensajeContent = latestMensaje ? (await render(latestMensaje)).Content : null;
 ---
 
 <Layout title="Inicio">
@@ -47,22 +42,6 @@ const MensajeContent = latestMensaje ? (await render(latestMensaje)).Content : n
         )}
       </div>
     </div>
-
-    <!-- Mensaje semanal -->
-    {latestMensaje && MensajeContent && (
-      <div class="rounded-xl border border-brand-amber/20 bg-brand-amber-bg dark:bg-amber-950/20 p-4 mb-6">
-        <div class="flex items-center gap-2 mb-2">
-          <Icon name="lucide:megaphone" class="h-4 w-4 text-brand-amber" aria-hidden="true" />
-          <span class="text-xs font-semibold uppercase tracking-wider text-brand-amber">
-            {latestMensaje.data.title || 'Mensaje del profesor'}
-          </span>
-          <span class="text-xs text-brand-muted ml-auto">{latestMensaje.data.fecha}</span>
-        </div>
-        <div class="text-sm text-brand-text dark:text-brand-text leading-relaxed prose-sm">
-          <MensajeContent />
-        </div>
-      </div>
-    )}
 
     <!-- Dashboard con Alpine (client-side) -->
     <Dashboard nav={nav} />

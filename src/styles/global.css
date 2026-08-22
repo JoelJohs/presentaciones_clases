@@ -238,40 +238,80 @@ h1, h2, h3, h4, h5, h6 {
   white-space: pre;
 }
 
-/* Markdown Tables inside .prose */
+/* Tablas HTML dentro de .prose; el wrapper controla el scroll responsive. */
 .prose table {
-  display: block;
+  display: table;
   width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  min-width: max-content;
   border-collapse: collapse;
+  border-spacing: 0;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
   font-size: 0.9em;
   text-align: left;
+  table-layout: auto;
 }
 .prose th {
-  background-color: var(--color-brand-sidebar-bg);
-  color: var(--color-brand-navy);
+  background-color: transparent;
+  color: var(--color-brand-primary);
   font-weight: 700;
+  font-size: 0.78em;
+  letter-spacing: 0.06em;
   padding: 0.75rem 1rem;
-  border-bottom: 2px solid var(--color-brand-border);
+  border-top: 2px solid var(--color-brand-primary);
+  border-bottom: 1px solid var(--color-brand-border);
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 .prose td {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--color-brand-border);
   color: var(--color-brand-text);
   vertical-align: middle;
+  min-width: 7rem;
 }
 .prose tr:hover td {
   background-color: var(--color-brand-hover-bg);
+}
+.prose tr:last-child td { border-bottom: 0; }
+
+/* Marcadores editoriales para separar la guía docente del contenido del alumno. */
+.prose .lesson-callout {
+  margin: 1.75rem 0;
+  padding: 0.25rem 0 0.25rem 1rem;
+  border-left: 3px solid var(--color-brand-primary);
+  background: transparent;
+}
+.prose .lesson-callout > :first-child { margin-top: 0; }
+.prose .lesson-callout > :last-child { margin-bottom: 0; }
+.prose .lesson-callout__label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--color-brand-primary);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+.prose .lesson-callout--example {
+  border-left-color: #6366f1;
+}
+.prose .lesson-callout--result {
+  border-left-color: #0f766e;
+}
+.dark .prose .lesson-callout { border-left-color: color-mix(in srgb, white 65%, var(--color-brand-primary)); }
+@media (max-width: 640px) {
+  .prose table { font-size: 0.84rem; }
+  .prose th, .prose td { padding: 0.65rem 0.75rem; }
+  .prose .lesson-callout { padding-left: 0.875rem; }
 }
 
 .prose img,
 .prose video {
   max-width: 100%;
   height: auto;
-  border-radius: 0.75rem;
+  border-radius: 0.25rem;
   margin: 1.5rem auto;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
@@ -550,7 +590,8 @@ h1, h2, h3, h4, h5, h6 {
 .prose-table-wrapper table {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
-  width: 100%;
+  width: max-content;
+  min-width: 100%;
 }
 /* Pista visual de scroll lateral para móviles */
 .prose-table-wrapper::after {
@@ -562,7 +603,7 @@ h1, h2, h3, h4, h5, h6 {
   width: 20px;
   background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.08));
   pointer-events: none;
-  border-radius: 0 0.75rem 0.75rem 0;
+  border-radius: 0 0.25rem 0.25rem 0;
 }
 
 .prose-table-wrapper:focus-within {

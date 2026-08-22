@@ -21,8 +21,8 @@ describe('global.css prose table styles', () => {
     expect(cssContent).toMatch(/\.prose\s+table\s*\{[^}]*border-collapse:\s*collapse/);
     
     // Check .prose th properties
-    expect(cssContent).toMatch(/\.prose\s+th\s*\{[^}]*background-color:\s*var\(--color-brand-sidebar-bg\)/);
-    expect(cssContent).toMatch(/\.prose\s+th\s*\{[^}]*color:\s*var\(--color-brand-navy\)/);
+    expect(cssContent).toMatch(/\.prose\s+th\s*\{[^}]*background-color:\s*transparent/);
+    expect(cssContent).toMatch(/\.prose\s+th\s*\{[^}]*color:\s*var\(--color-brand-primary\)/);
     expect(cssContent).toMatch(/\.prose\s+th\s*\{[^}]*font-weight:\s*700/);
 
     // Check .prose td properties
@@ -42,9 +42,9 @@ describe('global.css prose table styles', () => {
     expect(cssContent).toContain('.prose video');
     expect(cssContent).toMatch(/\.prose\s+img,\s*\.prose\s+video\s*\{[^}]*max-width:\s*100%/);
 
-    // Assert table scroll rules
-    expect(cssContent).toMatch(/\.prose\s+table\s*\{[^}]*display:\s*block/);
-    expect(cssContent).toMatch(/\.prose\s+table\s*\{[^}]*overflow-x:\s*auto/);
+    // Tables keep native layout; the shared wrapper owns horizontal scrolling.
+    expect(cssContent).toMatch(/\.prose\s+table\s*\{[^}]*display:\s*table/);
+    expect(cssContent).toMatch(/\.prose-table-wrapper\s*\{[^}]*overflow-x:\s*auto/);
     
   });
 
@@ -68,5 +68,3 @@ describe('global.css prose table styles', () => {
     expect(cssContent).toMatch(/\.prose\s+pre\.text-gray-200\s*\{[^}]*color:\s*var\(--color-gray-200,\s*#e5e7eb\)\s*!important/);
   });
 });
-
-

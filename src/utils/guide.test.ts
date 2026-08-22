@@ -18,6 +18,11 @@ describe('GUIA_CONTENIDO.md verification', () => {
     expect(content).toContain('## 3. Formato del Texto (Markdown y MDX)');
     expect(content).toContain('## 4. Agregar Imágenes y Recursos');
     expect(content).toContain('## 5. Publicar Cambios');
+    expect(content).toContain('### 3.1 Estructura para el modo Diapositivas');
+    expect(content).toContain('### 3.2 Tablas');
+    expect(content).toContain('### 3.4 La página está dirigida al estudiante');
+    expect(content).toContain('<thead>');
+    expect(content).toContain('No agregues clases nuevas a cada tabla');
     
     // 3. Verify all backticks (code blocks) are balanced
     const codeBlockCount = (content.match(/```/g) || []).length;
