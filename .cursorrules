@@ -1,0 +1,18 @@
+# Reglas de Proyecto: Presentaciones de Clases (Astro + MDX)
+
+- **Tecnologías:** Astro v6, MDX, Tailwind CSS v4, Alpine.js, astro-icon.
+- **Ruta de lecciones:** `src/content/lecciones/[00-99]-[modulo]/[00-99]-[tema]/[00-99]-[clase]/index.mdx`
+
+## Reglas Obligatorias al Generar o Modificar Clases
+
+1. **Nombres de archivo:** Minúsculas, números y guiones (`kebab-case`). Sin espacios, mayúsculas, tildes ni `ñ`.
+2. **Frontmatter:** Incluir siempre `title`, `moduleTitle`, `topicTitle`, `description`, `duration` y `objectives` (array).
+3. **Modo Diapositivas:**
+   - `#` se usa únicamente en el título de la clase.
+   - `##` marca cada diapositiva (una idea/demostración/reto por diapositiva).
+   - Separar cada `##` con `---`.
+   - `###` y `####` no separan diapositivas.
+4. **Tablas HTML Obligatorias:** Nunca usar tablas de Markdown con pipes `|`. Usar siempre elementos `<table><thead>...<tbody>...</table>`.
+5. **Iconos:** Importar `import { Icon } from "astro-icon/components";` y usar `<Icon name="lucide:..." class="inline w-5 h-5 align-text-bottom text-color" />`.
+6. **Enfoque en el estudiante:** Escribir en segunda persona imperativo directo ("Observa", "Prueba", "Crea", "Comprueba"). Cero notas o recordatorios para el docente ("explica al grupo", "agenda de la sesión").
+7. **Skill de referencia:** Consultar `skills/crear-clase/SKILL.md` y `skills/crear-clase/references/plantilla.mdx`.

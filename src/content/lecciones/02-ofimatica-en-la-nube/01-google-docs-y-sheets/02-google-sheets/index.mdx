@@ -4,69 +4,312 @@ moduleTitle: "2 - Ofimática en la Nube"
 topicTitle: "Tema 1: Google Docs y Sheets"
 subtopicTitle: "Google Sheets: Hojas de Cálculo"
 fecha: "29-08-2026"
-description: "Esqueleto de clase para Google Sheets: Hojas de Cálculo. Completa la explicación, demostración y práctica antes de impartirla."
+description: "Aprende a dominar las hojas de cálculo desde cero: coordenadas, fórmulas automáticas, funciones SUMA y PROMEDIO, y crea tu primer presupuesto inteligente."
 duration: 60
 objectives:
-  - "Explicar los conceptos principales de Google Sheets: Hojas de Cálculo"
-  - "Aplicar lo aprendido mediante una actividad guiada"
-  - "Generar una evidencia verificable del aprendizaje"
+  - "Identificar celdas, filas y columnas mediante el sistema de coordenadas"
+  - "Diferenciar datos de texto, números y fórmulas dentro de una hoja"
+  - "Construir fórmulas matemáticas utilizando referencias de celda"
+  - "Aplicar el autorrelleno para automatizar cálculos repetitivos"
+  - "Calcular totales y promedios con las funciones SUMA y PROMEDIO"
+  - "Construir un presupuesto completo con formato visual profesional"
 ---
 
-# Google Sheets: Hojas de Cálculo
+import { Icon } from "astro-icon/components";
 
-## Propósito de la clase
+# Google Sheets: Tu Calculadora Inteligente
 
-{/* Explica qué problema resuelve este tema y por qué es útil. */}
+A diferencia de un documento de texto donde escribes párrafos fijos, una **hoja de cálculo** es un tablero interactivo con capacidad de procesar miles de datos matemáticos al instante.
 
-## Resultados de aprendizaje
+---
 
-Al finalizar la sesión, el estudiante podrá:
+## 1. El Tablero de Coordenadas <Icon name="lucide:grid-3x3" class="inline w-6 h-6 align-text-bottom text-sky-600" />
 
-- [ ] Definir o explicar los conceptos centrales.
-- [ ] Aplicar el procedimiento o herramienta principal.
-- [ ] Relacionar lo aprendido con un caso práctico.
+Una hoja de cálculo funciona igual que el juego de la *Batalla Naval*:
 
-## Conceptos y vocabulario
+- <Icon name="lucide:arrow-down" class="inline w-5 h-5 align-text-bottom text-blue-600" /> **Columnas:** Líneas verticales identificadas con letras (**A, B, C, D...**).
+- <Icon name="lucide:arrow-right" class="inline w-5 h-5 align-text-bottom text-emerald-600" /> **Filas:** Líneas horizontales identificadas con números (**1, 2, 3, 4...**).
+- <Icon name="lucide:box" class="inline w-5 h-5 align-text-bottom text-purple-600" /> **Celda:** La intersección exacta entre una columna y una fila. Su nombre combina su letra y su número: `A1`, `B4`, `F12`.
 
-{/* Agrega definiciones, ejemplos, comparaciones y vocabulario técnico. */}
+> <Icon name="lucide:lightbulb" class="inline w-5 h-5 align-text-bottom text-amber-500" /> El cuadro de nombres arriba a la izquierda siempre te indica en qué celda estás ubicado.
 
-- **Concepto 1:** descripción breve.
-- **Concepto 2:** descripción breve.
-- **Concepto 3:** descripción breve.
+---
 
-## Desarrollo paso a paso
+## <Icon name="lucide:wrench" class="inline w-6 h-6 align-text-bottom text-gray-600" /> Prueba Rápida 1: Conquista el Tablero
 
-{/* Escribe aquí la explicación, demostraciones y capturas necesarias. */}
+1. **Abre una hoja nueva:** Escribe `sheets.new` en la barra de direcciones de tu navegador y presiona `Enter`.
+2. **Ubícate en la celda `C3`:** Haz clic sobre ella y escribe tu nombre.
+3. **Salta a la celda `E7`:** Escribe tu comida favorita.
+4. **Comprueba:** Mira el cuadro de nombres arriba a la izquierda para confirmar que estás en la coordenada correcta.
 
-1. **Inicio:** activa conocimientos previos con una pregunta o ejemplo.
-2. **Demostración:** muestra el procedimiento en vivo.
-3. **Aplicación:** guía al grupo con un ejercicio.
-4. **Comprobación:** revisa el resultado y corrige errores.
+---
 
-## Actividad práctica
+## 2. Los 3 Tipos de Datos <Icon name="lucide:layers" class="inline w-6 h-6 align-text-bottom text-indigo-600" />
 
-{/* Describe una actividad concreta, sus pasos y el resultado esperado. */}
+Google Sheets detecta automáticamente qué escribes en cada celda:
 
-- **Instrucciones:** completar aquí.
-- **Producto o evidencia:** completar aquí.
-- **Tiempo estimado:** completar aquí.
+<table>
+  <thead>
+    <tr>
+      <th>Tipo de Dato</th>
+      <th>Ejemplo</th>
+      <th>Alineación Automática</th>
+      <th>Comportamiento</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Texto</strong></td>
+      <td><code>Mouse Gamer</code>, <code>Juan</code></td>
+      <td><strong>Izquierda</strong></td>
+      <td>Sirve como etiqueta, título o descripción. No realiza operaciones matemáticas.</td>
+    </tr>
+    <tr>
+      <td><strong>Número</strong></td>
+      <td><code>250</code>, <code>14.99</code></td>
+      <td><strong>Derecha</strong></td>
+      <td>Permite sumas, multiplicaciones y cálculos estadísticos.</td>
+    </tr>
+    <tr>
+      <td><strong>Fórmula</strong></td>
+      <td><code>=A1+B1</code></td>
+      <td><strong>Derecha</strong> (Muestra el resultado)</td>
+      <td>Inicia con <code>=</code> y transforma la celda en un cálculo vivo.</td>
+    </tr>
+  </tbody>
+</table>
 
-## Errores comunes y recomendaciones
+---
 
-{/* Documenta errores previsibles y cómo diagnosticarlos o corregirlos. */}
+## <Icon name="lucide:wrench" class="inline w-6 h-6 align-text-bottom text-gray-600" /> Prueba Rápida 2: Detective de Datos
 
-- **Error frecuente:** solución o recomendación.
+1. En la celda `A1`, escribe: `Audífonos`
+2. En la celda `A2`, escribe: `350`
+3. En la celda `A3`, escribe: `350 pesos`
+4. **Observa:** ¿Hacia qué lado se alineó `A2` y hacia cuál `A3`? 
+5. Si combinas números con letras (`350 pesos`), la hoja lo trata como texto y no podrás sumarlo.
 
-## Recursos
+---
 
-{/* Agrega enlaces, archivos, videos, software o material de apoyo. */}
+## 3. La Regla de Oro del Signo Igual (`=`) <Icon name="lucide:calculator" class="inline w-6 h-6 align-text-bottom text-amber-500" />
 
-- Recurso pendiente.
+Si escribes `10+5` en una celda, la hoja muestra el texto `10+5`.
 
-## Cierre y verificación
+Para activar el motor de cálculo, **debes iniciar con el signo `=`**:
 
-{/* Escribe preguntas de salida, una mini-demostración o una lista de cotejo. */}
+- Suma: `+`
+- Resta: `-`
+- Multiplicación: `*` (asterisco)
+- División: `/` (barra diagonal)
 
-- ¿Qué aprendiste?
-- ¿Qué parte requiere más práctica?
-- ¿Qué evidencia demuestra que el objetivo se logró?
+### ¿Por qué usamos Referencias de Celda?
+
+En lugar de escribir números fijos como `=100*2`, escribes las coordenadas de las celdas: `=B2*C2`.
+
+Si el precio en `B2` cambia de 100 a 150, el resultado final se actualiza de inmediato sin tocar la fórmula.
+
+---
+
+## <Icon name="lucide:wrench" class="inline w-6 h-6 align-text-bottom text-gray-600" /> Prueba Rápida 3: La Calculadora Viva
+
+1. En `B1`, escribe: `50` (Precio)
+2. En `B2`, escribe: `3` (Cantidad)
+3. En `B3`, escribe exactamente: `=B1*B2` y presiona `Enter`.
+4. **La prueba de fuego:** Cambia el `50` de la celda `B1` por `120`. Mira cómo `B3` cambia su resultado automáticamente a `360`.
+
+---
+
+## 4. El Cuadro de Autorrelleno <Icon name="lucide:sparkles" class="inline w-6 h-6 align-text-bottom text-purple-600" />
+
+Observa la esquina inferior derecha de la celda activa: verás un pequeño cuadrado azul. Ese punto multiplica tu velocidad de trabajo.
+
+### Dos usos indispensables:
+
+1. **Crear series automáticas:**
+   - Escribe `Lunes` y arrastra el punto hacia abajo: la hoja completará `Martes`, `Miércoles`, `Jueves`...
+   - Escribe `1` en `A1` y `2` en `A2`. Selecciona ambas celdas y arrastra hacia abajo: creará la lista del 1 al 20.
+2. **Copiar fórmulas relativas:**
+   - Escribe la fórmula en la primera fila y arrastra el punto: la hoja adapta la fórmula para la fila 2, 3, 4 y 5 sin necesidad de escribirla otra vez.
+
+---
+
+## <Icon name="lucide:wrench" class="inline w-6 h-6 align-text-bottom text-gray-600" /> Prueba Rápida 4: Magia de Arrastre
+
+1. En `D1`, escribe: `Enero`
+2. Arrastra el punto azul hacia abajo hasta la fila 6.
+3. En `E1`, escribe `10`, en `E2` escribe `20`.
+4. Selecciona `E1` y `E2` juntos. Arrastra el punto hacia abajo hasta la fila 6.
+
+---
+
+## 5. Funciones Básicas: SUMA y PROMEDIO <Icon name="lucide:sigma" class="inline w-6 h-6 align-text-bottom text-emerald-600" />
+
+Cuando tienes 50 números, escribir `=A1+A2+A3...+A50` toma demasiado tiempo. Para eso existen las **Funciones**.
+
+### El Operador de Rango (`:`)
+Los dos puntos (`:`) significan "desde... hasta".
+- `B2:B6` significa *"todas las celdas desde B2 hasta B6"*.
+
+<table>
+  <thead>
+    <tr>
+      <th>Función</th>
+      <th>Sintaxis</th>
+      <th>Qué calcula</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>SUMA</strong></td>
+      <td><code>=SUMA(B2:B10)</code></td>
+      <td>Suma todos los valores del rango en un solo paso.</td>
+    </tr>
+    <tr>
+      <td><strong>PROMEDIO</strong></td>
+      <td><code>=PROMEDIO(B2:B10)</code></td>
+      <td>Suma los valores y los divide entre el total de elementos.</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## <Icon name="lucide:wrench" class="inline w-6 h-6 align-text-bottom text-gray-600" /> Prueba Rápida 5: Calificaciones Express
+
+1. En una columna vacía, escribe 4 calificaciones: `8`, `9`, `10`, `7`.
+2. Debajo de la última calificación, escribe: `=SUMA(` y selecciona con el mouse las 4 notas. Cierra el paréntesis `)` y presiona `Enter`.
+3. Al lado, calcula la media escribiendo: `=PROMEDIO(` selecciona las 4 notas, cierra el paréntesis y presiona `Enter`.
+
+---
+
+## <Icon name="lucide:keyboard" class="inline w-6 h-6 align-text-bottom text-gray-600" /> Hoja de Trucos y Atajos
+
+<table>
+  <thead>
+    <tr>
+      <th>Atajo / Acción</th>
+      <th>Tecla</th>
+      <th>Resultado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Editar Celda</strong></td>
+      <td><code>F2</code> o Doble clic</td>
+      <td>Muestra la fórmula detrás del número para corregirla.</td>
+    </tr>
+    <tr>
+      <td><strong>Moverse a la Derecha</strong></td>
+      <td><code>Tab</code></td>
+      <td>Confirma el dato y avanza a la siguiente columna.</td>
+    </tr>
+    <tr>
+      <td><strong>Moverse Abajo</strong></td>
+      <td><code>Enter</code></td>
+      <td>Confirma el dato y baja a la siguiente fila.</td>
+    </tr>
+    <tr>
+      <td><strong>Deshacer Error</strong></td>
+      <td><code>Ctrl + Z</code></td>
+      <td>Restaura el estado anterior si borraste algo sin querer.</td>
+    </tr>
+    <tr>
+      <td><strong>Formato Moneda</strong></td>
+      <td><code>Ctrl + Shift + 4</code> (o botón <code>$</code>)</td>
+      <td>Agrega símbolo de moneda y dos decimales al número.</td>
+    </tr>
+    <tr>
+      <td><strong>Columna Estrecha (<code>#####</code>)</strong></td>
+      <td>Doble clic en la línea entre dos columnas</td>
+      <td>Autoajusta el ancho para que el número quepa completo.</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## <Icon name="lucide:wand-2" class="inline w-6 h-6 align-text-bottom text-purple-600" /> Proyecto de Clase: "Tienda Setup Gamer"
+
+Aplica todo lo aprendido para armar la cotización oficial de una tienda de tecnología.
+
+### Estructura de la Tabla:
+Crea una tabla con las columnas: **Producto**, **Cantidad**, **Precio Unitario**, **Subtotal**.
+
+<table>
+  <thead>
+    <tr>
+      <th>Producto</th>
+      <th>Cantidad</th>
+      <th>Precio Unitario</th>
+      <th>Subtotal</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Teclado Mecánico RGB</td>
+      <td>2</td>
+      <td>850</td>
+      <td><em>Fórmula: =B2*C2</em></td>
+    </tr>
+    <tr>
+      <td>Mouse Inalámbrico</td>
+      <td>3</td>
+      <td>450</td>
+      <td><em>Autorrelleno hacia abajo</em></td>
+    </tr>
+    <tr>
+      <td>Monitor 144Hz</td>
+      <td>1</td>
+      <td>3200</td>
+      <td><em>Autorrelleno</em></td>
+    </tr>
+    <tr>
+      <td>Mousepad XXL</td>
+      <td>4</td>
+      <td>200</td>
+      <td><em>Autorrelleno</em></td>
+    </tr>
+    <tr>
+      <td>Headset con Micrófono</td>
+      <td>2</td>
+      <td>950</td>
+      <td><em>Autorrelleno</em></td>
+    </tr>
+  </tbody>
+</table>
+
+### Misión:
+1. Calcula los **Subtotales** usando la fórmula `=B2*C2` y arrastra el punto azul hasta la última fila.
+2. Agrega una fila final llamada **TOTAL** y calcula la suma de todos los subtotales usando `=SUMA(...)`.
+3. Debajo, agrega una fila llamada **PRECIO PROMEDIO** y calcúlalo con `=PROMEDIO(...)` sobre los precios unitarios.
+4. Aplica color de fondo a los encabezados, bordes a toda la tabla y formato de moneda (`$`) a las columnas de dinero.
+
+---
+
+## 6. Puente al Siguiente Nivel: Excel Pro <Icon name="lucide:rocket" class="inline w-6 h-6 align-text-bottom text-red-500" />
+
+En la próxima sesión subiremos la dificultad para convertir tu hoja en un panel interactivo:
+
+- <Icon name="lucide:palette" class="inline w-5 h-5 align-text-bottom text-amber-500" /> **Formato Condicional:** Reglas visuales para que las celdas se pinten de rojo o verde según su valor (por ejemplo: si una nota es menor a 6, se pinta roja sola).
+- <Icon name="lucide:pie-chart" class="inline w-5 h-5 align-text-bottom text-blue-500" /> **Gráficos Visuales:** Convertir tablas aburridas en gráficos de barras y pastel con dos clics.
+- <Icon name="lucide:split" class="inline w-5 h-5 align-text-bottom text-emerald-600" /> **Fórmulas Inteligentes:** Funciones lógicas con toma de decisiones: `=SI(...)` y `=CONTAR.SI(...)`.
+
+---
+
+## <Icon name="lucide:check-square" class="inline w-6 h-6 align-text-bottom text-indigo-600" /> Cierre y Verificación en Laboratorio
+
+Antes de finalizar la sesión y apagar tu computadora, completa esta lista de control:
+
+1. **Revisión de Fórmulas:**
+   - Comprueba que los subtotales usen coordenadas (`=B2*C2`) y no números escritos a mano.
+   - Confirma que la fila final use la función `=SUMA(...)` para el total.
+   - Verifica que el promedio use `=PROMEDIO(...)` sobre los precios unitarios.
+2. **Presentación Visual:**
+   - Aplica bordes a todas las celdas de la tabla.
+   - Da formato de moneda (`$`) a las columnas de **Precio Unitario** y **Subtotal**.
+3. **Guardado y Entrega:**
+   - Asigna el nombre `Presupuesto_TuNombre` a tu archivo.
+   - Asegúrate de dejar el documento guardado en la carpeta de entrega del laboratorio.
+4. **Apunte Rápido en Libreta (2 minutos):**
+   - Escribe en tu cuaderno: ¿Qué pasa si olvidas escribir el signo `=` antes de una operación en la celda?
+   - Anota qué significa el símbolo de dos puntos (`:`) en la expresión `B2:B10`.
