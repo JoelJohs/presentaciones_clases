@@ -21,40 +21,32 @@ import { Icon } from "astro-icon/components";
 
 Una **hoja de cálculo** organiza información en tablas y procesa operaciones matemáticas con los datos ingresados.
 
-<div class="not-prose my-6 rounded-2xl border border-emerald-200 dark:border-emerald-900/60 bg-gradient-to-br from-emerald-50/80 via-teal-50/40 to-white dark:from-emerald-950/40 dark:via-stone-900/40 dark:to-stone-900 p-5 shadow-sm">
-  <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-    <div class="flex items-start gap-3.5">
-      <div class="p-3 bg-emerald-600 text-white rounded-xl shadow-md shrink-0 flex items-center justify-center">
-        <Icon name="lucide:file-spreadsheet" class="w-6 h-6" />
-      </div>
-      <div>
-        <div class="flex items-center gap-2 flex-wrap mb-1">
-          <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/60 px-2 py-0.5 rounded-md">
-            Archivo para Clase
-          </span>
-          <span class="text-xs text-brand-muted font-medium">
-            Plantilla sin resolver (.xlsx)
-          </span>
-        </div>
-        <p class="text-base font-bold text-brand-navy dark:text-white m-0">
-          Cuaderno de Práctica Oficial
-        </p>
-        <p class="text-xs text-brand-muted m-0 mt-0.5">
-          Descarga el archivo para realizar las 5 pruebas rápidas y la cotización gamer en Excel o Google Sheets.
-        </p>
-      </div>
+<div class="download-card">
+  <div class="download-card__content">
+    <div class="download-card__icon">
+      <Icon name="lucide:file-spreadsheet" class="w-7 h-7" />
     </div>
-
-    <a
-      href="/descargas/practica-google-sheets-excel.xlsx"
-      download="practica-google-sheets-excel.xlsx"
-      class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm text-white bg-emerald-600 hover:bg-emerald-700 active:scale-95 shadow-sm transition-all duration-150 shrink-0 w-full sm:w-auto text-center"
-      aria-label="Descargar cuaderno de práctica en formato Excel"
-    >
-      <Icon name="lucide:download" class="w-4 h-4" />
-      <span>Descargar (.xlsx)</span>
-    </a>
+    <div class="download-card__body">
+      <div class="download-card__badges">
+        <span class="download-card__tag">Material de Práctica</span>
+        <span class="download-card__meta">Plantilla en blanco (.xlsx)</span>
+      </div>
+      <p class="download-card__title">Cuaderno de Trabajo Oficial</p>
+      <p class="download-card__desc">
+        Descarga el archivo para realizar las 5 pruebas de clase y el proyecto gamer en Excel o Google Sheets.
+      </p>
+    </div>
   </div>
+
+  <a
+    href="/descargas/practica-google-sheets-excel.xlsx"
+    download="practica-google-sheets-excel.xlsx"
+    class="btn-download"
+    aria-label="Descargar cuaderno de práctica en formato Excel"
+  >
+    <Icon name="lucide:download" class="w-5 h-5" />
+    <span>Descargar Plantilla (.xlsx)</span>
+  </a>
 </div>
 
 ---
@@ -262,20 +254,23 @@ Los dos puntos (`:`) definen el inicio y el final de un bloque continuo de celda
 
 ## <Icon name="lucide:wand-2" class="inline w-6 h-6 align-text-bottom text-purple-600" /> Proyecto de Laboratorio: "Cotización de Tienda Gamer"
 
-<div class="not-prose my-4 p-3.5 rounded-xl border border-emerald-200/80 dark:border-emerald-900/40 bg-emerald-50/60 dark:bg-emerald-950/20 flex items-center justify-between gap-3 flex-wrap">
-  <div class="flex items-center gap-2.5">
-    <Icon name="lucide:file-spreadsheet" class="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-    <span class="text-xs sm:text-sm font-medium text-brand-navy dark:text-white">
-      Trabaja directamente sobre la pestaña <strong>4. Cotización Gamer</strong> del archivo descargable.
-    </span>
+<div class="download-card !my-4 !p-4">
+  <div class="download-card__content">
+    <div class="download-card__icon !w-10 !h-10 !rounded-lg">
+      <Icon name="lucide:file-spreadsheet" class="w-5 h-5" />
+    </div>
+    <div class="download-card__body">
+      <p class="download-card__title !text-sm">¿Tienes el archivo de práctica?</p>
+      <p class="download-card__desc !text-xs">Trabaja directamente sobre la pestaña <strong>4. Cotización Gamer</strong>.</p>
+    </div>
   </div>
   <a
     href="/descargas/practica-google-sheets-excel.xlsx"
     download="practica-google-sheets-excel.xlsx"
-    class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-300 hover:underline"
+    class="btn-download !py-2 !px-3.5 !text-xs"
   >
-    <Icon name="lucide:download" class="w-3.5 h-3.5" />
-    <span>Bajar plantilla (.xlsx)</span>
+    <Icon name="lucide:download" class="w-4 h-4" />
+    <span>Descargar (.xlsx)</span>
   </a>
 </div>
 
