@@ -1,0 +1,205 @@
+---
+title: "Excel y Google Sheets: Funciones, Formato Condicional y Gráficos"
+moduleTitle: "2 - Ofimática en la Nube"
+topicTitle: "Tema 1: Google Docs y Sheets"
+subtopicTitle: "Funciones Condicionales y Gráficos"
+fecha: "03-09-2026"
+description: "Aprende a analizar datos con MAX, MIN y CONTAR, automatizar estatus con la función SI, resaltar celdas con Formato Condicional y crear gráficos estadísticos."
+duration: 60
+objectives:
+  - "Utilizar las funciones estadísticas MAX, MIN y CONTAR para analizar listas de datos"
+  - "Aplicar la función condicional SI para la toma de decisiones automática"
+  - "Configurar reglas de Formato Condicional para destacar valores mediante colores"
+  - "Crear y personalizar gráficos de barras, columnas y pastel para representar resultados"
+---
+
+import { Icon } from "astro-icon/components";
+
+# Excel y Google Sheets: Funciones, Formato Condicional y Gráficos
+
+Transforma datos numéricos en información útil y visual mediante herramientas avanzadas de análisis.
+
+<div class="download-card">
+  <div class="download-card__content">
+    <div class="download-card__icon">
+      <Icon name="lucide:file-spreadsheet" class="w-7 h-7" />
+    </div>
+    <div class="download-card__body">
+      <div class="download-card__badges">
+        <span class="download-card__tag">Material de Práctica</span>
+        <span class="download-card__meta">Plantilla oficial (.xlsx)</span>
+      </div>
+      <p class="download-card__title">Cuaderno de Trabajo Práctica 2</p>
+      <p class="download-card__desc">
+        Descarga la plantilla con las actividades de clase sin resolver para practicar funciones, formato condicional y gráficos.
+      </p>
+    </div>
+  </div>
+
+  <a
+    href="/descargas/practica-excel-funciones-graficos.xlsx"
+    download="practica-excel-funciones-graficos.xlsx"
+    class="btn-download"
+    aria-label="Descargar plantilla de práctica en formato Excel"
+  >
+    <Icon name="lucide:download" class="w-5 h-5" />
+    <span>Descargar Plantilla (.xlsx)</span>
+  </a>
+</div>
+
+---
+
+## 1. Funciones Estadísticas: MAX, MIN y CONTAR <Icon name="lucide:calculator" class="inline w-6 h-6 align-text-bottom text-sky-600" />
+
+Además de sumar y promediar, las hojas de cálculo pueden examinar listas de datos para obtener valores extremos y cantidades exactas.
+
+<table>
+  <thead>
+    <tr>
+      <th>Función</th>
+      <th>Sintaxis</th>
+      <th>¿Qué realiza?</th>
+      <th>Ejemplo de Uso</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>MAX</strong></td>
+      <td><code>=MAX(rango)</code></td>
+      <td>Encuentra el valor <strong>máximo o más alto</strong> dentro de una lista.</td>
+      <td><code>=MAX(E7:E13)</code> identifica el producto más caro.</td>
+    </tr>
+    <tr>
+      <td><strong>MIN</strong></td>
+      <td><code>=MIN(rango)</code></td>
+      <td>Encuentra el valor <strong>mínimo o más bajo</strong> dentro de una lista.</td>
+      <td><code>=MIN(E7:E13)</code> identifica el producto más económico.</td>
+    </tr>
+    <tr>
+      <td><strong>CONTAR</strong></td>
+      <td><code>=CONTAR(rango)</code></td>
+      <td>Cuenta cuántas celdas contienen <strong>números</strong> dentro de un rango.</td>
+      <td><code>=CONTAR(B7:B13)</code> determina cuántos registros numéricos existen.</td>
+    </tr>
+  </tbody>
+</table>
+
+> <Icon name="lucide:lightbulb" class="inline w-5 h-5 align-text-bottom text-amber-500" /> **Recuerda:** Los rangos se escriben separando la primera celda y la última con dos puntos (`:`), por ejemplo: `D7:D20`.
+
+---
+
+## <Icon name="lucide:wrench" class="inline w-6 h-6 align-text-bottom text-gray-600" /> Prueba Rápida 1: Análisis Estadístico de Ventas
+
+1. **Abre tu plantilla descargada:** Ve a la pestaña **`1. MAX, MIN y CONTAR`**.
+2. **Obtén el precio más alto:** En la celda `F18`, escribe la fórmula `=MAX(E7:E13)` y presiona `Enter`.
+3. **Obtén el precio más bajo:** En la celda `F19`, escribe `=MIN(E7:E13)`.
+4. **Cuenta el total de productos:** En la celda `F20`, escribe `=CONTAR(E7:E13)`.
+5. **Comprueba:** Verifica que los resultados se actualicen automáticamente si cambias el precio de algún producto.
+
+---
+
+## 2. Toma de Decisiones con la Función =SI() <Icon name="lucide:git-fork" class="inline w-6 h-6 align-text-bottom text-indigo-600" />
+
+La función condicional **SI** permite que la hoja de cálculo tome decisiones lógicas e imprima distintos resultados según se cumpla o no una condición.
+
+```text
+=SI(Prueba_Lógica, "Valor_si_Verdadero", "Valor_si_Falso")
+```
+
+### Analogía del Semáforo Lógico:
+- **Prueba Lógica:** ¿La luz está en verde?
+- **Si es Verdadero:** `"Avanzar"`
+- **Si es Falso:** `"Detenerse"`
+
+### Ejemplo Escolar:
+```text
+=SI(D8>=70, "APROBADO", "REPROBADO")
+```
+- Si la calificación en `D8` es mayor o igual a **70**, aparecerá `"APROBADO"`.
+- Si la calificación es menor a **70**, aparecerá `"REPROBADO"`.
+
+---
+
+## <Icon name="lucide:wrench" class="inline w-6 h-6 align-text-bottom text-gray-600" /> Prueba Rápida 2: Evaluador Automático de Estatus
+
+1. **Cambia a la pestaña:** **`2. Función SI Condicional`**.
+2. **Selecciona la celda `E8`:** Escribe la fórmula: `=SI(D8>=70, "APROBADO", "REPROBADO")`.
+3. **Aplica autorrelleno:** Haz doble clic en el cuadro azul de la esquina inferior derecha de la celda `E8` para copiar la fórmula a todos los estudiantes.
+4. **Comprueba:** Cambia la calificación del alumno Mateo a `50` y observa cómo su estatus cambia a `"REPROBADO"` de forma instantánea.
+
+---
+
+## 3. Formato Condicional: Resalta Datos con Color <Icon name="lucide:palette" class="inline w-6 h-6 align-text-bottom text-purple-600" />
+
+El **Formato Condicional** cambia automáticamente el color de fondo o de texto de una celda en función de su valor numérico o texto.
+
+### ¿Para qué se utiliza?
+- <Icon name="lucide:alert-triangle" class="inline w-5 h-5 align-text-bottom text-red-600" /> **Alertas de Inventario:** Colorear en rojo celdas con poco stock.
+- <Icon name="lucide:check-circle" class="inline w-5 h-5 align-text-bottom text-emerald-600" /> **Rendimiento:** Colorear en verde calificaciones excelentes.
+- <Icon name="lucide:trending-up" class="inline w-5 h-5 align-text-bottom text-blue-600" /> **Escalas de Color:** Visualizar rápidamente rangos altos, medios y bajos.
+
+---
+
+## <Icon name="lucide:wrench" class="inline w-6 h-6 align-text-bottom text-gray-600" /> Prueba Rápida 3: Alertas de Stock en Almacén
+
+1. **Abre la pestaña:** **`3. Formato Condicional`**.
+2. **Selecciona el rango de datos:** Sombrea el rango `D7:D12` (Stock Actual).
+3. **Abre la herramienta:** Haz clic en el menú **Formato > Formato condicional**.
+4. **Configura la regla:**
+   - Regla de celda: *Es menor que*.
+   - Valor: `10`.
+   - Estilo de formato: Relleno rojo claro con texto rojo oscuro.
+5. **Aplica y comprueba:** Observa cómo las celdas con stock crítico se destacan visualmente al momento.
+
+---
+
+## 4. Gráficos Estadísticos: Visualiza tus Resultados <Icon name="lucide:bar-chart-3" class="inline w-6 h-6 align-text-bottom text-emerald-600" />
+
+Los gráficos convierten tablas llenas de números en imágenes comprensibles que facilitan la comparación de datos.
+
+<table>
+  <thead>
+    <tr>
+      <th>Tipo de Gráfico</th>
+      <th>Apariencia Visual</th>
+      <th>Mejor Uso Recomendado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Columnas / Barras</strong></td>
+      <td>Barras verticales u horizontales</td>
+      <td>Comparar valores entre diferentes categorías o personas.</td>
+    </tr>
+    <tr>
+      <td><strong>Líneas</strong></td>
+      <td>Puntos unidos por una línea continua</td>
+      <td>Mostrar tendencias y cambios a lo largo del tiempo (días, meses, años).</td>
+    </tr>
+    <tr>
+      <td><strong>Circular / Pastel</strong></td>
+      <td>Círculo dividido en rebanadas</td>
+      <td>Mostrar porcentajes y la proporción de partes de un todo (100%).</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## <Icon name="lucide:wand-2" class="inline w-6 h-6 align-text-bottom text-amber-500" /> Proyecto Práctico: Dashboard de Rendimiento Escolar
+
+Completa el reporte final en la pestaña **`4. Dashboard Integrador`** siguiendo estas misiones:
+
+1. **Calcula los Promedios:** En la celda `F7`, escribe `=PROMEDIO(C7:E7)` y arrastra el autorrelleno hasta la fila 11.
+2. **Determina el Estatus:** En la celda `G7`, usa `=SI(F7>=70, "APROBADO", "REPROBADO")` para toda la lista.
+3. **Resumen Estadístico:**
+   - Calcula el promedio más alto en la celda `F13` con `=MAX(F7:F11)`.
+   - Calcula el promedio más bajo en la celda `F14` con `=MIN(F7:F11)`.
+4. **Aplica Formato Condicional:** Resalta en color verde los estatus `"APROBADO"` y en rojo los `"REPROBADO"`.
+5. **Crea el Gráfico Final:**
+   - Selecciona los nombres (`B6:B11`) y los promedios (`F6:F11`).
+   - Ve a **Insertar > Gráfico** y elige un **Gráfico de Columnas**.
+   - Asigna el título *"Comparativa de Promedios por Estudiante"*.
+
+> [!TIP]
+> Puedes mantener presionada la tecla `Ctrl` (o `Cmd` en Mac) para seleccionar dos columnas discontinuas en tu hoja de cálculo.
