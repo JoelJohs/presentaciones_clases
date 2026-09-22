@@ -1,0 +1,105 @@
+---
+title: "Sistemas Operativos y Software"
+moduleTitle: "1 - Hardware, Sistemas Operativos y Software de Base"
+topicTitle: "Tema 1: Arquitectura y Componentes"
+subtopicTitle: "El Puente Entre Máquina y Usuario"
+semana: 2
+fecha: "27-06-2026"
+published: true
+description: "Analiza la función del sistema operativo, prepara unidades de arranque, gestiona particiones e instala software en los equipos del laboratorio."
+duration: 45
+objectives:
+  - "Diferenciar las capas de software de base, software de aplicación y controladores"
+  - "Configurar una memoria USB booteable para instalación de sistemas"
+  - "Gestionar particiones en almacenamiento secundario con tablas GPT y MBR"
+---
+import { Icon } from "astro-icon/components";
+
+# Sistemas Operativos y Software
+
+Analiza la función del sistema operativo, prepara unidades de arranque, gestiona particiones e instala software en los equipos del laboratorio.
+
+## 1. El Rol del Sistema Operativo <Icon name="lucide:layers" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+El sistema operativo controla los recursos de hardware y ofrece una plataforma uniforme para que funcionen las aplicaciones.
+
+Sin sistema operativo, cada programa tendría que comunicarse directamente con los circuitos de la tarjeta de red, la pantalla y el procesador. El sistema operativo actúa como el árbitro de los recursos del equipo.
+
+* **Administrador de procesos:** Asigna tiempo de procesador a cada tarea.
+* **Administrador de memoria:** Impide que un programa invada los datos de otro.
+* **Sistema de archivos:** Organiza bytes en carpetas legibles.
+
+---
+
+## 2. Arquitectura de Arranque: BIOS, UEFI y Medios Booteables <Icon name="lucide:power" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Al presionar el botón de encendido, el chip de firmware (UEFI o BIOS) realiza una prueba básica de componentes (POST) y busca un sector de arranque en las unidades conectadas.
+
+* **UEFI:** Estándar moderno. Soporta unidades mayores a 2 TB con tabla de partición GPT y arranque seguro.
+* **Legacy BIOS:** Modo clásico con tabla de partición MBR (máximo 4 particiones primarias).
+* **Medio booteable:** Memoria USB con una imagen ISO grabada para arrancar un instalador del sistema.
+
+---
+
+## 3. Comparativa de Sistemas de Archivos <Icon name="lucide:database" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Observa la compatibilidad entre formatos de disco:
+
+<table>
+  <thead>
+    <tr>
+      <th>Sistema de Archivos</th>
+      <th>Plataforma Nativa</th>
+      <th>Límite por Archivo</th>
+      <th>Uso Recomendado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>NTFS</td>
+      <td>Windows</td>
+      <td>16 TB</td>
+      <td>Instalación principal de Windows</td>
+    </tr>
+    <tr>
+      <td>EXT4</td>
+      <td>Linux</td>
+      <td>16 TB</td>
+      <td>Instalación de distribuciones Linux</td>
+    </tr>
+    <tr>
+      <td>FAT32</td>
+      <td>Universal</td>
+      <td>4 GB</td>
+      <td>Unidades USB pequeñas y compatibilidad BIOS</td>
+    </tr>
+    <tr>
+      <td>exFAT</td>
+      <td>Windows, Linux, macOS</td>
+      <td>16 EB (virtualmente sin límite)</td>
+      <td>Memorias USB grandes para transferir entre plataformas</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 4. Práctica en Laboratorio: Preparación de Medio Booteable <Icon name="lucide:usb" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Crea tu unidad de instalación en el aula:
+
+1. Conecta la memoria USB de prácticas de 8 GB o superior en tu equipo.
+2. Abre la herramienta de creación de medios indicada por el docente.
+3. Selecciona la imagen ISO oficial del sistema operativo.
+4. Elige el esquema de partición **GPT** con destino **UEFI (no CSM)**.
+5. Inicia el proceso y espera la confirmación de escritura completa.
+
+---
+
+## 5. Reto de Laboratorio: Arranque UEFI <Icon name="lucide:check-circle-2" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Comprueba tu instalación:
+
+1. Reinicia el equipo e ingresa al menú de arranque presionando la tecla de función asignada (F12, F11 o Supr).
+2. Selecciona la memoria USB con prefijo **UEFI**.
+3. Confirma que aparece la pantalla de bienvenida del instalador. Toma nota del tipo de partición detectada.

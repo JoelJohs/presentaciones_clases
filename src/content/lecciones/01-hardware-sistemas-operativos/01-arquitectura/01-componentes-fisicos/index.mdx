@@ -1,0 +1,102 @@
+---
+title: "Arquitectura de Hardware y Componentes Físicos"
+moduleTitle: "1 - Hardware, Sistemas Operativos y Software de Base"
+topicTitle: "Tema 1: Arquitectura y Componentes"
+subtopicTitle: "Partes Internas del Equipo"
+semana: 1
+fecha: "20-06-2026"
+published: true
+description: "Identifica el procesador, memoria RAM, almacenamiento y placa madre. Conecta componentes físicos de forma segura en el laboratorio."
+duration: 45
+objectives:
+  - "Identificar la función del procesador, memoria RAM y almacenamiento en un equipo"
+  - "Reconocer los conectores principales de la tarjeta madre y la fuente de poder"
+  - "Manipular componentes físicos en el aula aplicando normas de seguridad antiestática"
+---
+import { Icon } from "astro-icon/components";
+
+# Arquitectura de Hardware y Componentes Físicos
+
+Identifica el procesador, memoria RAM, almacenamiento y placa madre. Conecta componentes físicos de forma segura en el laboratorio.
+
+## 1. El Procesador y la Tarjeta Madre <Icon name="lucide:cpu" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+El procesador ejecuta las instrucciones de los programas y coordina cada tarea del sistema. La tarjeta madre conecta todos los componentes mediante pistas eléctricas y buses de datos.
+
+Piensa en una cocina: el procesador es el cocinero principal y la tarjeta madre es la cocina completa con sus estufas, tuberías y contactos de energía.
+
+> **Regla de taller:** Nunca toques los pines dorados del procesador ni la base del socket en la placa madre con los dedos desnudos.
+
+---
+
+## 2. Memoria de Trabajo y Almacenamiento <Icon name="lucide:hard-drive" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+La memoria RAM almacena datos temporales de los programas que tienes abiertos en este momento. Al apagar el equipo, su contenido desaparece.
+
+El disco de almacenamiento (SSD o HDD) guarda tus archivos, el sistema operativo y las aplicaciones de forma permanente.
+
+* **RAM:** Mesa de trabajo inmediata. Entre más amplia, más proyectos abres al mismo tiempo sin lentitud.
+* **Almacenamiento:** Alacena o librero donde guardas cajas y libros cerrados.
+
+---
+
+## 3. Especificaciones y Conectores Principales <Icon name="lucide:cable" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Examina las conexiones físicas en los equipos del laboratorio:
+
+<table>
+  <thead>
+    <tr>
+      <th>Componente</th>
+      <th>Tipo de Conexión</th>
+      <th>Velocidad / Característica</th>
+      <th>Precaución en Aula</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Memoria RAM</td>
+      <td>Ranuras DIMM DDR4/DDR5</td>
+      <td>Volátil, alta tasa de transferencia</td>
+      <td>Abre los seguros laterales antes de insertar</td>
+    </tr>
+    <tr>
+      <td>SSD M.2 NVMe</td>
+      <td>Puerto PCIe M.2</td>
+      <td>Hasta 7,000 MB/s de lectura</td>
+      <td>Fija con el tornillo milimétrico sin barrer la rosca</td>
+    </tr>
+    <tr>
+      <td>Almacenamiento SATA</td>
+      <td>Cable de datos SATA + Cable de poder</td>
+      <td>Hasta 600 MB/s</td>
+      <td>Conector con pestaña en forma de L</td>
+    </tr>
+    <tr>
+      <td>Fuente de Poder (ATX)</td>
+      <td>Conector principal de 24 pines</td>
+      <td>Distribuye 12V, 5V y 3.3V</td>
+      <td>Desconecta de la toma eléctrica antes de manipular</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 4. Práctica en Aula: Identificación Física <Icon name="lucide:wrench" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Sigue estos pasos en la mesa de trabajo de tu estación:
+
+1. Retira la tapa lateral del gabinete usando el destornillador de cruz provisto.
+2. Descarga la electricidad estática de tu cuerpo tocando una parte metálica sin pintar del gabinete.
+3. Ubica visualmente el disipador del procesador, los módulos de memoria RAM y los puertos SATA.
+4. Anota en tu libreta el modelo de la tarjeta madre y la cantidad de ranuras de memoria libres.
+
+---
+
+## 5. Reto de Verificación Técnica <Icon name="lucide:check-circle-2" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Responde y comprueba con tu compañero de banca:
+
+* Si un equipo enciende ventiladores pero no muestra imagen en el monitor y emite tres pitidos cortos, ¿qué componente inspeccionas primero?
+* Muestra al docente tu equipo con los seguros de memoria RAM alineados y el cable de corriente desconectado.

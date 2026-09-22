@@ -2,48 +2,1279 @@
 import { getCollection } from 'astro:content';
 import { getNavigationStructure } from '../utils/navigation';
 import Layout from '../layouts/Layout.astro';
-import Dashboard from '../components/Dashboard.astro';
+import { Icon } from 'astro-icon/components';
+import { getTodasLasSemanas } from '../data/plan-estudios';
 
 const lecciones = await getCollection('lecciones');
 const nav = getNavigationStructure(lecciones);
-const firstLesson = nav.allLessonsOrdered.length > 0 ? nav.allLessonsOrdered[0] : null;
+const todasLasSemanas = getTodasLasSemanas();
 
+const leccionesData = lecciones
+  .filter(l => l.data.published !== false)
+  .map(l => ({
+    slug: l.id.replace(/\.(mdx|md)$/, '').replace(/\/index$/, ''),
+    title: l.data.title,
+    semana: l.data.semana || 0,
+    moduleTitle: l.data.moduleTitle || '',
+  }));
 ---
 
-<Layout title="Inicio">
-  <div class="max-w-2xl mx-auto">
-    <!-- Header compacto -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 pb-6 border-b border-brand-border">
-      <div>
-        <h1 class="font-display font-extrabold text-3xl sm:text-4xl text-brand-navy dark:text-white tracking-tight">
+<Layout title="Inicio" nav={nav} isLesson={false}>
+  <!-- Contenedor reactivo según estado de sesión -->
+  <div class="space-y-6">
+
+    <!-- 1. VISTA SIN AUTENTICAR (MINIMALISTA, ACCESO DIRECTO) -->
+    <div id="view-unauthenticated" class="max-w-md mx-auto py-12 sm:py-16 space-y-6">
+      <div class="text-center space-y-2">
+        <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-primary text-white font-bold text-lg shadow-sm">
+          CPI
+        </div>
+        <h1 class="text-2xl font-bold tracking-tight text-brand-text">
           Plataforma de Estudios
         </h1>
-        <p class="text-brand-muted text-sm mt-1">
-          Impartido por <span class="text-brand-primary font-semibold">Joel Josafat Hernandez Saucedo</span>
+        <p class="text-xs sm:text-sm text-brand-muted">
+          Ingresa con tus credenciales para consultar el material de tu clase.
         </p>
       </div>
-      <div class="flex items-center gap-3 text-sm text-brand-muted">
-        <span>{nav.modules.length} módulo{nav.modules.length !== 1 ? 's' : ''}</span>
-        <span class="w-1 h-1 rounded-full bg-brand-border"></span>
-        <span>{nav.allLessonsOrdered.length} lecciones</span>
-        {firstLesson && (
-          <>
-            <span class="w-1 h-1 rounded-full bg-brand-border"></span>
-            <a
-              href={`/${firstLesson.slug}`}
-              class="inline-flex items-center gap-1.5 rounded-lg bg-brand-primary text-white px-4 py-2 font-semibold text-xs hover:bg-brand-accent transition-colors"
-            >
-              Primera lección
-              <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-              </svg>
-            </a>
-          </>
-        )}
+
+      <div class="rounded-2xl border border-brand-border bg-white dark:bg-brand-sidebar-bg p-6 sm:p-7 shadow-xs space-y-5">
+        <!-- Selector de rol -->
+        <div class="flex border-b border-brand-border">
+          <button
+            type="button"
+            id="tab-home-group"
+            class="flex-1 pb-2.5 text-xs font-semibold border-b-2 border-brand-primary text-brand-text transition-all"
+          >
+            Alumno
+          </button>
+          <button
+            type="button"
+            id="tab-home-teacher"
+            class="flex-1 pb-2.5 text-xs font-semibold border-b-2 border-transparent text-brand-muted hover:text-brand-text transition-all"
+          >
+            Docente
+          </button>
+        </div>
+
+        <!-- Formulario Alumno -->
+        <form id="form-home-group" class="space-y-4">
+          <div class="space-y-1.5">
+            <label for="home-group-key" class="font-bold text-xs text-brand-text block">
+              Nombre de usuario
+            </label>
+            <div class="relative">
+              <Icon name="lucide:user" class="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-muted" />
+              <input
+                id="home-group-key"
+                type="text"
+                placeholder="Nombre de usuario"
+                autocomplete="username"
+                class="w-full pl-10 pr-3 py-2.5 rounded-xl border border-brand-border bg-white dark:bg-brand-bg text-xs outline-none focus:border-brand-primary text-brand-text transition-all"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="space-y-1.5">
+            <label for="home-group-password" class="font-bold text-xs text-brand-text block">
+              Contraseña
+            </label>
+            <div class="relative">
+              <Icon name="lucide:lock" class="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-muted" />
+              <input
+                id="home-group-password"
+                type="password"
+                placeholder="Contraseña"
+                autocomplete="current-password"
+                class="w-full pl-10 pr-3 py-2.5 rounded-xl border border-brand-border bg-white dark:bg-brand-bg text-xs outline-none focus:border-brand-primary text-brand-text transition-all"
+                required
+              />
+            </div>
+          </div>
+
+          <p id="home-group-error" class="text-xs text-rose-500 hidden"></p>
+
+          <button
+            type="submit"
+            class="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-brand-primary hover:bg-brand-accent text-white font-semibold text-xs transition-colors shadow-xs"
+          >
+            <span>Iniciar sesión</span>
+            <Icon name="lucide:arrow-right" class="h-4 w-4" />
+          </button>
+        </form>
+
+        <!-- Formulario Docente -->
+        <form id="form-home-teacher" class="space-y-4 hidden">
+          <div class="space-y-1.5">
+            <label for="home-teacher-email" class="font-bold text-xs text-brand-text block">
+              Correo
+            </label>
+            <div class="relative">
+              <Icon name="lucide:mail" class="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-muted" />
+              <input
+                id="home-teacher-email"
+                type="email"
+                placeholder="Correo"
+                autocomplete="email"
+                class="w-full pl-10 pr-3 py-2.5 rounded-xl border border-brand-border bg-white dark:bg-brand-bg text-xs outline-none focus:border-brand-primary text-brand-text transition-all"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="space-y-1.5">
+            <label for="home-teacher-password" class="font-bold text-xs text-brand-text block">
+              Contraseña
+            </label>
+            <div class="relative">
+              <Icon name="lucide:lock" class="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-muted" />
+              <input
+                id="home-teacher-password"
+                type="password"
+                placeholder="Contraseña"
+                autocomplete="current-password"
+                class="w-full pl-10 pr-3 py-2.5 rounded-xl border border-brand-border bg-white dark:bg-brand-bg text-xs outline-none focus:border-brand-primary text-brand-text transition-all"
+                required
+              />
+            </div>
+          </div>
+
+          <p id="home-teacher-error" class="text-xs text-rose-500 hidden"></p>
+
+          <button
+            type="submit"
+            class="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-brand-primary hover:bg-brand-accent text-white font-semibold text-xs transition-colors shadow-xs"
+          >
+            <span>Iniciar sesión</span>
+            <Icon name="lucide:shield-check" class="h-4 w-4" />
+          </button>
+        </form>
+
+        <div class="pt-2 border-t border-brand-border text-center">
+          <a
+            href="/plan-de-estudios"
+            class="inline-flex items-center gap-1.5 text-xs text-brand-primary hover:underline font-semibold"
+          >
+            <Icon name="lucide:map" class="h-3.5 w-3.5" />
+            <span>Consultar Plan de Estudio Oficial (54 Semanas)</span>
+          </a>
+        </div>
       </div>
     </div>
 
-    <!-- Dashboard con Alpine (client-side) -->
-    <Dashboard nav={nav} />
+    <!-- 2. VISTA ALUMNO / GRUPO AUTENTICADO -->
+    <div id="view-student" class="space-y-6 hidden">
+      <!-- Barra superior de estado del alumno -->
+      <div class="rounded-2xl border border-brand-border bg-white dark:bg-brand-sidebar-bg p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
+        <div class="space-y-1">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300">
+              <Icon name="lucide:check-circle-2" class="h-3.5 w-3.5" />
+              <span id="student-group-name">Clase Sábado</span>
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-brand-callout-bg border border-brand-border text-brand-primary">
+              <Icon name="lucide:calendar" class="h-3.5 w-3.5" />
+              <span id="student-week-badge-text">Semana activa</span>
+            </span>
+            <span id="student-matricula-badge" class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono bg-brand-border/60 text-brand-text">
+              Matrícula
+            </span>
+          </div>
+          <h2 id="student-welcome-title" class="text-xl font-bold text-brand-text">
+            Bienvenido a tu curso
+          </h2>
+          <p class="text-xs text-brand-muted">
+            Horario escolar: 09:00 a 13:00 h (4 horas por sesión). Tu plataforma se sincroniza con la semana de avance de tu clase.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2.5 flex-wrap">
+          <a
+            href="/plan-de-estudios"
+            class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-brand-border bg-brand-callout-bg dark:bg-brand-sidebar-bg hover:border-brand-primary text-xs font-semibold text-brand-text transition-colors"
+          >
+            <Icon name="lucide:map" class="h-4 w-4 text-brand-primary" />
+            <span>Plan de Estudios</span>
+          </a>
+
+          <a
+            href="/calificaciones"
+            class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-brand-primary hover:bg-brand-accent text-white text-xs font-semibold transition-colors shadow-xs"
+          >
+            <Icon name="lucide:graduation-cap" class="h-4 w-4" />
+            <span>Mis Calificaciones</span>
+          </a>
+
+          <button
+            type="button"
+            class="btn-logout-action inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 text-xs font-semibold hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-colors"
+          >
+            <Icon name="lucide:log-out" class="h-4 w-4" />
+            <span>Cerrar sesión</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- HERO: CLASE ACTIVA DE LA SEMANA -->
+      <div id="student-active-week-container" class="space-y-4">
+        <!-- Inyectado dinámicamente según la semana activa del grupo -->
+      </div>
+
+      <!-- SECCIÓN: TAREA DE LA SEMANA (Solo visible si hay tarea asignada para la semana activa) -->
+      <div id="student-task-container" class="hidden space-y-4">
+        <!-- Inyectado dinámicamente según la semana activa del grupo -->
+      </div>
+
+      <!-- SECCIÓN: CLASES DESBLOQUEADAS (HISTORIAL DE REPASO) -->
+      <div class="space-y-4 pt-2">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-brand-border pb-3">
+          <div>
+            <h3 class="text-base font-bold text-brand-text flex items-center gap-2">
+              <Icon name="lucide:book-open" class="h-4 w-4 text-brand-primary" />
+              <span>Clases Desbloqueadas</span>
+            </h3>
+            <p class="text-xs text-brand-muted">
+              Temario disponible hasta la fecha para repasar conceptos y prácticas de laboratorio.
+            </p>
+          </div>
+          <span id="student-unlocked-count" class="text-xs font-mono font-semibold px-2.5 py-1 rounded-lg bg-brand-callout-bg border border-brand-border text-brand-text self-start sm:self-auto">
+            0 clases disponibles
+          </span>
+        </div>
+
+        <div id="student-unlocked-list" class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <!-- Inyectado dinámicamente -->
+        </div>
+      </div>
+
+      <!-- SECCIÓN: PRÓXIMAS SESIONES DEL CALENDARIO (BLOQUEADAS) -->
+      <div class="space-y-4 pt-2">
+        <details class="group rounded-2xl border border-brand-border bg-white dark:bg-brand-sidebar-bg p-5 shadow-xs">
+          <summary class="list-none cursor-pointer flex items-center justify-between gap-3 select-none">
+            <div class="flex items-center gap-3">
+              <div class="h-8 w-8 rounded-xl bg-brand-callout-bg border border-brand-border flex items-center justify-center text-brand-muted shrink-0">
+                <Icon name="lucide:lock" class="h-4 w-4" />
+              </div>
+              <div>
+                <h4 class="text-sm font-bold text-brand-text">
+                  Próximas Sesiones del Calendario
+                </h4>
+                <p class="text-xs text-brand-muted">
+                  Estas clases se activan semanalmente conforme tu grupo avanza en el curso.
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <span id="student-locked-count" class="text-xs font-mono text-brand-muted">
+                0 bloqueadas
+              </span>
+              <Icon name="lucide:chevron-down" class="h-4 w-4 text-brand-muted transition-transform duration-200 group-open:rotate-180" />
+            </div>
+          </summary>
+
+          <div id="student-locked-list" class="mt-4 pt-4 border-t border-brand-border space-y-2.5">
+            <!-- Inyectado dinámicamente -->
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <!-- 3. VISTA DOCENTE AUTENTICADO -->
+    <div id="view-teacher" class="space-y-6 hidden">
+      <div class="rounded-2xl border border-brand-border bg-white dark:bg-brand-sidebar-bg p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
+        <div class="space-y-1">
+          <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-brand-callout-bg text-brand-primary border border-brand-border">
+            <Icon name="lucide:shield-check" class="h-3.5 w-3.5" />
+            <span>Docente Titular</span>
+          </span>
+          <h2 class="text-xl font-bold text-brand-text">
+            Ing. Joel Josafat Hernández Saucedo
+          </h2>
+          <p class="text-xs text-brand-muted">
+            Control de grupos, ajuste de semanas y visualización del temario de los alumnos.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2.5 flex-wrap">
+          <a
+            href="/00-inicio"
+            class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-purple-300 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/40 hover:bg-purple-100 dark:hover:bg-purple-900/60 text-xs font-semibold text-purple-700 dark:text-purple-300 transition-colors shadow-xs"
+            title="Presentación interactiva de 10 diapositivas para proyectar a nuevos grupos"
+          >
+            <Icon name="lucide:presentation" class="h-4 w-4" />
+            <span>Presentación Inducción</span>
+          </a>
+
+          <a
+            href="/plan-de-estudios"
+            class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-brand-border bg-brand-callout-bg dark:bg-brand-sidebar-bg hover:border-brand-primary text-xs font-semibold text-brand-text transition-colors"
+          >
+            <Icon name="lucide:map" class="h-4 w-4 text-brand-primary" />
+            <span>Plan de Estudios</span>
+          </a>
+
+          <a
+            href="/panel"
+            class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-brand-border bg-brand-callout-bg dark:bg-brand-sidebar-bg hover:border-brand-primary text-xs font-semibold text-brand-text transition-colors"
+          >
+            <Icon name="lucide:sliders" class="h-4 w-4 text-brand-primary" />
+            <span>Control de Grupos</span>
+          </a>
+
+          <a
+            href="/calificaciones"
+            class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-brand-primary hover:bg-brand-accent text-white text-xs font-semibold transition-colors shadow-xs"
+          >
+            <Icon name="lucide:clipboard-check" class="h-4 w-4" />
+            <span>Captura de Calificaciones</span>
+          </a>
+
+          <button
+            type="button"
+            class="btn-logout-action inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 text-xs font-semibold hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-colors"
+          >
+            <Icon name="lucide:log-out" class="h-4 w-4" />
+            <span>Cerrar sesión</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Banner de Presentación e Inducción al Curso (54 Semanas) -->
+      <div class="rounded-2xl border border-purple-300/80 dark:border-purple-800/70 bg-gradient-to-r from-purple-50 via-purple-50/40 to-white dark:from-purple-950/30 dark:via-purple-950/10 dark:to-brand-sidebar-bg p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-5 shadow-xs">
+        <div class="space-y-1.5 max-w-2xl">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-100 dark:bg-purple-900/60 text-purple-800 dark:text-purple-200 border border-purple-300 dark:border-purple-700">
+              <Icon name="lucide:presentation" class="h-3.5 w-3.5" />
+              <span>Inducción para Nuevos Grupos</span>
+            </span>
+            <span class="text-[11px] font-mono text-purple-700 dark:text-purple-300 font-semibold">10 Diapositivas Interactivas</span>
+          </div>
+          <h3 class="text-lg sm:text-xl font-bold text-brand-text">
+            Presentación Oficial del Programa de Cómputo (54 Semanas)
+          </h3>
+          <p class="text-xs sm:text-sm text-brand-muted leading-relaxed">
+            Material de apoyo para proyectar en pantalla grande ante cada grupo nuevo: presentación del docente, ruta formativa en 4 etapas, reglas de laboratorio, ponderación de calificaciones y entregables de proyectos.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2.5 shrink-0 flex-wrap">
+          <a
+            href="/00-inicio"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs transition-colors shadow-xs"
+          >
+            <Icon name="lucide:play" class="h-4 w-4" />
+            <span>Proyectar Diapositivas</span>
+          </a>
+          <a
+            href="/plan-de-estudios"
+            class="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-brand-border bg-white dark:bg-brand-sidebar-bg hover:border-brand-primary text-brand-text font-semibold text-xs transition-colors"
+          >
+            <Icon name="lucide:map" class="h-4 w-4 text-brand-primary" />
+            <span>Plan Escrito</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Dashboard Resumen Docente -->
+      <div class="space-y-4">
+        <div class="border-b border-brand-border pb-2 flex items-center justify-between">
+          <div>
+            <h3 class="text-base font-bold text-brand-text">Resumen de Clases</h3>
+            <p class="text-xs text-brand-muted">
+              Estado de avance semanal por grupo (horario: 09:00 a 13:00 h, 4 horas por sesión).
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Clase Sábado -->
+          <div class="p-5 rounded-2xl border border-brand-border bg-white dark:bg-brand-sidebar-bg space-y-4 shadow-xs">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="h-3 w-3 rounded-full bg-amber-500"></span>
+                <h4 class="text-sm font-bold text-brand-text">Clase Sábado</h4>
+              </div>
+              <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-brand-border/60 text-brand-text">09:00 – 13:00 h (4 hrs)</span>
+            </div>
+
+            <div class="space-y-2 py-1 text-xs">
+              <div class="flex items-center justify-between">
+                <span class="text-brand-muted font-medium">Semana en curso:</span>
+                <span id="teacher-sabado-week" class="font-bold text-brand-primary font-mono text-sm">Semana 4 de 54</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-brand-muted font-medium">Módulo actual:</span>
+                <span class="font-semibold text-brand-text">Módulo 01: Fundamentos y Hardware</span>
+              </div>
+            </div>
+
+            <!-- Estado de Tarea de la semana -->
+            <div class="p-3 rounded-xl border border-brand-border bg-brand-callout-bg/60 text-xs space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-brand-text flex items-center gap-1.5">
+                  <Icon name="lucide:book-open" class="h-3.5 w-3.5 text-amber-500" />
+                  <span>Tarea de la semana:</span>
+                </span>
+                <button
+                  type="button"
+                  class="btn-open-task-modal text-[11px] font-semibold text-brand-primary hover:underline"
+                  data-task-group="sabado"
+                >
+                  Gestionar tarea
+                </button>
+              </div>
+              <p id="teacher-sabado-task-summary" class="text-brand-muted text-[11px] line-clamp-2">
+                Sin tarea asignada para esta semana.
+              </p>
+            </div>
+
+            <div class="pt-2 border-t border-brand-border flex items-center justify-between gap-2 flex-wrap">
+              <button
+                type="button"
+                id="btn-quick-advance-sabado"
+                class="px-2.5 py-1 rounded-lg bg-brand-primary hover:bg-brand-accent text-white text-xs font-semibold transition-colors inline-flex items-center gap-1"
+              >
+                <Icon name="lucide:check-circle-2" class="h-3.5 w-3.5" />
+                <span>+1 Finalizar semana</span>
+              </button>
+              <a href="/panel" class="text-xs font-semibold text-brand-primary hover:text-brand-accent transition-colors">
+                Modificar semana →
+              </a>
+            </div>
+          </div>
+
+          <!-- Clase Domingo -->
+          <div class="p-5 rounded-2xl border border-brand-border bg-white dark:bg-brand-sidebar-bg space-y-4 shadow-xs">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="h-3 w-3 rounded-full bg-emerald-500"></span>
+                <h4 class="text-sm font-bold text-brand-text">Clase Domingo</h4>
+              </div>
+              <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-brand-border/60 text-brand-text">09:00 – 13:00 h (4 hrs)</span>
+            </div>
+
+            <div class="space-y-2 py-1 text-xs">
+              <div class="flex items-center justify-between">
+                <span class="text-brand-muted font-medium">Semana en curso:</span>
+                <span id="teacher-domingo-week" class="font-bold text-brand-primary font-mono text-sm">Semana 1 de 54</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-brand-muted font-medium">Módulo actual:</span>
+                <span class="font-semibold text-brand-text">Módulo 01: Fundamentos y Hardware</span>
+              </div>
+            </div>
+
+            <!-- Estado de Tarea de la semana -->
+            <div class="p-3 rounded-xl border border-brand-border bg-brand-callout-bg/60 text-xs space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-brand-text flex items-center gap-1.5">
+                  <Icon name="lucide:book-open" class="h-3.5 w-3.5 text-emerald-500" />
+                  <span>Tarea de la semana:</span>
+                </span>
+                <button
+                  type="button"
+                  class="btn-open-task-modal text-[11px] font-semibold text-brand-primary hover:underline"
+                  data-task-group="domingo"
+                >
+                  Gestionar tarea
+                </button>
+              </div>
+              <p id="teacher-domingo-task-summary" class="text-brand-muted text-[11px] line-clamp-2">
+                Sin tarea asignada para esta semana.
+              </p>
+            </div>
+
+            <div class="pt-2 border-t border-brand-border flex items-center justify-between gap-2 flex-wrap">
+              <button
+                type="button"
+                id="btn-quick-advance-domingo"
+                class="px-2.5 py-1 rounded-lg bg-brand-primary hover:bg-brand-accent text-white text-xs font-semibold transition-colors inline-flex items-center gap-1"
+              >
+                <Icon name="lucide:check-circle-2" class="h-3.5 w-3.5" />
+                <span>+1 Finalizar semana</span>
+              </button>
+              <a href="/panel" class="text-xs font-semibold text-brand-primary hover:text-brand-accent transition-colors">
+                Modificar semana →
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
+
+  <!-- Modal para cambio de contraseña obligatorio en 1er login -->
+  <dialog
+    id="dialog-change-password"
+    class="fixed inset-0 m-auto z-50 p-0 rounded-2xl bg-white dark:bg-surface-elevated border border-brand-border shadow-2xl backdrop:bg-black/50 max-w-sm w-full"
+  >
+    <div class="p-5 border-b border-brand-border bg-brand-callout-bg">
+      <div class="flex items-center gap-2 text-brand-primary font-bold text-sm">
+        <Icon name="lucide:key" class="h-4 w-4" />
+        <span>Primer Inicio de Sesión</span>
+      </div>
+      <p class="text-xs text-brand-muted mt-1">Por tu seguridad, establece tu contraseña personal definitiva (mínimo 8 caracteres).</p>
+    </div>
+    <form id="form-change-password" class="p-5 space-y-4 text-xs">
+      <div>
+        <label for="input-new-pass" class="font-bold text-brand-text block mb-1">Nueva contraseña</label>
+        <input
+          id="input-new-pass"
+          type="password"
+          placeholder="Nueva contraseña"
+          required
+          minlength="8"
+          class="w-full px-3 py-2 rounded-xl border border-brand-border bg-white dark:bg-brand-bg text-xs outline-none focus:border-brand-primary text-brand-text"
+        />
+      </div>
+      <div>
+        <label for="input-confirm-pass" class="font-bold text-brand-text block mb-1">Confirmar nueva contraseña</label>
+        <input
+          id="input-confirm-pass"
+          type="password"
+          placeholder="Confirmar contraseña"
+          required
+          minlength="8"
+          class="w-full px-3 py-2 rounded-xl border border-brand-border bg-white dark:bg-brand-bg text-xs outline-none focus:border-brand-primary text-brand-text"
+        />
+      </div>
+      <p id="change-pass-error" class="text-xs text-rose-500 hidden"></p>
+      <button
+        type="submit"
+        class="w-full py-2.5 px-4 rounded-xl bg-brand-primary hover:bg-brand-accent text-white font-semibold text-xs transition-colors"
+      >
+        Guardar y Continuar
+      </button>
+    </form>
+  </dialog>
+
+  <!-- Modal para que el docente asigne o edite la tarea de la semana -->
+  <dialog
+    id="dialog-task-editor"
+    class="fixed inset-0 m-auto z-50 p-0 rounded-2xl bg-white dark:bg-surface-elevated border border-brand-border shadow-2xl backdrop:bg-black/50 max-w-lg w-full"
+  >
+    <div class="p-5 border-b border-brand-border bg-brand-callout-bg flex items-center justify-between">
+      <div class="flex items-center gap-2 text-brand-primary font-bold text-sm">
+        <Icon name="lucide:book-open" class="h-4 w-4" />
+        <span>Tarea de la Semana (Investigación Teórica)</span>
+      </div>
+      <button type="button" id="btn-close-task-modal" class="text-brand-muted hover:text-brand-text">
+        <Icon name="lucide:x" class="h-4 w-4" />
+      </button>
+    </div>
+
+    <form id="form-task-editor" class="p-5 space-y-4 text-xs">
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label for="task-input-group" class="font-bold text-brand-text block mb-1">Grupo</label>
+          <select
+            id="task-input-group"
+            class="w-full px-3 py-2 rounded-xl border border-brand-border bg-white dark:bg-brand-bg text-xs outline-none focus:border-brand-primary text-brand-text"
+          >
+            <option value="sabado">Clase Sábado</option>
+            <option value="domingo">Clase Domingo</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="task-input-week" class="font-bold text-brand-text block mb-1">Semana (1 - 54)</label>
+          <input
+            id="task-input-week"
+            type="number"
+            min="1"
+            max="54"
+            required
+            class="w-full px-3 py-2 rounded-xl border border-brand-border bg-white dark:bg-brand-bg text-xs outline-none focus:border-brand-primary text-brand-text"
+          />
+        </div>
+      </div>
+
+      <div id="task-week-theme-preview" class="p-2.5 rounded-lg bg-brand-callout-bg border border-brand-border text-[11px] text-brand-muted">
+        <!-- Tema de la semana -->
+      </div>
+
+      <div>
+        <label for="task-input-title" class="font-bold text-brand-text block mb-1">Título de la tarea</label>
+        <input
+          id="task-input-title"
+          type="text"
+          placeholder="Ej: Investigación: Sistemas de Archivos EXT4 vs NTFS"
+          required
+          class="w-full px-3 py-2 rounded-xl border border-brand-border bg-white dark:bg-brand-bg text-xs outline-none focus:border-brand-primary text-brand-text"
+        />
+      </div>
+
+      <div>
+        <label for="task-input-desc" class="font-bold text-brand-text block mb-1">
+          Instrucciones de investigación teórica (nunca prácticas para casa)
+        </label>
+        <textarea
+          id="task-input-desc"
+          rows="4"
+          placeholder="Describe las preguntas o conceptos teóricos a investigar en libreta técnica..."
+          required
+          class="w-full px-3 py-2 rounded-xl border border-brand-border bg-white dark:bg-brand-bg text-xs outline-none focus:border-brand-primary text-brand-text resize-none"
+        ></textarea>
+      </div>
+
+      <div>
+        <label for="task-input-due" class="font-bold text-brand-text block mb-1">Momento / Fecha de entrega (opcional)</label>
+        <input
+          id="task-input-due"
+          type="text"
+          placeholder="Ej: Inicio de la próxima sesión (09:00 h)"
+          class="w-full px-3 py-2 rounded-xl border border-brand-border bg-white dark:bg-brand-bg text-xs outline-none focus:border-brand-primary text-brand-text"
+        />
+      </div>
+
+      <div class="pt-2 border-t border-brand-border flex items-center justify-between gap-2">
+        <button
+          type="button"
+          id="btn-delete-current-task"
+          class="px-3 py-2 rounded-xl border border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 font-semibold text-xs hover:bg-rose-100 transition-colors hidden"
+        >
+          Eliminar tarea
+        </button>
+
+        <div class="flex items-center gap-2 ml-auto">
+          <button
+            type="button"
+            id="btn-cancel-task-modal"
+            class="px-3.5 py-2 rounded-xl border border-brand-border text-brand-text text-xs font-semibold hover:bg-brand-callout-bg transition-colors"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            class="px-4 py-2 rounded-xl bg-brand-primary hover:bg-brand-accent text-white font-semibold text-xs transition-colors shadow-xs"
+          >
+            Guardar tarea
+          </button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Datos del Plan de Estudio y Lecciones para el cliente -->
+  <script is:inline id="plan-semanas-json" type="application/json" set:html={JSON.stringify(todasLasSemanas)}></script>
+  <script is:inline id="lecciones-map-json" type="application/json" set:html={JSON.stringify(leccionesData)}></script>
 </Layout>
+
+<script>
+  import {
+    getCurrentUser,
+    getPortalDB,
+    loginWithKey,
+    logout,
+    setSessionUser,
+    savePortalDB,
+    updateWeek,
+    syncRemoteGroups,
+    getTaskForWeek,
+    saveTask,
+    deleteTask,
+    syncRemoteTasks,
+    type PortalUser,
+    type GroupId
+  } from '../features/portal/db';
+  import { teacherLogin, teacherLogout, studentLogin, changeStudentPassword, isSupabaseConfigured } from '../lib/supabase';
+
+  let activeStudentToChangePass: PortalUser | null = null;
+  const changePassModal = document.getElementById('dialog-change-password') as HTMLDialogElement | null;
+  const formChangePass = document.getElementById('form-change-password');
+
+  const semanasDataEl = document.getElementById('plan-semanas-json');
+  const leccionesDataEl = document.getElementById('lecciones-map-json');
+  const allSemanas = semanasDataEl ? JSON.parse(semanasDataEl.textContent || '[]') : [];
+  const allLecciones = leccionesDataEl ? JSON.parse(leccionesDataEl.textContent || '[]') : [];
+
+  function getBadgeConfig(tipo: string): { bg: string; text: string; label: string } {
+    switch (tipo) {
+      case 'laboratorio':
+        return { bg: 'bg-teal-100 dark:bg-teal-950/70', text: 'text-teal-800 dark:text-teal-300', label: 'Laboratorio en Aula' };
+      case 'proyecto':
+        return { bg: 'bg-purple-100 dark:bg-purple-950/70', text: 'text-purple-800 dark:text-purple-300', label: 'Proyecto' };
+      case 'evaluacion':
+        return { bg: 'bg-rose-100 dark:bg-rose-950/70', text: 'text-rose-800 dark:text-rose-300', label: 'Evaluación' };
+      default:
+        return { bg: 'bg-amber-100 dark:bg-amber-950/70', text: 'text-amber-800 dark:text-amber-300', label: 'Práctica' };
+    }
+  }
+
+  function renderStudentHub(activeWeekNum: number, groupKey: string) {
+    const activeContainer = document.getElementById('student-active-week-container');
+    const taskContainer = document.getElementById('student-task-container');
+    const unlockedList = document.getElementById('student-unlocked-list');
+    const unlockedCount = document.getElementById('student-unlocked-count');
+    const lockedList = document.getElementById('student-locked-list');
+    const lockedCount = document.getElementById('student-locked-count');
+
+    if (!activeContainer || !unlockedList || !lockedList) return;
+
+    const activeWeek = allSemanas.find((s: any) => s.semana === activeWeekNum) || allSemanas[0];
+    const groupLabel = groupKey === 'sabado' ? 'Clase Sábado' : 'Clase Domingo';
+
+    if (activeWeek) {
+      const b = getBadgeConfig(activeWeek.claseTipo);
+      const matchLesson = allLecciones.find((l: any) => l.semana === activeWeek.semana);
+
+      activeContainer.innerHTML = `
+        <div class="rounded-2xl border-2 border-brand-primary/40 bg-white dark:bg-brand-sidebar-bg p-5 sm:p-7 shadow-xs space-y-4">
+          <div class="flex items-center justify-between gap-3 flex-wrap">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-brand-primary/10 text-brand-primary border border-brand-primary/20">
+                <span class="h-2 w-2 rounded-full bg-brand-primary animate-pulse"></span>
+                <span>Clase en Curso · Semana ${activeWeek.semana} de 54</span>
+              </span>
+              <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${b.bg} ${b.text}">
+                ${b.label}
+              </span>
+              <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-brand-border/60 text-brand-text">
+                ${groupLabel} · 09:00 a 13:00 h (4 hrs)
+              </span>
+            </div>
+            <span class="text-xs font-semibold text-brand-muted font-mono">
+              Módulo ${activeWeek.moduloNumeroStr}
+            </span>
+          </div>
+
+          <div class="space-y-1.5">
+            <div class="text-xs font-bold uppercase tracking-wider text-brand-muted">
+              ${activeWeek.moduloTitulo}
+            </div>
+            <h3 class="text-xl sm:text-2xl font-bold text-brand-text tracking-tight">
+              ${activeWeek.claseTitulo}
+            </h3>
+            <p class="text-xs sm:text-sm text-brand-muted leading-relaxed max-w-3xl">
+              ${activeWeek.claseDescripcion}
+            </p>
+          </div>
+
+          <div class="pt-3 border-t border-brand-border flex items-center justify-between gap-3 flex-wrap">
+            <div class="flex items-center gap-2 flex-wrap">
+              ${matchLesson ? `
+                <a
+                  href="/${matchLesson.slug}"
+                  class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-primary hover:bg-brand-accent text-white font-semibold text-xs transition-colors shadow-xs"
+                >
+                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/>
+                  </svg>
+                  <span>Abrir Presentación de Clase</span>
+                  <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/>
+                  </svg>
+                </a>
+              ` : `
+                <span class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-brand-callout-bg border border-brand-border text-xs text-brand-text font-medium">
+                  <svg class="h-4 w-4 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                  </svg>
+                  <span>Sesión presencial en aula de cómputo</span>
+                </span>
+              `}
+            </div>
+
+            <a
+              href="/plan-de-estudios#modulo-${activeWeek.moduloNumero}"
+              class="text-xs font-semibold text-brand-primary hover:underline inline-flex items-center gap-1"
+            >
+              <span>Ver temario completo del módulo</span>
+              <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      `;
+    }
+
+    // Tarea de la semana activa (solo se muestra si hay tarea asignada)
+    if (taskContainer) {
+      const activeTask = getTaskForWeek(groupKey as GroupId, activeWeekNum);
+      if (activeTask && activeTask.titulo) {
+        taskContainer.innerHTML = `
+          <div class="rounded-2xl border border-amber-500/40 bg-amber-500/5 dark:bg-amber-950/20 p-5 sm:p-6 shadow-xs space-y-3">
+            <div class="flex items-center justify-between gap-3 flex-wrap">
+              <div class="flex items-center gap-2">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30">
+                  <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                  </svg>
+                  <span>Tarea de la Semana · Investigación Teórica</span>
+                </span>
+                <span class="text-[11px] font-mono text-brand-muted">
+                  Semana ${activeWeekNum}
+                </span>
+              </div>
+              ${activeTask.fechaEntrega ? `
+                <span class="inline-flex items-center gap-1 text-xs font-medium text-amber-700 dark:text-amber-300">
+                  <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"/>
+                  </svg>
+                  <span>Entrega: ${activeTask.fechaEntrega}</span>
+                </span>
+              ` : ''}
+            </div>
+
+            <div class="space-y-1.5">
+              <h3 class="text-base sm:text-lg font-bold text-brand-text">
+                ${activeTask.titulo}
+              </h3>
+              <p class="text-xs sm:text-sm text-brand-text/90 whitespace-pre-line leading-relaxed">
+                ${activeTask.descripcion}
+              </p>
+            </div>
+
+            <div class="pt-2 border-t border-amber-500/20 flex items-center justify-between text-[11px] text-brand-muted">
+              <span>Registra tus notas en tu libreta técnica para revisión presencial.</span>
+              <span class="font-medium text-amber-700 dark:text-amber-400">Sin entrega práctica en casa</span>
+            </div>
+          </div>
+        `;
+        taskContainer.classList.remove('hidden');
+      } else {
+        taskContainer.innerHTML = '';
+        taskContainer.classList.add('hidden');
+      }
+    }
+
+    // Clases desbloqueadas (1 .. activeWeekNum)
+    const unlocked = allSemanas.filter((s: any) => s.semana <= activeWeekNum);
+    if (unlockedCount) {
+      unlockedCount.textContent = `${unlocked.length} ${unlocked.length === 1 ? 'clase disponible' : 'clases disponibles'}`;
+    }
+
+    unlockedList.innerHTML = unlocked.map((s: any) => {
+      const b = getBadgeConfig(s.claseTipo);
+      const isCurrent = s.semana === activeWeekNum;
+      const matchLesson = allLecciones.find((l: any) => l.semana === s.semana);
+
+      return `
+        <div class="rounded-xl border ${isCurrent ? 'border-brand-primary bg-brand-callout-bg/40' : 'border-brand-border bg-white dark:bg-brand-sidebar-bg'} p-4 shadow-xs space-y-2.5 transition-all">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold font-mono px-2 py-0.5 rounded ${isCurrent ? 'bg-brand-primary text-white' : 'bg-brand-border/60 text-brand-text'}">
+                Semana ${s.semana}
+              </span>
+              <span class="text-[11px] font-medium px-2 py-0.5 rounded-full ${b.bg} ${b.text}">
+                ${b.label}
+              </span>
+            </div>
+            ${isCurrent ? `
+              <span class="text-[11px] font-bold text-brand-primary uppercase tracking-wider flex items-center gap-1">
+                <span class="h-1.5 w-1.5 rounded-full bg-brand-primary"></span>
+                En curso
+              </span>
+            ` : `
+              <span class="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+                Disponible
+              </span>
+            `}
+          </div>
+
+          <div class="space-y-1">
+            <div class="text-[11px] text-brand-muted font-medium truncate">
+              Módulo ${s.moduloNumeroStr}: ${s.moduloTitulo}
+            </div>
+            <h4 class="text-xs sm:text-sm font-bold text-brand-text">
+              ${s.claseTitulo}
+            </h4>
+            <p class="text-[11px] sm:text-xs text-brand-muted line-clamp-2 leading-relaxed">
+              ${s.claseDescripcion}
+            </p>
+          </div>
+
+          <div class="pt-2 border-t border-brand-border flex items-center justify-between text-xs">
+            ${matchLesson ? `
+              <a
+                href="/${matchLesson.slug}"
+                class="font-semibold text-brand-primary hover:underline inline-flex items-center gap-1"
+              >
+                <span>Ver presentación</span>
+                <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            ` : `
+              <span class="text-[11px] text-brand-muted">
+                Práctica en aula
+              </span>
+            `}
+            <a
+              href="/plan-de-estudios#modulo-${s.moduloNumero}"
+              class="text-[11px] text-brand-muted hover:text-brand-text transition-colors"
+            >
+              Objetivos →
+            </a>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Clases bloqueadas (activeWeekNum + 1 .. 54)
+    const locked = allSemanas.filter((s: any) => s.semana > activeWeekNum);
+    if (lockedCount) {
+      lockedCount.textContent = `${locked.length} ${locked.length === 1 ? 'próxima sesión' : 'próximas sesiones'}`;
+    }
+
+    lockedList.innerHTML = locked.map((s: any) => `
+      <div class="flex items-center justify-between gap-3 p-3 rounded-xl border border-brand-border bg-brand-callout-bg/20 dark:bg-black/10 text-xs opacity-70">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="h-6 w-6 rounded-lg bg-brand-border/40 flex items-center justify-center text-brand-muted shrink-0">
+            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <span class="font-mono font-semibold text-brand-muted text-[11px]">Semana ${s.semana}</span>
+              <span class="text-brand-muted truncate text-[11px]">· Módulo ${s.moduloNumeroStr}</span>
+            </div>
+            <div class="font-semibold text-brand-text truncate">
+              ${s.claseTitulo}
+            </div>
+          </div>
+        </div>
+        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-brand-border/40 text-brand-muted shrink-0">
+          Bloqueada
+        </span>
+      </div>
+    `).join('');
+  }
+
+  function renderHomeState() {
+    const user = getCurrentUser();
+    const db = getPortalDB();
+
+    const viewUnauth = document.getElementById('view-unauthenticated');
+    const viewStudent = document.getElementById('view-student');
+    const viewTeacher = document.getElementById('view-teacher');
+
+    if (!user) {
+      viewUnauth?.classList.remove('hidden');
+      viewStudent?.classList.add('hidden');
+      viewTeacher?.classList.add('hidden');
+      return;
+    }
+
+    if (user.rol === 'profesor') {
+      viewUnauth?.classList.add('hidden');
+      viewStudent?.classList.add('hidden');
+      viewTeacher?.classList.remove('hidden');
+
+      const sabData = db.grupos['sabado'];
+      const domData = db.grupos['domingo'];
+      const sabWeek = sabData?.semanaActual || 1;
+      const domWeek = domData?.semanaActual || 1;
+      const sabWeekEl = document.getElementById('teacher-sabado-week');
+      const domWeekEl = document.getElementById('teacher-domingo-week');
+      if (sabWeekEl) sabWeekEl.textContent = `Semana ${sabWeek} de 54`;
+      if (domWeekEl) domWeekEl.textContent = `Semana ${domWeek} de 54`;
+
+      const sabTask = getTaskForWeek('sabado', sabWeek);
+      const sabTaskSummary = document.getElementById('teacher-sabado-task-summary');
+      if (sabTaskSummary) {
+        sabTaskSummary.textContent = sabTask
+          ? `${sabTask.titulo}${sabTask.fechaEntrega ? ` · Entrega: ${sabTask.fechaEntrega}` : ''}`
+          : `Sin tarea asignada para la semana ${sabWeek}.`;
+      }
+
+      const domTask = getTaskForWeek('domingo', domWeek);
+      const domTaskSummary = document.getElementById('teacher-domingo-task-summary');
+      if (domTaskSummary) {
+        domTaskSummary.textContent = domTask
+          ? `${domTask.titulo}${domTask.fechaEntrega ? ` · Entrega: ${domTask.fechaEntrega}` : ''}`
+          : `Sin tarea asignada para la semana ${domWeek}.`;
+      }
+      return;
+    }
+
+    // Rol Alumno / Grupo
+    viewUnauth?.classList.add('hidden');
+    viewStudent?.classList.remove('hidden');
+    viewTeacher?.classList.add('hidden');
+
+    const claseKey = (user.clase || user.grupo || 'sabado') as 'sabado' | 'domingo';
+    const groupData = db.grupos[claseKey];
+    const semanaActual = groupData?.semanaActual || 1;
+
+    const studentTitle = document.getElementById('student-welcome-title');
+    const studentGroupBadge = document.getElementById('student-group-name');
+    const studentWeekBadgeText = document.getElementById('student-week-badge-text');
+    const studentMatriculaBadge = document.getElementById('student-matricula-badge');
+
+    if (studentTitle) studentTitle.textContent = user.nombre || (claseKey === 'sabado' ? 'Clase Sábado' : 'Clase Domingo');
+    if (studentGroupBadge) studentGroupBadge.textContent = claseKey === 'sabado' ? 'Clase Sábado' : 'Clase Domingo';
+    if (studentWeekBadgeText) studentWeekBadgeText.textContent = `Semana activa: ${semanaActual} de 54`;
+    if (studentMatriculaBadge) {
+      studentMatriculaBadge.textContent = user.matricula ? `Matrícula: ${user.matricula}` : (user.username ? `@${user.username}` : 'Estudiante');
+    }
+
+    renderStudentHub(semanaActual, claseKey);
+  }
+
+  // Finalizar / avanzar semana rápidamente desde dashboard docente
+  document.getElementById('btn-quick-advance-sabado')?.addEventListener('click', () => {
+    const db = getPortalDB();
+    const nextVal = Math.min(54, (db.grupos.sabado?.semanaActual || 1) + 1);
+    updateWeek('sabado', nextVal);
+    renderHomeState();
+  });
+
+  document.getElementById('btn-quick-advance-domingo')?.addEventListener('click', () => {
+    const db = getPortalDB();
+    const nextVal = Math.min(54, (db.grupos.domingo?.semanaActual || 1) + 1);
+    updateWeek('domingo', nextVal);
+    renderHomeState();
+  });
+
+  // Logout
+  async function performLogout() {
+    logout();
+    await teacherLogout();
+    renderHomeState();
+  }
+
+  document.querySelectorAll('.btn-logout-action').forEach(btn => {
+    btn.addEventListener('click', performLogout);
+  });
+
+  // Alternador de pestañas en formulario no autenticado
+  const tabGroup = document.getElementById('tab-home-group');
+  const tabTeacher = document.getElementById('tab-home-teacher');
+  const formGroup = document.getElementById('form-home-group');
+  const formTeacher = document.getElementById('form-home-teacher');
+
+  const TAB_ACTIVE_CLASS = 'flex-1 pb-2.5 text-xs font-semibold border-b-2 border-brand-primary text-brand-text transition-all';
+  const TAB_INACTIVE_CLASS = 'flex-1 pb-2.5 text-xs font-semibold border-b-2 border-transparent text-brand-muted hover:text-brand-text transition-all';
+
+  tabGroup?.addEventListener('click', () => {
+    tabGroup.className = TAB_ACTIVE_CLASS;
+    tabTeacher!.className = TAB_INACTIVE_CLASS;
+    formGroup?.classList.remove('hidden');
+    formTeacher?.classList.add('hidden');
+  });
+
+  tabTeacher?.addEventListener('click', () => {
+    tabTeacher.className = TAB_ACTIVE_CLASS;
+    tabGroup!.className = TAB_INACTIVE_CLASS;
+    formTeacher?.classList.remove('hidden');
+    formGroup?.classList.add('hidden');
+  });
+
+  // Submit Clave de Grupo o Alumno individual
+  formGroup?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const inputKey = document.getElementById('home-group-key') as HTMLInputElement | null;
+    const inputPass = document.getElementById('home-group-password') as HTMLInputElement | null;
+    const errorEl = document.getElementById('home-group-error');
+
+    const keyVal = inputKey?.value.trim() || '';
+    const passVal = inputPass?.value.trim() || '';
+
+    // 1. Si ingresó contraseña y Supabase está configurado, intenta login de alumno con Postgres RPC
+    if (passVal && isSupabaseConfigured()) {
+      const studentRes = await studentLogin(keyVal, passVal);
+      if (studentRes.success && studentRes.user) {
+        if (errorEl) errorEl.classList.add('hidden');
+        setSessionUser(studentRes.user.id);
+
+        const db = getPortalDB();
+        if (!db.usuarios.some(u => u.id === studentRes.user!.id)) {
+          db.usuarios.push(studentRes.user);
+          savePortalDB(db);
+        }
+
+        if (studentRes.user.debeCambiarPassword) {
+          activeStudentToChangePass = studentRes.user;
+          changePassModal?.showModal();
+          return;
+        }
+
+        renderHomeState();
+        return;
+      } else {
+        if (errorEl) {
+          errorEl.textContent = studentRes.error || 'Credenciales de alumno incorrectas.';
+          errorEl.classList.remove('hidden');
+        }
+        return;
+      }
+    }
+
+    // 2. Si no hay contraseña o Supabase está en modo local, utiliza loginWithKey
+    const res = loginWithKey(keyVal);
+    if (res.success) {
+      if (errorEl) errorEl.classList.add('hidden');
+      renderHomeState();
+    } else {
+      if (errorEl) {
+        errorEl.textContent = res.error || 'Clave o usuario no válido. Consulta con tu docente.';
+        errorEl.classList.remove('hidden');
+      }
+    }
+  });
+
+  // Submit Cambio de Contraseña en 1er Login
+  formChangePass?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const newPass = (document.getElementById('input-new-pass') as HTMLInputElement)?.value.trim();
+    const confirmPass = (document.getElementById('input-confirm-pass') as HTMLInputElement)?.value.trim();
+    const errorEl = document.getElementById('change-pass-error');
+
+    if (newPass !== confirmPass) {
+      if (errorEl) {
+        errorEl.textContent = 'Las contraseñas no coinciden.';
+        errorEl.classList.remove('hidden');
+      }
+      return;
+    }
+
+    if (activeStudentToChangePass) {
+      const res = await changeStudentPassword(activeStudentToChangePass.id, newPass);
+      if (res.success) {
+        changePassModal?.close();
+        renderHomeState();
+      } else {
+        if (errorEl) {
+          errorEl.textContent = res.error || 'Error al actualizar contraseña.';
+          errorEl.classList.remove('hidden');
+        }
+      }
+    }
+  });
+
+  // Submit Login Docente con Supabase
+  formTeacher?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const emailInput = document.getElementById('home-teacher-email') as HTMLInputElement | null;
+    const passInput = document.getElementById('home-teacher-password') as HTMLInputElement | null;
+    const errorEl = document.getElementById('home-teacher-error');
+
+    const email = emailInput?.value || '';
+    const pass = passInput?.value || '';
+
+    const res = await teacherLogin(email, pass);
+    if (res.success) {
+      if (errorEl) errorEl.classList.add('hidden');
+      loginWithKey('profesor');
+      renderHomeState();
+    } else {
+      if (errorEl) {
+        errorEl.textContent = res.error || 'Credenciales no válidas.';
+        errorEl.classList.remove('hidden');
+      }
+    }
+  });
+
+  // Modal de Gestión de Tareas de la Semana
+  const taskModal = document.getElementById('dialog-task-editor') as HTMLDialogElement | null;
+  const formTask = document.getElementById('form-task-editor');
+  const btnCloseTask = document.getElementById('btn-close-task-modal');
+  const btnCancelTask = document.getElementById('btn-cancel-task-modal');
+  const btnDeleteTask = document.getElementById('btn-delete-current-task');
+  const selectTaskGroup = document.getElementById('task-input-group') as HTMLSelectElement | null;
+  const inputTaskWeek = document.getElementById('task-input-week') as HTMLInputElement | null;
+  const inputTaskTitle = document.getElementById('task-input-title') as HTMLInputElement | null;
+  const inputTaskDesc = document.getElementById('task-input-desc') as HTMLTextAreaElement | null;
+  const inputTaskDue = document.getElementById('task-input-due') as HTMLInputElement | null;
+  const taskWeekPreview = document.getElementById('task-week-theme-preview');
+
+  function updateTaskModalThemePreview() {
+    const group = (selectTaskGroup?.value || 'sabado') as GroupId;
+    const week = parseInt(inputTaskWeek?.value || '1', 10);
+    const sem = allSemanas.find((s: any) => s.semana === week);
+
+    if (taskWeekPreview) {
+      if (sem) {
+        taskWeekPreview.innerHTML = `
+          <div class="font-semibold text-brand-text">Semana ${sem.semana}: ${sem.claseTitulo}</div>
+          <div class="text-brand-muted">Módulo ${sem.moduloNumeroStr}: ${sem.moduloTitulo} · Tipo: ${sem.claseTipo}</div>
+        `;
+      } else {
+        taskWeekPreview.textContent = `Semana ${week} de 54`;
+      }
+    }
+
+    const currentTask = getTaskForWeek(group, week);
+    if (currentTask) {
+      if (inputTaskTitle) inputTaskTitle.value = currentTask.titulo;
+      if (inputTaskDesc) inputTaskDesc.value = currentTask.descripcion;
+      if (inputTaskDue) inputTaskDue.value = currentTask.fechaEntrega || '';
+      btnDeleteTask?.classList.remove('hidden');
+    } else {
+      if (inputTaskTitle) inputTaskTitle.value = '';
+      if (inputTaskDesc) inputTaskDesc.value = '';
+      if (inputTaskDue) inputTaskDue.value = '';
+      btnDeleteTask?.classList.add('hidden');
+    }
+  }
+
+  function openTaskEditor(group: GroupId, defaultWeek?: number) {
+    const db = getPortalDB();
+    const week = defaultWeek ?? (db.grupos[group]?.semanaActual || 1);
+
+    if (selectTaskGroup) selectTaskGroup.value = group;
+    if (inputTaskWeek) inputTaskWeek.value = String(week);
+
+    updateTaskModalThemePreview();
+    taskModal?.showModal();
+  }
+
+  document.querySelectorAll('.btn-open-task-modal').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLElement;
+      const group = (target.dataset.taskGroup || 'sabado') as GroupId;
+      openTaskEditor(group);
+    });
+  });
+
+  selectTaskGroup?.addEventListener('change', updateTaskModalThemePreview);
+  inputTaskWeek?.addEventListener('input', updateTaskModalThemePreview);
+
+  btnCloseTask?.addEventListener('click', () => taskModal?.close());
+  btnCancelTask?.addEventListener('click', () => taskModal?.close());
+
+  formTask?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const group = (selectTaskGroup?.value || 'sabado') as GroupId;
+    const week = parseInt(inputTaskWeek?.value || '1', 10);
+    const title = inputTaskTitle?.value || '';
+    const desc = inputTaskDesc?.value || '';
+    const due = inputTaskDue?.value || '';
+
+    saveTask(group, week, title, desc, due);
+    taskModal?.close();
+    renderHomeState();
+  });
+
+  btnDeleteTask?.addEventListener('click', () => {
+    const group = (selectTaskGroup?.value || 'sabado') as GroupId;
+    const week = parseInt(inputTaskWeek?.value || '1', 10);
+    deleteTask(group, week);
+    taskModal?.close();
+    renderHomeState();
+  });
+
+  renderHomeState();
+  syncRemoteGroups().then((changed) => {
+    if (changed) renderHomeState();
+  });
+  syncRemoteTasks().then((changed) => {
+    if (changed) renderHomeState();
+  });
+  window.addEventListener('cpi-portal-update', renderHomeState);
+  window.addEventListener('focus', () => {
+    syncRemoteGroups().then((changed) => {
+      if (changed) renderHomeState();
+    });
+    syncRemoteTasks().then((changed) => {
+      if (changed) renderHomeState();
+    });
+  });
+</script>

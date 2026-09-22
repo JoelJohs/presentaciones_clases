@@ -1,0 +1,106 @@
+---
+title: "Hojas de Cálculo II: Gestión y Análisis de Datos"
+moduleTitle: "2 - Productividad, Ofimática y Colaboración en la Nube"
+topicTitle: "Tema 2: Hojas de Cálculo"
+subtopicTitle: "Búsquedas, Tablas Dinámicas y Gráficos"
+semana: 8
+fecha: "08-08-2026"
+published: true
+description: "Aplica funciones de búsqueda como BUSCARV, filtros avanzados, tablas dinámicas y genera gráficos estadísticos para toma de decisiones."
+duration: 45
+objectives:
+  - "Cruzar datos entre tablas independientes usando la función BUSCARV / VLOOKUP"
+  - "Construir tablas dinámicas para resumir grandes volúmenes de registros en segundos"
+  - "Seleccionar y configurar el tipo de gráfico adecuado según la naturaleza de la información"
+---
+import { Icon } from "astro-icon/components";
+
+# Hojas de Cálculo II: Gestión y Análisis de Datos
+
+Aplica funciones de búsqueda como BUSCARV, filtros avanzados, tablas dinámicas y genera gráficos estadísticos para toma de decisiones.
+
+## 1. Búsqueda y Cruce de Datos con BUSCARV <Icon name="lucide:search" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+En bases de datos reales la información está separada en varias tablas (ejemplo: una tabla con ventas y otra con la lista de precios de productos).
+
+La función **BUSCARV** busca un identificador (como un código de producto o matrícula de alumno) en una tabla de referencia y devuelve un dato asociado de otra columna.
+
+* **Sintaxis:** `=BUSCARV(valor_buscado, tabla_matriz, columna_a_devolver, FALSO)`
+* **Importante:** El último parámetro siempre debe ser **FALSO** (o 0) para exigir coincidencia exacta. Si omites este parámetro, devolverá datos incorrectos.
+
+---
+
+## 2. Tablas Dinámicas (Pivot Tables) <Icon name="lucide:pie-chart" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Una tabla dinámica no altera tus datos originales: genera una vista resumida e interactiva.
+
+Permite agrupar miles de filas con preguntas clave en segundos:
+* ¿Cuánto vendió cada sucursal este mes?
+* ¿Cuántos alumnos hay en cada grupo escolar?
+* ¿Cuál es el gasto total por categoría de insumos?
+
+Las cuatro áreas de una tabla dinámica son: **Filas**, **Columnas**, **Valores** (lo que se suma o cuenta) y **Filtros**.
+
+---
+
+## 3. Matriz de Selección de Gráficos <Icon name="lucide:bar-chart-3" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Elige el gráfico según el mensaje que deseas transmitir:
+
+<table>
+  <thead>
+    <tr>
+      <th>Tipo de Gráfico</th>
+      <th>Propósito Principal</th>
+      <th>Cuándo Usarlo</th>
+      <th>Error Común a Evitar</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Barras / Columnas</td>
+      <td>Comparar cantidades entre categorías distintas</td>
+      <td>Ventas por producto o calificaciones por materia</td>
+      <td>Poner más de 12 barras saturando el eje horizontal</td>
+    </tr>
+    <tr>
+      <td>Líneas con Marcadores</td>
+      <td>Mostrar evolución de un valor a lo largo del tiempo</td>
+      <td>Temperatura por hora o ingresos por mes</td>
+      <td>Usarlo para comparar categorías no temporales</td>
+    </tr>
+    <tr>
+      <td>Circular (Pay / Pastel)</td>
+      <td>Representar partes de un todo (porcentajes que suman 100%)</td>
+      <td>Distribución de presupuesto entre 3 a 5 áreas</td>
+      <td>Usar más de 6 rebanadas o valores que no suman 100%</td>
+    </tr>
+    <tr>
+      <td>Dispersión (XY)</td>
+      <td>Analizar la relación o correlación entre dos variables numéricas</td>
+      <td>Horas de estudio vs nota de examen</td>
+      <td>Conectar puntos con líneas sin orden lógico</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 4. Práctica: Reporte con Tabla Dinámica y BUSCARV <Icon name="lucide:layout-grid" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Desarrolla el ejercicio en el aula:
+
+1. En la hoja 1, crea una tabla de *Catálogo de Componentes* con: Código (C01, C02...), Nombre y Precio Unitario.
+2. En la hoja 2, crea una tabla de *Ventas* con: Folio, Código del Componente y Cantidad Vendida.
+3. Usa `BUSCARV` en la tabla de Ventas para traer el Nombre y el Precio Unitario desde el Catálogo.
+4. Calcula el Total multiplicando Cantidad por Precio Unitario.
+5. Inserta una **Tabla Dinámica** que muestre el total de ingresos agrupado por Nombre de Componente.
+
+---
+
+## 5. Reto de Análisis Visual <Icon name="lucide:check-circle-2" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Presenta tu informe gráfico:
+
+* Agrega un gráfico de columnas vinculado a tu tabla dinámica con título claro y etiquetas de datos sobre cada barra.
+* Agrega una **Segmentación de Datos** (Slicer) para filtrar el reporte por rango de fechas en un solo clic.

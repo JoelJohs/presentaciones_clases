@@ -1,0 +1,88 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  title?: string;
+  steps: string[];
+}
+
+const { title = 'Reto Práctico de Laboratorio', steps } = Astro.props;
+---
+
+<div
+  x-data={`{
+    steps: ${JSON.stringify(steps)},
+    checked: new Array(${steps.length}).fill(false),
+    toggle(i) {
+      this.checked[i] = !this.checked[i];
+    },
+    get completedCount() {
+      return this.checked.filter(Boolean).length;
+    },
+    get percent() {
+      return Math.round((this.completedCount / this.steps.length) * 100);
+    }
+  }`}
+  class="challenge-card not-prose"
+>
+  <div class="flex items-center justify-between gap-3 mb-3">
+    <div class="flex items-center gap-2.5">
+      <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+        <Icon name="lucide:terminal" class="h-4 w-4" />
+      </span>
+      <div>
+        <h3 class="font-display font-bold text-sm text-brand-navy dark:text-white">
+          {title}
+        </h3>
+        <span class="text-[11px] text-brand-muted">Marca cada paso conforme lo verifiques en tu equipo</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Barra de progreso del Reto -->
+  <div class="mb-4">
+    <div class="flex items-center justify-between text-xs font-semibold mb-1.5">
+      <span class="text-brand-muted">
+        Progreso: <span x-text="completedCount"></span> de <span x-text="steps.length"></span> pasos
+      </span>
+      <span class="text-emerald-600 dark:text-emerald-400 font-mono font-bold" x-text="percent + '%'"></span>
+    </div>
+    <div class="h-2 rounded-full bg-brand-border/60 dark:bg-brand-border overflow-hidden">
+      <div
+        class="h-full rounded-full bg-emerald-500 transition-all duration-300"
+        :style="'width:' + percent + '%'"
+      ></div>
+    </div>
+  </div>
+
+  <!-- Lista de Pasos Interactiva -->
+  <div class="space-y-2">
+    {steps.map((step, idx) => (
+      <div
+        class="flex items-start gap-3 p-2.5 rounded-lg border transition-all duration-200 cursor-pointer select-none"
+        :class={`checked[${idx}] ? 'bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-500/30' : 'bg-white dark:bg-brand-sidebar-bg border-brand-border hover:border-brand-primary/40'`}
+        @click={`toggle(${idx})`}
+      >
+        <input
+          type="checkbox"
+          :checked={`checked[${idx}]`}
+          class="mt-0.5 h-4 w-4 rounded border-brand-border text-emerald-600 focus:ring-emerald-500 cursor-pointer pointer-events-none shrink-0"
+        />
+        <span
+          class="text-xs sm:text-sm text-brand-text leading-relaxed flex-1"
+          :class={`checked[${idx}] ? 'line-through opacity-70 text-brand-muted' : ''`}
+        >
+          {step}
+        </span>
+      </div>
+    ))}
+  </div>
+
+  <!-- Mensaje de reto completado -->
+  <template x-if="completedCount === steps.length">
+    <div class="mt-4 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-2 text-xs font-semibold text-emerald-700 dark:text-emerald-300">
+      <Icon name="lucide:check-circle-2" class="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+      <span>¡Has completado todos los pasos de este reto en el laboratorio!</span>
+    </div>
+  </template>
+</div>

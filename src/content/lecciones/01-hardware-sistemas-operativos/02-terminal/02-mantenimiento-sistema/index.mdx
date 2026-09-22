@@ -1,0 +1,102 @@
+---
+title: "Diagnóstico y Mantenimiento del Sistema"
+moduleTitle: "1 - Hardware, Sistemas Operativos y Software de Base"
+topicTitle: "Tema 2: Administración y Terminal"
+subtopicTitle: "Monitoreo de Recursos y Salud del Equipo"
+semana: 4
+fecha: "11-07-2026"
+published: true
+description: "Monitorea el uso de CPU, memoria y almacenamiento. Identifica fallas de rendimiento y aplica mantenimiento preventivo en el laboratorio."
+duration: 45
+objectives:
+  - "Interpretar métricas de rendimiento en tiempo real (CPU, RAM, disco y red)"
+  - "Identificar y terminar procesos bloqueados o que consumen recursos excesivos"
+  - "Diagnosticar la salud de unidades de almacenamiento con parámetros S.M.A.R.T."
+---
+import { Icon } from "astro-icon/components";
+
+# Diagnóstico y Mantenimiento del Sistema
+
+Monitorea el uso de CPU, memoria y almacenamiento. Identifica fallas de rendimiento y aplica mantenimiento preventivo en el laboratorio.
+
+## 1. Mantenimiento Preventivo vs Correctivo <Icon name="lucide:activity" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+El mantenimiento preventivo se realiza antes de que el equipo falle para garantizar estabilidad y extender su vida útil. El correctivo se aplica cuando el fallo ya detuvo el trabajo.
+
+* **Preventivo de hardware:** Limpieza de polvo en ventiladores, cambio de pasta térmica, verificación de voltajes.
+* **Preventivo de software:** Limpieza de archivos temporales, actualización de parches de seguridad, revisión de espacio libre en disco.
+* **Correctivo:** Reemplazo de un disco dañado, reparación de sectores defectuosos o reinstalación del sistema.
+
+---
+
+## 2. Monitoreo de Recursos en Tiempo Real <Icon name="lucide:gauge" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Cuando un equipo responde lento, analiza los cuatro cuellos de botella posibles:
+
+1. **CPU al 100%:** Un proceso realiza cálculos en bucle o hay software no deseado.
+2. **RAM al límite:** El sistema recurre a la memoria virtual en disco (swap), reduciendo la velocidad de forma notable.
+3. **Disco al 100% de uso de tiempo:** Lecturas o escrituras masivas bloquean la respuesta de las aplicaciones.
+4. **Temperatura elevada:** El procesador baja su frecuencia intencionalmente (thermal throttling) para no dañarse.
+
+---
+
+## 3. Herramientas y Señales de Diagnóstico <Icon name="lucide:stethoscope" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Utiliza esta guía para identificar anomalías:
+
+<table>
+  <thead>
+    <tr>
+      <th>Síntoma Detectado</th>
+      <th>Causa Probable</th>
+      <th>Herramienta de Diagnóstico</th>
+      <th>Acción Correctiva</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Ventiladores al máximo con equipo inactivo</td>
+      <td>Pasta térmica seca o proceso fuera de control</td>
+      <td><code>top</code>, <code>htop</code> o Administrador de Tareas</td>
+      <td>Cierra el proceso o limpia disipadores</td>
+    </tr>
+    <tr>
+      <td>Pantallas azules (BSOD) aleatorias</td>
+      <td>Falla en celdas de memoria RAM</td>
+      <td>MemTest86 o Diagnóstico de Memoria</td>
+      <td>Prueba módulos de RAM por separado</td>
+    </tr>
+    <tr>
+      <td>Demora de varios minutos al abrir carpetas</td>
+      <td>Sectores reasignados en disco mecánico o SSD degradado</td>
+      <td>CrystalDiskInfo o <code>smartctl</code></td>
+      <td>Respalda datos de inmediato y reemplaza disco</td>
+    </tr>
+    <tr>
+      <td>El equipo se apaga súbitamente al exigir carga</td>
+      <td>Fuente de poder deficiente o sobrecalentamiento crítico</td>
+      <td>HWMonitor o <code>sensors</code></td>
+      <td>Monitorea temperaturas antes del apagón</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 4. Práctica en el Laboratorio: Auditoría del Sistema <Icon name="lucide:clipboard-check" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Realiza la auditoría técnica de tu estación:
+
+1. Abre la terminal o monitor del sistema de tu equipo.
+2. Registra el porcentaje de uso de CPU y memoria RAM con solo el navegador abierto.
+3. Identifica cuál es el proceso con mayor consumo de memoria y anota su identificador (PID).
+4. Ejecuta la herramienta de diagnóstico de disco provista en clase y verifica el estado de salud reportado (Bueno, Riesgo o Malo).
+
+---
+
+## 5. Reto de Aula: Control de Procesos <Icon name="lucide:check-circle-2" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Comprueba tus habilidades de soporte:
+
+* Desde la terminal, usa el comando `kill` con el PID del proceso de prueba indicado por el docente para cerrarlo de forma limpia.
+* Presenta tu hoja de auditoría completa con los tres indicadores clave: temperatura, consumo de RAM y salud de disco.

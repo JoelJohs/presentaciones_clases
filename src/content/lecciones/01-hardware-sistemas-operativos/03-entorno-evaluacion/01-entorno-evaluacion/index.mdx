@@ -1,0 +1,103 @@
+---
+title: "Configuración del Entorno de Desarrollo y Evaluación 1"
+moduleTitle: "1 - Hardware, Sistemas Operativos y Software de Base"
+topicTitle: "Tema 3: Entorno y Evaluación"
+subtopicTitle: "Herramientas de Trabajo y Cierre del Módulo 1"
+semana: 5
+fecha: "18-07-2026"
+published: true
+description: "Instala y personaliza tu editor de código con extensiones técnicas, atajos de teclado y completa la evaluación práctica del Módulo 1."
+duration: 45
+objectives:
+  - "Configurar el editor de código con fuentes monoespaciadas y extensiones indispensables"
+  - "Operar con soltura los atajos de teclado para edición ágil de texto y código"
+  - "Resolver la evaluación práctica integrada de hardware y sistemas operativos en el aula"
+---
+import { Icon } from "astro-icon/components";
+
+# Configuración del Entorno de Desarrollo y Evaluación 1
+
+Instala y personaliza tu editor de código con extensiones técnicas, atajos de teclado y completa la evaluación práctica del Módulo 1.
+
+## 1. El Editor de Código como Herramienta Principal <Icon name="lucide:code" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Un editor de código no es un procesador de textos común. Ofrece resaltado de sintaxis, autocompletado inteligente, terminal integrada y control de versiones.
+
+* **VS Code / VSCodium:** Entorno ligero y estándar en la industria.
+* **Tipografía monoespaciada:** Cada letra ocupa el mismo ancho físico para alinear columnas de código y detectar errores visualmente (ej. JetBrains Mono, Fira Code).
+* **Terminal integrada:** Permite compilar y ejecutar comandos sin salir de tu ventana de trabajo.
+
+---
+
+## 2. Extensiones Indispensables de Trabajo <Icon name="lucide:puzzle" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Configura estas extensiones en el laboratorio:
+
+* **Prettier:** Formatea tu código automáticamente al guardar cambios con sangría consistente.
+* **Error Lens:** Muestra advertencias y errores de sintaxis en la misma línea donde se originan.
+* **Live Preview:** Levanta un servidor local en el aula para ver cambios en vivo sin recargar manualmente.
+* **GitLens:** Identifica qué cambios se hicieron y en qué momento dentro del archivo.
+
+---
+
+## 3. Atajos de Teclado Indispensables <Icon name="lucide:keyboard" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Los profesionales usan el teclado en lugar del ratón para editar rápido:
+
+<table>
+  <thead>
+    <tr>
+      <th>Atajo (Windows / Linux)</th>
+      <th>Acción Directa en el Editor</th>
+      <th>Utilidad en Clase</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Ctrl + P</code></td>
+      <td>Búsqueda rápida y apertura de archivos</td>
+      <td>Navegar proyectos grandes en segundos</td>
+    </tr>
+    <tr>
+      <td><code>Ctrl + Shift + P</code></td>
+      <td>Paleta de comandos completa</td>
+      <td>Ejecutar cualquier función del editor</td>
+    </tr>
+    <tr>
+      <td><code>Ctrl + `</code></td>
+      <td>Abrir o alternar terminal integrada</td>
+      <td>Ejecutar comandos sin cambiar de ventana</td>
+    </tr>
+    <tr>
+      <td><code>Alt + Flecha Arriba/Abajo</code></td>
+      <td>Mover la línea actual hacia arriba o abajo</td>
+      <td>Reorganizar instrucciones sin cortar y pegar</td>
+    </tr>
+    <tr>
+      <td><code>Ctrl + D</code></td>
+      <td>Seleccionar la siguiente coincidencia de la palabra</td>
+      <td>Renombrar variables repetidas con rapidez</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 4. Práctica: Preparación del Entorno <Icon name="lucide:settings" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Aplica la configuración recomendada en tu máquina de clase:
+
+1. Abre el editor de código e ingresa a Configuración (`Ctrl + ,`).
+2. Activa la opción **Format On Save** (Formatear al guardar).
+3. Establece el tamaño de tabulación en **2 espacios**.
+4. Abre la terminal integrada con `Ctrl + `` y verifica que ejecute correctamente comandos del sistema.
+
+---
+
+## 5. Evaluación Práctica del Módulo 1 <Icon name="lucide:graduation-cap" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Completa el reto de evaluación presencial en el aula:
+
+1. Identifica el modelo de procesador y la cantidad total de RAM en la máquina asignada.
+2. Abre la terminal y genera un archivo con el reporte de hardware usando redirección de salida (`lscpu > reporte.txt` o equivalente).
+3. Abre dicho reporte dentro de tu editor de código y muestra el resultado al docente.

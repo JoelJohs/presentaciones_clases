@@ -1,0 +1,472 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { getNavigationStructure } from '../utils/navigation';
+import { Icon } from 'astro-icon/components';
+import { PLAN_DE_ESTUDIOS, TOTAL_SEMANAS, TOTAL_CLASES } from '../data/plan-estudios';
+
+const lecciones = await getCollection('lecciones');
+const nav = getNavigationStructure(lecciones);
+---
+
+<Layout title="Plan de Estudios (54 Semanas)" nav={nav} isLesson={false}>
+  <div class="space-y-8 max-w-5xl mx-auto">
+    <!-- Encabezado de Página -->
+    <header class="border-b border-brand-border pb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <nav aria-label="Ruta" class="flex items-center gap-1.5 text-xs text-brand-muted mb-2">
+          <a href="/" class="hover:text-brand-text transition-colors">Inicio</a>
+          <Icon name="lucide:chevron-right" class="h-3 w-3" />
+          <span class="text-brand-primary font-medium">Plan de Estudios</span>
+        </nav>
+        <div class="flex items-center gap-3">
+          <div class="h-10 w-10 rounded-xl bg-brand-primary/10 text-brand-primary flex items-center justify-center font-bold">
+            <Icon name="lucide:compass" class="h-5 w-5" />
+          </div>
+          <div>
+            <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-brand-text">
+              Ruta de Aprendizaje CPI
+            </h1>
+            <p class="text-xs sm:text-sm text-brand-muted mt-0.5">
+              Programa integral de 54 semanas · 11 módulos formativos · 1 clase semanal
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 flex-wrap">
+        <a
+          href="/calificaciones"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-brand-primary hover:bg-brand-accent text-white text-xs font-semibold transition-colors shadow-xs"
+        >
+          <Icon name="lucide:graduation-cap" class="h-4 w-4" />
+          <span>Ver Calificaciones</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Banner Interactivo: Progreso Personalizado de la Clase (Se hidrata con la sesión activa) -->
+    <div id="student-progress-banner" class="hidden rounded-2xl border border-emerald-200 dark:border-emerald-800/80 bg-gradient-to-r from-emerald-50/90 to-teal-50/50 dark:from-emerald-950/40 dark:to-teal-950/20 p-4 sm:p-5 shadow-xs space-y-3">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="space-y-1">
+          <div class="flex items-center gap-2">
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-600 text-white shadow-2xs">
+              <Icon name="lucide:map-pin" class="h-3 w-3" />
+              <span id="banner-group-name">Clase Sábado</span>
+            </span>
+            <span id="banner-week-label" class="text-xs font-bold text-emerald-900 dark:text-emerald-200 font-mono">
+              Semana 4 de 54
+            </span>
+          </div>
+          <p id="banner-module-title" class="text-xs sm:text-sm font-semibold text-emerald-950 dark:text-emerald-100">
+            Módulo en curso: Hardware, Sistemas Operativos y Software de Base
+          </p>
+        </div>
+
+        <button
+          id="btn-scroll-to-current"
+          type="button"
+          class="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-all shadow-xs shrink-0 cursor-pointer"
+        >
+          <span>Ir a mi clase actual</span>
+          <Icon name="lucide:arrow-down" class="h-3.5 w-3.5" />
+        </button>
+      </div>
+
+      <!-- Barra de progreso visual semanal -->
+      <div class="space-y-1">
+        <div class="h-2 w-full rounded-full bg-emerald-200/60 dark:bg-emerald-900/60 overflow-hidden">
+          <div
+            id="banner-progress-bar"
+            class="h-full rounded-full bg-emerald-600 transition-all duration-500"
+            style="width: 7%;"
+          ></div>
+        </div>
+        <div class="flex items-center justify-between text-[11px] text-emerald-700 dark:text-emerald-300/80 font-mono">
+          <span>Inicio del Programa</span>
+          <span id="banner-percent-label">7% del trayecto anual</span>
+          <span>Graduación (Semana 54)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resumen del Programa: Panorama de Módulos y Periodos -->
+    <section class="space-y-3">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-bold text-brand-text">Estructura del Programa por Periodos</h2>
+          <p class="text-xs text-brand-muted">Conoce qué semanas corresponden a cada tecnología del temario</p>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto rounded-2xl border border-brand-border bg-white dark:bg-brand-sidebar-bg shadow-2xs">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="border-b border-brand-border bg-slate-50/80 dark:bg-brand-bg/40 text-brand-muted font-bold">
+              <th scope="col" class="py-2.5 px-4 w-16 text-center">#</th>
+              <th scope="col" class="py-2.5 px-4">Módulo Formativo</th>
+              <th scope="col" class="py-2.5 px-4 text-center w-36">Periodo en el Año</th>
+              <th scope="col" class="py-2.5 px-4 text-center w-28">Clases</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-brand-border">
+            {PLAN_DE_ESTUDIOS.map((mod) => (
+              <tr class="hover:bg-brand-hover-bg/10 transition-colors">
+                <td class="py-2.5 px-4 text-center font-mono font-bold">
+                  <span
+                    class="inline-flex h-6 w-8 items-center justify-center rounded-md text-[11px] text-white font-bold"
+                    style={`background-color: ${mod.colorHex};`}
+                  >
+                    {mod.numeroStr}
+                  </span>
+                </td>
+                <td class="py-2.5 px-4">
+                  <a href={`#modulo-${mod.numeroStr}`} class="font-semibold text-brand-text hover:text-brand-primary transition-colors flex items-center gap-2">
+                    <span>{mod.titulo}</span>
+                  </a>
+                </td>
+                <td class="py-2.5 px-4 text-center font-mono font-semibold text-brand-text">
+                  <span class="inline-flex px-2 py-0.5 rounded-md bg-brand-callout-bg border border-brand-border text-[11px]">
+                    {mod.rangoSemanas}
+                  </span>
+                </td>
+                <td class="py-2.5 px-4 text-center font-mono text-brand-muted">
+                  {mod.clases.length} clases
+                </td>
+              </tr>
+            ))}
+            <tr class="border-t-2 border-brand-border bg-slate-50/50 dark:bg-brand-bg/20 font-bold text-brand-text">
+              <td class="py-2.5 px-4 text-center font-mono uppercase tracking-wider text-[11px]">Total</td>
+              <td class="py-2.5 px-4">11 Módulos de Especialidad</td>
+              <td class="py-2.5 px-4 text-center font-mono text-brand-primary font-bold">
+                Semanas 1 a {TOTAL_SEMANAS}
+              </td>
+              <td class="py-2.5 px-4 text-center font-mono text-brand-primary font-bold">
+                {TOTAL_CLASES} clases
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Barra de Búsqueda y Filtro de Módulos -->
+    <div class="sticky top-16 z-10 p-3 rounded-2xl border border-brand-border bg-white/95 dark:bg-brand-sidebar-bg/95 backdrop-blur-md shadow-xs space-y-3">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="relative flex-1">
+          <Icon name="lucide:search" class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-muted" />
+          <input
+            id="search-input"
+            type="search"
+            placeholder="Buscar tema (ej. Python, Linux, SQL, CSS, Git, GIMP, Videojuegos)..."
+            class="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-brand-border bg-brand-bg text-brand-text placeholder:text-brand-muted outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/20 transition-all"
+          />
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <button
+            id="btn-expand-all"
+            type="button"
+            class="px-3 py-1.5 rounded-lg border border-brand-border text-xs font-semibold text-brand-muted hover:text-brand-text hover:bg-slate-100 dark:hover:bg-brand-bg transition-colors cursor-pointer"
+          >
+            Expandir todos
+          </button>
+          <button
+            id="btn-collapse-all"
+            type="button"
+            class="px-3 py-1.5 rounded-lg border border-brand-border text-xs font-semibold text-brand-muted hover:text-brand-text hover:bg-slate-100 dark:hover:bg-brand-bg transition-colors cursor-pointer"
+          >
+            Colapsar todos
+          </button>
+        </div>
+      </div>
+
+      <!-- Filtro rápido por módulo (chips con rango de semanas intuitivo) -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px] no-scrollbar">
+        <button
+          type="button"
+          data-filter-mod="all"
+          class="chip-mod-filter active shrink-0 px-2.5 py-1 rounded-lg font-semibold bg-brand-primary text-white transition-colors cursor-pointer"
+        >
+          Todos (Sem. 1–54)
+        </button>
+        {PLAN_DE_ESTUDIOS.map((mod) => (
+          <button
+            type="button"
+            data-filter-mod={mod.numeroStr}
+            class="chip-mod-filter shrink-0 px-2.5 py-1 rounded-lg font-semibold border border-brand-border bg-brand-bg text-brand-muted hover:text-brand-text hover:border-brand-primary transition-colors cursor-pointer"
+          >
+            M{mod.numeroStr} · Sem. {mod.semanaInicio}–{mod.semanaFin}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Detalle de Clases por Módulo (Diseño Intuitivo y Limpio) -->
+    <div id="modules-container" class="space-y-6">
+      {PLAN_DE_ESTUDIOS.map((mod) => (
+        <details
+          id={`modulo-${mod.numeroStr}`}
+          data-module-card={mod.numeroStr}
+          class="module-details group rounded-2xl border border-brand-border bg-white dark:bg-brand-sidebar-bg overflow-hidden shadow-2xs transition-all"
+          open
+        >
+          <!-- Encabezado del Módulo -->
+          <summary class="list-none cursor-pointer p-4 sm:p-5 flex items-center justify-between gap-3 select-none hover:bg-brand-hover-bg/10 transition-colors">
+            <div class="flex items-center gap-3 min-w-0">
+              <span
+                class="inline-flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl text-white font-bold font-mono text-sm shrink-0 shadow-xs"
+                style={`background-color: ${mod.colorHex};`}
+              >
+                {mod.numeroStr}
+              </span>
+              <div class="min-w-0">
+                <div class="flex items-center gap-2 flex-wrap mb-0.5">
+                  <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md text-white font-mono" style={`background-color: ${mod.colorHex};`}>
+                    Módulo {mod.numeroStr}
+                  </span>
+                  <span class="text-[11px] font-bold text-brand-text font-mono">
+                    {mod.rangoSemanas}
+                  </span>
+                  <span class="text-[11px] text-brand-muted">
+                    · {mod.clases.length} clases
+                  </span>
+                </div>
+                <h3 class="text-sm sm:text-base font-bold text-brand-text truncate">
+                  {mod.titulo}
+                </h3>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+              <div class="h-8 w-8 rounded-lg bg-slate-100 dark:bg-brand-bg flex items-center justify-center text-brand-muted group-open:rotate-180 transition-transform duration-200">
+                <Icon name="lucide:chevron-down" class="h-4 w-4" />
+              </div>
+            </div>
+          </summary>
+
+          <!-- Lista de Clases del Módulo (Formato Limpio y Legible) -->
+          <div class="border-t border-brand-border divide-y divide-brand-border/60">
+            {mod.clases.map((clase) => (
+              <div
+                id={`clase-semana-${clase.numero}`}
+                class="class-item p-4 sm:p-5 flex flex-col sm:flex-row sm:items-start gap-3.5 sm:gap-5 hover:bg-brand-hover-bg/10 transition-colors"
+                data-week-num={clase.numero}
+                data-search-text={`${clase.numero} ${clase.titulo} ${clase.descripcion} ${mod.titulo}`.toLowerCase()}
+              >
+                <!-- Badge de Semana -->
+                <div class="flex items-center sm:flex-col sm:items-center justify-between sm:justify-start gap-2 shrink-0 sm:w-20">
+                  <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-lg bg-brand-callout-bg border border-brand-border font-mono text-xs font-bold text-brand-text">
+                    Sem. {clase.numero < 10 ? '0' + clase.numero : clase.numero}
+                  </span>
+
+                  {clase.tipo === 'evaluacion' && (
+                    <span class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+                      Evaluación
+                    </span>
+                  )}
+
+                  {clase.tipo === 'proyecto' && (
+                    <span class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-100 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+                      Proyecto
+                    </span>
+                  )}
+
+                  {clase.tipo === 'laboratorio' && (
+                    <span class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-100 dark:bg-cyan-950/60 text-cyan-800 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800">
+                      Taller
+                    </span>
+                  )}
+                </div>
+
+                <!-- Título y Descripción -->
+                <div class="flex-1 space-y-1.5 min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <h4 class="text-sm font-bold text-brand-text leading-snug">
+                      {clase.titulo}
+                    </h4>
+
+                    <div class="week-indicator-badge hidden">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-600 text-white shadow-2xs">
+                        <span class="h-1.5 w-1.5 rounded-full bg-white animate-pulse"></span>
+                        <span>Tu clase esta semana</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  <p class="text-xs text-brand-muted leading-relaxed">
+                    {clase.descripcion}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </details>
+      ))}
+    </div>
+
+    <!-- Mensaje si no hay resultados en búsqueda -->
+    <div id="no-search-results" class="hidden text-center py-12 space-y-2">
+      <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 dark:bg-brand-sidebar-bg text-brand-muted">
+        <Icon name="lucide:search-x" class="h-6 w-6" />
+      </div>
+      <p class="text-sm font-semibold text-brand-text">No se encontraron temas coincidentes</p>
+      <p class="text-xs text-brand-muted">Prueba buscando "Python", "Linux", "SQL", "CSS", "Git", "GIMP" o "Videojuegos".</p>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  import { getCurrentUser, getPortalDB } from '../features/portal/db';
+
+  let currentStudentWeek: number | null = null;
+
+  // 1. Detectar si el alumno tiene sesión activa y activar el banner de progreso personalizado
+  function hydrateStudentProgress() {
+    const user = getCurrentUser();
+    const db = getPortalDB();
+    if (!user) return;
+
+    const groupKey = user.clase || user.grupo || 'sabado';
+    const groupInfo = db.grupos[groupKey];
+    if (!groupInfo) return;
+
+    const currentWeek = groupInfo.semanaActual || 1;
+    currentStudentWeek = currentWeek;
+
+    const banner = document.getElementById('student-progress-banner');
+    const groupNameEl = document.getElementById('banner-group-name');
+    const weekLabelEl = document.getElementById('banner-week-label');
+    const progressBar = document.getElementById('banner-progress-bar');
+    const percentLabel = document.getElementById('banner-percent-label');
+    const moduleTitleEl = document.getElementById('banner-module-title');
+
+    // Calcular porcentaje y módulo en curso
+    const percent = Math.min(100, Math.round((currentWeek / 54) * 100));
+
+    if (banner && groupNameEl && weekLabelEl && progressBar && percentLabel) {
+      groupNameEl.textContent = groupInfo.nombre;
+      weekLabelEl.textContent = `Semana ${currentWeek} de 54`;
+      progressBar.style.width = `${percent}%`;
+      percentLabel.textContent = `${percent}% del trayecto anual completado`;
+
+      // Encontrar nombre del módulo de la semana actual
+      const activeClass = document.getElementById(`clase-semana-${currentWeek}`);
+      const parentModule = activeClass?.closest<HTMLDetailsElement>('.module-details');
+      const modTitle = parentModule?.querySelector('h3')?.textContent?.trim();
+      if (moduleTitleEl && modTitle) {
+        moduleTitleEl.textContent = `Módulo en curso: ${modTitle}`;
+      }
+
+      banner.classList.remove('hidden');
+    }
+
+    // Resaltar la tarjeta de la clase actual
+    const items = document.querySelectorAll<HTMLElement>('.class-item');
+    items.forEach(item => {
+      const weekNum = parseInt(item.dataset.weekNum || '0', 10);
+      if (weekNum === currentWeek) {
+        item.classList.add(
+          'bg-emerald-50/80',
+          'dark:bg-emerald-950/30',
+          'border-l-4',
+          'border-emerald-500'
+        );
+        const badge = item.querySelector('.week-indicator-badge');
+        if (badge) badge.classList.remove('hidden');
+
+        // Asegurarse de que el módulo padre esté abierto
+        const details = item.closest<HTMLDetailsElement>('.module-details');
+        if (details) details.open = true;
+      }
+    });
+  }
+
+  // Botón para saltar con smooth scroll a la clase actual
+  document.getElementById('btn-scroll-to-current')?.addEventListener('click', () => {
+    if (currentStudentWeek) {
+      const targetEl = document.getElementById(`clase-semana-${currentStudentWeek}`);
+      if (targetEl) {
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  });
+
+  // 2. Filtro y Búsqueda en vivo
+  const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
+  const filterChips = document.querySelectorAll<HTMLButtonElement>('.chip-mod-filter');
+  const detailsList = document.querySelectorAll<HTMLDetailsElement>('.module-details');
+  const noResults = document.getElementById('no-search-results');
+
+  let activeModFilter = 'all';
+
+  function applyFilters() {
+    const query = (searchInput?.value || '').trim().toLowerCase();
+    let totalVisible = 0;
+
+    detailsList.forEach(details => {
+      const modNum = details.dataset.moduleCard || '';
+      const matchesMod = activeModFilter === 'all' || activeModFilter === modNum;
+
+      if (!matchesMod) {
+        details.classList.add('hidden');
+        return;
+      }
+
+      let moduleHasVisibleItem = false;
+      const classItems = details.querySelectorAll<HTMLElement>('.class-item');
+
+      classItems.forEach(item => {
+        const text = item.dataset.searchText || '';
+        const matchesQuery = query === '' || text.includes(query);
+
+        if (matchesQuery) {
+          item.classList.remove('hidden');
+          moduleHasVisibleItem = true;
+          totalVisible++;
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+
+      if (moduleHasVisibleItem) {
+        details.classList.remove('hidden');
+        if (query !== '') details.open = true;
+      } else {
+        details.classList.add('hidden');
+      }
+    });
+
+    if (noResults) {
+      if (totalVisible === 0) noResults.classList.remove('hidden');
+      else noResults.classList.add('hidden');
+    }
+  }
+
+  searchInput?.addEventListener('input', applyFilters);
+
+  filterChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      filterChips.forEach(c => {
+        c.classList.remove('bg-brand-primary', 'text-white');
+        c.classList.add('border', 'border-brand-border', 'bg-brand-bg', 'text-brand-muted');
+      });
+      chip.classList.add('bg-brand-primary', 'text-white');
+      chip.classList.remove('border', 'border-brand-border', 'bg-brand-bg', 'text-brand-muted');
+
+      activeModFilter = chip.dataset.filterMod || 'all';
+      applyFilters();
+    });
+  });
+
+  // 3. Botones de Expandir / Colapsar
+  document.getElementById('btn-expand-all')?.addEventListener('click', () => {
+    detailsList.forEach(d => { d.open = true; });
+  });
+
+  document.getElementById('btn-collapse-all')?.addEventListener('click', () => {
+    detailsList.forEach(d => { d.open = false; });
+  });
+
+  hydrateStudentProgress();
+  window.addEventListener('cpi-portal-update', hydrateStudentProgress);
+</script>

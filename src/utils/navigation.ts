@@ -2,7 +2,9 @@ export interface LessonLink {
   id: string;
   slug: string;
   title: string;
+  semana?: number;
   releaseDate?: string;
+  published?: boolean;
 }
 
 export interface TopicGroup {
@@ -42,7 +44,7 @@ export function parseDDMMAAAA(dateStr: string): Date | null {
 
 export function getNavigationStructure(entries: any[], currentDate: Date = new Date()): NavigationResult {
   const showAll = (typeof process !== 'undefined' && process.env.SHOW_ALL_LESSONS === 'true') ||
-                  import.meta.env.SHOW_ALL_LESSONS === 'true';
+                  (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.SHOW_ALL_LESSONS === 'true');
 
   const sortedEntries = [...entries].sort((a, b) => {
     const aParts = a.id.split('/');
@@ -59,10 +61,10 @@ export function getNavigationStructure(entries: any[], currentDate: Date = new D
       if (aFile === 'repaso') return 1;
       if (bFile === 'repaso') return -1;
       
-      return aFile.localeCompare(bFile);
+      return aFile.localeCompare(bFile, 'es', { numeric: true });
     }
     
-    return a.id.localeCompare(b.id);
+    return a.id.localeCompare(b.id, 'es', { numeric: true });
   });
 
   const initialPages: LessonLink[] = [];
@@ -76,17 +78,26 @@ export function getNavigationStructure(entries: any[], currentDate: Date = new D
     let releaseDateStr: string | undefined = undefined;
     let isReleased = true;
 
-    // Only date-gate entries that have a fecha AND are not initial pages
-    if (!isInitial && entry.data.fecha) {
-      const fechaStr = entry.data.fecha;
-      const releaseDate = parseDDMMAAAA(fechaStr);
+    if (!isInitial) {
+      if (typeof entry.data.published === 'boolean') {
+        isReleased = showAll || entry.data.published;
+      } else if (entry.data.fecha) {
+        const fechaStr = entry.data.fecha;
+        const releaseDate = parseDDMMAAAA(fechaStr);
+        if (releaseDate) {
+          releaseDateStr = releaseDate.toISOString();
+          const releaseLimit = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
+          isReleased = showAll || releaseLimit >= releaseDate;
+        } else {
+          isReleased = false;
+        }
+      } else {
+        isReleased = true;
+      }
+    } else if (entry.data.fecha) {
+      const releaseDate = parseDDMMAAAA(entry.data.fecha);
       if (releaseDate) {
         releaseDateStr = releaseDate.toISOString();
-        // Release lessons 24 hours before class to allow teacher/student preparation the day before
-        const releaseLimit = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
-        isReleased = showAll || releaseLimit >= releaseDate;
-      } else {
-        isReleased = false;
       }
     }
 
@@ -98,7 +109,9 @@ export function getNavigationStructure(entries: any[], currentDate: Date = new D
       id: entry.id,
       slug,
       title: entry.data.title,
+      semana: entry.data.semana,
       releaseDate: releaseDateStr,
+      published: entry.data.published,
     };
 
     allLessonsOrdered.push(lesson);
@@ -128,12 +141,14 @@ export function getNavigationStructure(entries: any[], currentDate: Date = new D
     }
   }
 
-  const allGroups = Array.from(modulesMap.values()).sort((a, b) => a.title.localeCompare(b.title));
+  // Ordenamiento natural (se asegura de que "10 -" y "12 -" vayan después de "9 -")
+  const allGroups = Array.from(modulesMap.values()).sort((a, b) =>
+    a.title.localeCompare(b.title, 'es', { numeric: true })
+  );
   const modules: ModuleGroup[] = [];
   const extras: ModuleGroup[] = [];
 
   for (const group of allGroups) {
-    // ponytail: digit-prefixed groups are "modules" (sidebar), others are "extras" (home only)
     if (/^\d/.test(group.title)) {
       modules.push(group);
     } else {

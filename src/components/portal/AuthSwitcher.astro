@@ -1,0 +1,446 @@
+---
+import { Icon } from 'astro-icon/components';
+---
+
+<div id="auth-switcher-container" class="relative flex items-center gap-1.5 sm:gap-2">
+  <!-- Botón de Estado de Usuario / Acceso -->
+  <button
+    id="btn-auth-menu"
+    type="button"
+    class="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg border border-brand-border bg-white dark:bg-brand-sidebar-bg hover:border-brand-primary/60 transition-all text-xs font-semibold shadow-xs"
+    aria-label="Perfil y Sesión"
+  >
+    <span id="user-avatar" class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-tr from-brand-primary to-brand-accent text-white text-[10px] font-bold">
+      CPI
+    </span>
+    <div class="text-left hidden sm:block max-w-[130px] truncate">
+      <span id="user-name" class="block text-xs font-bold text-brand-text truncate">Sin sesión</span>
+      <span id="user-role" class="block text-[10px] text-brand-muted truncate font-normal">Invitado</span>
+    </div>
+    <Icon name="lucide:chevron-down" class="h-3 w-3 text-brand-muted shrink-0" />
+  </button>
+
+  <!-- Botón de Logout directo en la barra superior (visible cuando hay sesión activa) -->
+  <button
+    id="btn-header-logout"
+    type="button"
+    class="items-center gap-1.5 px-2.5 py-1 rounded-lg border border-rose-200 dark:border-rose-900/50 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/40 text-xs font-semibold transition-all shadow-xs"
+    style="display: none;"
+    title="Cerrar sesión activa"
+  >
+    <Icon name="lucide:log-out" class="h-3.5 w-3.5" />
+    <span class="hidden md:inline">Salir</span>
+  </button>
+
+  <!-- Modal Minimalista de Acceso y Gestión de Sesión -->
+  <dialog
+    id="auth-modal"
+    class="fixed inset-0 m-auto z-50 p-0 rounded-2xl bg-white dark:bg-surface-elevated border border-brand-border shadow-2xl backdrop:bg-black/50 backdrop:backdrop-blur-xs max-w-sm w-full"
+  >
+    <div class="p-4 sm:p-5 border-b border-brand-border flex items-center justify-between bg-brand-callout-bg/60">
+      <div class="flex items-center gap-2.5">
+        <div class="h-8 w-8 rounded-xl bg-brand-primary/10 flex items-center justify-center text-brand-primary">
+          <Icon name="lucide:shield-check" class="h-4 w-4" />
+        </div>
+        <div>
+          <h3 class="text-sm font-bold text-brand-text" id="modal-title">Gestión de Acceso</h3>
+          <p class="text-[11px] text-brand-muted">Plataforma de Estudios CPI</p>
+        </div>
+      </div>
+      <button
+        id="btn-close-auth-modal"
+        type="button"
+        class="p-1.5 rounded-lg text-brand-muted hover:text-brand-text hover:bg-brand-border/40 transition-colors"
+        aria-label="Cerrar ventana"
+      >
+        <Icon name="lucide:x" class="h-4 w-4" />
+      </button>
+    </div>
+
+    <div class="p-5 space-y-4 text-xs">
+      <!-- Tarjeta cuando ya hay sesión iniciada -->
+      <div id="modal-active-session" class="hidden space-y-3">
+        <div class="p-3.5 rounded-xl border border-brand-border bg-brand-callout-bg dark:bg-brand-sidebar-bg/60 space-y-1">
+          <span class="text-[10px] uppercase tracking-wider font-bold text-brand-muted block">Sesión actual</span>
+          <p id="modal-active-user-name" class="font-bold text-sm text-brand-text">Usuario</p>
+          <p id="modal-active-user-role" class="text-xs text-brand-muted">Grupo</p>
+        </div>
+
+        <button
+          type="button"
+          id="btn-modal-logout"
+          class="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 font-bold text-xs hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-colors"
+        >
+          <Icon name="lucide:log-out" class="h-4 w-4" />
+          <span>Cerrar sesión</span>
+        </button>
+      </div>
+
+      <!-- Formularios cuando no hay sesión o desea cambiar de clave -->
+      <div id="modal-login-forms" class="space-y-4">
+        <!-- Selector de rol: Alumno o Docente -->
+        <div class="flex border-b border-brand-border">
+          <button
+            type="button"
+            id="tab-btn-group"
+            class="flex-1 pb-2 text-xs font-semibold border-b-2 border-brand-primary text-brand-text transition-all"
+          >
+            Alumno
+          </button>
+          <button
+            type="button"
+            id="tab-btn-teacher"
+            class="flex-1 pb-2 text-xs font-semibold border-b-2 border-transparent text-brand-muted hover:text-brand-text transition-all"
+          >
+            Docente
+          </button>
+        </div>
+
+        <!-- Formulario Alumno -->
+        <form id="form-group-key" class="space-y-3">
+          <div>
+            <label for="input-group-key" class="font-bold text-[11px] text-brand-text block mb-1">
+              Nombre de usuario
+            </label>
+            <input
+              id="input-group-key"
+              type="text"
+              placeholder="Nombre de usuario"
+              autocomplete="username"
+              class="w-full px-3 py-2 rounded-xl border border-brand-border bg-white dark:bg-brand-sidebar-bg text-xs outline-none focus:border-brand-primary text-brand-text transition-all"
+              required
+            />
+          </div>
+          <div>
+            <label for="input-group-password" class="font-bold text-[11px] text-brand-text block mb-1">
+              Contraseña
+            </label>
+            <input
+              id="input-group-password"
+              type="password"
+              placeholder="Contraseña"
+              autocomplete="current-password"
+              class="w-full px-3 py-2 rounded-xl border border-brand-border bg-white dark:bg-brand-sidebar-bg text-xs outline-none focus:border-brand-primary text-brand-text transition-all"
+              required
+            />
+          </div>
+          <p id="group-key-error" class="text-[11px] text-rose-500 hidden"></p>
+          <button
+            type="submit"
+            class="w-full py-2 px-4 rounded-xl bg-brand-primary text-white font-semibold text-xs hover:bg-brand-accent transition-colors"
+          >
+            Iniciar sesión
+          </button>
+        </form>
+
+        <!-- Formulario Docente (Supabase Auth) -->
+        <form id="form-teacher-auth" class="space-y-3 hidden">
+          <div>
+            <label for="input-teacher-email" class="font-bold text-[11px] text-brand-text block mb-1">
+              Correo
+            </label>
+            <input
+              id="input-teacher-email"
+              type="email"
+              placeholder="Correo"
+              autocomplete="email"
+              class="w-full px-3 py-2 rounded-xl border border-brand-border bg-white dark:bg-brand-sidebar-bg text-xs outline-none focus:border-brand-primary text-brand-text transition-all"
+              required
+            />
+          </div>
+          <div>
+            <label for="input-teacher-password" class="font-bold text-[11px] text-brand-text block mb-1">
+              Contraseña
+            </label>
+            <input
+              id="input-teacher-password"
+              type="password"
+              placeholder="Contraseña"
+              autocomplete="current-password"
+              class="w-full px-3 py-2 rounded-xl border border-brand-border bg-white dark:bg-brand-sidebar-bg text-xs outline-none focus:border-brand-primary text-brand-text transition-all"
+              required
+            />
+          </div>
+          <p id="teacher-auth-error" class="text-[11px] text-rose-500 hidden"></p>
+          <button
+            type="submit"
+            class="w-full py-2 px-4 rounded-xl bg-brand-primary text-white font-semibold text-xs hover:bg-brand-accent transition-colors"
+          >
+            Iniciar sesión
+          </button>
+        </form>
+      </div>
+
+      <!-- Sub-formulario para cambio obligatorio de contraseña en 1er login -->
+      <div id="modal-change-password" class="hidden space-y-3">
+        <div class="p-3 rounded-xl border border-brand-accent/30 bg-brand-accent/10 space-y-1 text-xs">
+          <p class="font-bold text-brand-text">Primer inicio de sesión detectado</p>
+          <p class="text-brand-muted text-[11px]">Por seguridad institucional, debes cambiar tu contraseña provisional.</p>
+        </div>
+        <form id="form-modal-change-pass" class="space-y-3">
+          <div>
+            <label for="modal-input-new-pass" class="font-bold text-[11px] text-brand-text block mb-1">
+              Nueva contraseña
+            </label>
+            <input
+              id="modal-input-new-pass"
+              type="password"
+              placeholder="Nueva contraseña"
+              minlength="8"
+              required
+              class="w-full px-3 py-2 rounded-xl border border-brand-border bg-white dark:bg-brand-sidebar-bg text-xs outline-none focus:border-brand-primary text-brand-text transition-all"
+            />
+          </div>
+          <div>
+            <label for="modal-input-confirm-pass" class="font-bold text-[11px] text-brand-text block mb-1">
+              Confirmar nueva contraseña
+            </label>
+            <input
+              id="modal-input-confirm-pass"
+              type="password"
+              placeholder="Confirmar contraseña"
+              minlength="8"
+              required
+              class="w-full px-3 py-2 rounded-xl border border-brand-border bg-white dark:bg-brand-sidebar-bg text-xs outline-none focus:border-brand-primary text-brand-text transition-all"
+            />
+          </div>
+          <p id="modal-change-pass-error" class="text-[11px] text-rose-500 hidden"></p>
+          <button
+            type="submit"
+            class="w-full py-2 px-4 rounded-xl bg-brand-primary text-white font-semibold text-xs hover:bg-brand-accent transition-colors"
+          >
+            Guardar y continuar
+          </button>
+        </form>
+      </div>
+    </div>
+  </dialog>
+</div>
+
+<script>
+  import { getCurrentUser, loginWithKey, logout, setSessionUser, getPortalDB, savePortalDB } from '../../features/portal/db';
+  import type { PortalUser } from '../../features/portal/types';
+  import { teacherLogin, teacherLogout, studentLogin, changeStudentPassword, isSupabaseConfigured } from '../../lib/supabase';
+
+  let activeStudentToChangePass: PortalUser | null = null;
+
+  function updateAuthUI() {
+    const user = getCurrentUser();
+    const avatarEl = document.getElementById('user-avatar');
+    const nameEl = document.getElementById('user-name');
+    const roleEl = document.getElementById('user-role');
+    const headerLogout = document.getElementById('btn-header-logout');
+
+    const modalActive = document.getElementById('modal-active-session');
+    const modalForms = document.getElementById('modal-login-forms');
+    const modalChangePass = document.getElementById('modal-change-password');
+    const modalActiveName = document.getElementById('modal-active-user-name');
+    const modalActiveRole = document.getElementById('modal-active-user-role');
+
+    if (user) {
+      const claseKey = user.clase || user.grupo || 'sabado';
+      if (nameEl) {
+        nameEl.textContent = user.rol === 'profesor'
+          ? 'Docente'
+          : (claseKey === 'sabado' ? 'Clase Sábado' : (claseKey === 'domingo' ? 'Clase Domingo' : user.nombre.split(' ')[0]));
+      }
+      if (roleEl) {
+        roleEl.textContent = user.rol === 'profesor'
+          ? 'Administrador'
+          : (claseKey === 'sabado' ? 'Clase Sábado · Activo' : 'Clase Domingo · Activo');
+      }
+      if (avatarEl) {
+        avatarEl.textContent = user.rol === 'profesor' ? 'DOC' : (claseKey === 'sabado' ? 'SÁB' : 'DOM');
+      }
+      if (headerLogout) headerLogout.style.display = 'inline-flex';
+
+      modalActive?.classList.remove('hidden');
+      modalForms?.classList.add('hidden');
+      modalChangePass?.classList.add('hidden');
+      if (modalActiveName) modalActiveName.textContent = user.nombre;
+      if (modalActiveRole) {
+        modalActiveRole.textContent = user.rol === 'profesor'
+          ? 'Docente Titular · Control total'
+          : (claseKey === 'sabado' ? 'Clase Sábado' : 'Clase Domingo');
+      }
+    } else {
+      if (nameEl) nameEl.textContent = 'Sin sesión';
+      if (roleEl) roleEl.textContent = 'Invitado';
+      if (avatarEl) avatarEl.textContent = 'CPI';
+      if (headerLogout) headerLogout.style.display = 'none';
+
+      modalActive?.classList.add('hidden');
+      modalForms?.classList.remove('hidden');
+      modalChangePass?.classList.add('hidden');
+    }
+  }
+
+  async function handleLogout() {
+    logout();
+    await teacherLogout();
+    modal?.close();
+    window.location.href = '/';
+  }
+
+  const modal = document.getElementById('auth-modal') as HTMLDialogElement | null;
+  const btnOpen = document.getElementById('btn-auth-menu');
+  const btnClose = document.getElementById('btn-close-auth-modal');
+  const btnHeaderLogout = document.getElementById('btn-header-logout');
+  const btnModalLogout = document.getElementById('btn-modal-logout');
+
+  btnOpen?.addEventListener('click', () => {
+    activeStudentToChangePass = null;
+    document.getElementById('modal-change-password')?.classList.add('hidden');
+    updateAuthUI();
+    modal?.showModal();
+  });
+  btnClose?.addEventListener('click', () => modal?.close());
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) modal.close();
+  });
+
+  btnHeaderLogout?.addEventListener('click', handleLogout);
+  btnModalLogout?.addEventListener('click', handleLogout);
+
+  // Selector de pestañas en modal
+  const tabGroup = document.getElementById('tab-btn-group');
+  const tabTeacher = document.getElementById('tab-btn-teacher');
+  const formGroup = document.getElementById('form-group-key');
+  const formTeacher = document.getElementById('form-teacher-auth');
+  const modalForms = document.getElementById('modal-login-forms');
+  const modalChangePass = document.getElementById('modal-change-password');
+  const formModalChangePass = document.getElementById('form-modal-change-pass');
+
+  const TAB_MODAL_ACTIVE = 'flex-1 pb-2 text-xs font-semibold border-b-2 border-brand-primary text-brand-text transition-all';
+  const TAB_MODAL_INACTIVE = 'flex-1 pb-2 text-xs font-semibold border-b-2 border-transparent text-brand-muted hover:text-brand-text transition-all';
+
+  tabGroup?.addEventListener('click', () => {
+    tabGroup.className = TAB_MODAL_ACTIVE;
+    tabTeacher!.className = TAB_MODAL_INACTIVE;
+    formGroup?.classList.remove('hidden');
+    formTeacher?.classList.add('hidden');
+  });
+
+  tabTeacher?.addEventListener('click', () => {
+    tabTeacher.className = TAB_MODAL_ACTIVE;
+    tabGroup!.className = TAB_MODAL_INACTIVE;
+    formTeacher?.classList.remove('hidden');
+    formGroup?.classList.add('hidden');
+  });
+
+  // Envío clave de grupo o alumno individual
+  formGroup?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const inputKey = document.getElementById('input-group-key') as HTMLInputElement | null;
+    const inputPass = document.getElementById('input-group-password') as HTMLInputElement | null;
+    const errorEl = document.getElementById('group-key-error');
+
+    const keyVal = inputKey?.value.trim() || '';
+    const passVal = inputPass?.value.trim() || '';
+
+    // 1. Si ingresó contraseña y Supabase está configurado, intenta login de alumno con Postgres RPC
+    if (passVal && isSupabaseConfigured()) {
+      const studentRes = await studentLogin(keyVal, passVal);
+      if (studentRes.success && studentRes.user) {
+        if (errorEl) errorEl.classList.add('hidden');
+        setSessionUser(studentRes.user.id);
+
+        const db = getPortalDB();
+        if (!db.usuarios.some(u => u.id === studentRes.user!.id)) {
+          db.usuarios.push(studentRes.user);
+          savePortalDB(db);
+        }
+
+        if (studentRes.user.debeCambiarPassword) {
+          activeStudentToChangePass = studentRes.user;
+          modalForms?.classList.add('hidden');
+          modalChangePass?.classList.remove('hidden');
+          return;
+        }
+
+        modal?.close();
+        window.location.reload();
+        return;
+      } else {
+        if (errorEl) {
+          errorEl.textContent = studentRes.error || 'Credenciales de alumno incorrectas.';
+          errorEl.classList.remove('hidden');
+        }
+        return;
+      }
+    }
+
+    // 2. Si no hay contraseña o Supabase está en modo local, utiliza loginWithKey
+    const res = loginWithKey(keyVal);
+    if (res.success) {
+      modal?.close();
+      window.location.reload();
+    } else {
+      if (errorEl) {
+        errorEl.textContent = res.error || 'Clave o usuario no válido. Consulta con tu docente.';
+        errorEl.classList.remove('hidden');
+      }
+    }
+  });
+
+  // Envío cambio obligatorio de contraseña en modal
+  formModalChangePass?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const newPass = (document.getElementById('modal-input-new-pass') as HTMLInputElement)?.value.trim();
+    const confirmPass = (document.getElementById('modal-input-confirm-pass') as HTMLInputElement)?.value.trim();
+    const errorEl = document.getElementById('modal-change-pass-error');
+
+    if (newPass !== confirmPass) {
+      if (errorEl) {
+        errorEl.textContent = 'Las contraseñas no coinciden.';
+        errorEl.classList.remove('hidden');
+      }
+      return;
+    }
+
+    if (activeStudentToChangePass) {
+      const res = await changeStudentPassword(activeStudentToChangePass.id, newPass);
+      if (res.success) {
+        const db = getPortalDB();
+        const u = db.usuarios.find(user => user.id === activeStudentToChangePass!.id);
+        if (u) {
+          u.debeCambiarPassword = false;
+          savePortalDB(db);
+        }
+        modal?.close();
+        window.location.reload();
+      } else {
+        if (errorEl) {
+          errorEl.textContent = res.error || 'Error al actualizar contraseña.';
+          errorEl.classList.remove('hidden');
+        }
+      }
+    }
+  });
+
+  // Envío login docente
+  formTeacher?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const emailInput = document.getElementById('input-teacher-email') as HTMLInputElement | null;
+    const passInput = document.getElementById('input-teacher-password') as HTMLInputElement | null;
+    const errorEl = document.getElementById('teacher-auth-error');
+
+    const email = emailInput?.value || '';
+    const pass = passInput?.value || '';
+
+    const res = await teacherLogin(email, pass);
+    if (res.success) {
+      loginWithKey('profesor');
+      modal?.close();
+      window.location.reload();
+    } else {
+      if (errorEl) {
+        errorEl.textContent = res.error || 'Credenciales incorrectas.';
+        errorEl.classList.remove('hidden');
+      }
+    }
+  });
+
+  updateAuthUI();
+  window.addEventListener('cpi-portal-update', updateAuthUI);
+</script>

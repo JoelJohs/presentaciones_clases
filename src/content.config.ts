@@ -8,9 +8,12 @@ const lecciones = defineCollection({
     moduleTitle: z.string().optional(),
     topicTitle: z.string().optional(),
     subtopicTitle: z.string().optional(),
+    semana: z.number().optional(),
     fecha: z.string().optional(),
+    published: z.boolean().optional(),
     description: z.string().optional(),
     duration: z.number().optional(),
+    kind: z.enum(['lesson', 'activity', 'assessment', 'project']).optional(),
     objectives: z.array(z.string()).optional(),
   }),
 });

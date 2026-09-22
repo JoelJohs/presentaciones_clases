@@ -1,0 +1,104 @@
+---
+title: "Retoque y Edición de Imagen Digital"
+moduleTitle: "3 - Multimedia Práctica: Imagen y Video"
+topicTitle: "Tema 1: Gráficos Digitales"
+subtopicTitle: "Capas, Máscaras y Flujo No Destructivo"
+semana: 11
+fecha: "29-08-2026"
+published: true
+description: "Aprende el flujo de trabajo no destructivo con capas, máscaras, curvas de nivel y herramientas de selección en software de edición."
+duration: 45
+objectives:
+  - "Dominar el sistema de capas, modos de fusión y jerarquías de superposición"
+  - "Crear y editar máscaras de capa para ocultar elementos sin borrarlos físicamente"
+  - "Corregir exposición, balance de blancos y curvas tonales de una fotografía en el laboratorio"
+---
+import { Icon } from "astro-icon/components";
+
+# Retoque y Edición de Imagen Digital
+
+Aprende el flujo de trabajo no destructivo con capas, máscaras, curvas de nivel y herramientas de selección en software de edición.
+
+## 1. El Flujo de Trabajo No Destructivo y las Capas <Icon name="lucide:layers-2" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+El error de novato más grave es usar el borrador directamente sobre la foto original. Si te equivocas, la información se pierde para siempre.
+
+El **flujo de trabajo no destructivo** garantiza que la fotografía base permanezca intacta. Todas las modificaciones se realizan mediante capas superpuestas que puedes ocultar, reordenar o ajustar en cualquier momento.
+
+* **Capas (Layers):** Hojas de acetato transparente apiladas una sobre otra.
+* **Orden de apilamiento:** La capa superior tapa a las que están abajo, a menos que tenga transparencia o un modo de fusión.
+* **Opacidad:** Porcentaje de transparencia de cada capa (0% invisible, 100% opaca).
+
+---
+
+## 2. Máscaras de Capa: Ocultar sin Borrar <Icon name="lucide:eye" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Una **máscara de capa** es un mapa en escala de grises que controla qué partes de una capa son visibles y cuáles permanecen ocultas.
+
+Aprende la regla fundamental de las máscaras:
+
+> **"El blanco revela, el negro oculta, el gris transparenta."**
+
+* Pinta con pincel negro en la máscara para hacer invisible una zona (ejemplo: recortar el fondo de una persona).
+* Si te pasas, simplemente pinta con pincel blanco para recuperar la zona oculta. ¡Nunca perdiste píxeles!
+
+---
+
+## 3. Herramientas de Ajuste Tonal y Selección <Icon name="lucide:sliders-horizontal" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Comandos esenciales de edición fotográfica:
+
+<table>
+  <thead>
+    <tr>
+      <th>Herramienta / Ajuste</th>
+      <th>Función Técnica</th>
+      <th>Cuándo Utilizarla</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Niveles / Curvas</td>
+      <td>Ajusta el punto negro, punto blanco y tonos medios de la imagen</td>
+      <td>Corregir fotos oscuras (subexpuestas) o lavadas sin contraste</td>
+    </tr>
+    <tr>
+      <td>Tono y Saturación</td>
+      <td>Modifica la vivacidad y matiz de colores específicos</td>
+      <td>Acentuar el color del cielo o corregir tonos de piel amarillentos</td>
+    </tr>
+    <tr>
+      <td>Lazo Poligonal / Pluma</td>
+      <td>Selección precisa basada en vértices vectoriales</td>
+      <td>Recortar objetos con bordes duros como computadoras o cajas</td>
+    </tr>
+    <tr>
+      <td>Pincel Corrector</td>
+      <td>Muestrea píxeles vecinos para disimular imperfecciones</td>
+      <td>Eliminar polvo de la lente, manchas o cables molestos del fondo</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 4. Práctica en Laboratorio: Montaje y Corrección Tonal <Icon name="lucide:wand-2" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Sigue el flujo de trabajo en el editor de imágenes del aula:
+
+1. Abre la imagen de fondo (*laboratorio.jpg*) y coloca encima como capa la foto del estudiante (*persona.jpg*).
+2. Agrega una **Máscara de Capa** a la capa de la persona.
+3. Con un pincel suave de color negro, oculta el fondo original de la persona hasta integrarla con el laboratorio.
+4. Agrega una capa de ajuste de **Curvas** y ajusta el contraste para que la iluminación de la persona coincida con la del fondo.
+5. Guarda tu archivo en el formato nativo del editor (`.xcf` o `.psd`) para conservar todas las capas editables.
+
+---
+
+## 5. Reto Práctico: Exportación Final de la Portada <Icon name="lucide:check-circle-2" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Culmina tu entregable de la Semana 11:
+
+* Agrega una capa de texto con tipografía limpia y legible que diga: *Tecnología y Futuro 2026*.
+* Aplica una sombra suave a la tipografía para garantizar lectura sobre el fondo.
+* Exporta una copia en **PNG** (para visualización) manteniendo tu archivo maestro editable con capas.
+* Muestra al docente la máscara de capa activa para comprobar que no usaste el borrador destructivo.

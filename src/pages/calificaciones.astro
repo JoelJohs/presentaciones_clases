@@ -1,0 +1,561 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { getNavigationStructure } from '../utils/navigation';
+import { Icon } from 'astro-icon/components';
+
+const lecciones = await getCollection('lecciones');
+const nav = getNavigationStructure(lecciones);
+---
+
+<Layout title="Calificaciones" nav={nav} isLesson={false}>
+  <div class="space-y-6">
+    <!-- Encabezado de Página -->
+    <header class="border-b border-brand-border pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <nav aria-label="Ruta" class="flex items-center gap-1.5 text-xs text-brand-muted mb-2">
+          <a href="/" class="hover:text-brand-text">Inicio</a>
+          <Icon name="lucide:chevron-right" class="h-3 w-3" />
+          <span class="text-brand-primary font-medium">Calificaciones</span>
+        </nav>
+        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-brand-text">
+          Sistema de Calificaciones
+        </h1>
+        <p class="text-xs sm:text-sm text-brand-muted mt-1">
+          Evaluaciones periódicas y seguimiento de desempeño formativo por módulo
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span id="role-indicator" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-brand-primary/10 text-brand-primary border border-brand-primary/20">
+          <Icon name="lucide:shield-check" class="h-3.5 w-3.5" />
+          <span id="role-text">Verificando sesión...</span>
+        </span>
+      </div>
+    </header>
+
+    <!-- Estado 0: Sin sesión activa -->
+    <div id="view-unauthenticated" class="max-w-md mx-auto py-12 text-center space-y-4 hidden">
+      <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-400">
+        <Icon name="lucide:lock" class="h-6 w-6" />
+      </div>
+      <h2 class="text-lg font-bold text-brand-text">Acceso Restringido</h2>
+      <p class="text-xs sm:text-sm text-brand-muted">
+        Para consultar tu boleta de calificaciones o capturar notas, debes ingresar primero con tu clave de acceso.
+      </p>
+      <div>
+        <a
+          href="/"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-primary hover:bg-brand-accent text-white font-semibold text-xs transition-colors shadow-xs"
+        >
+          <Icon name="lucide:key-round" class="h-4 w-4" />
+          <span>Ingresar clave en el inicio</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Vista de Alumno (Personal Report Card) -->
+    <div id="view-student" class="space-y-6 hidden">
+      <!-- Tarjeta Resumen de Promedio -->
+      <div class="p-6 rounded-2xl border border-brand-border bg-white dark:bg-brand-sidebar-bg flex flex-col sm:flex-row sm:items-center justify-between gap-6 shadow-xs">
+        <div class="flex items-center gap-4">
+          <div class="h-16 w-16 rounded-2xl bg-gradient-to-tr from-brand-primary to-brand-accent text-white flex flex-col items-center justify-center font-bold">
+            <span id="student-average" class="text-2xl font-mono leading-none">0.0</span>
+            <span class="text-[9px] uppercase tracking-wider font-semibold opacity-90 mt-1">Promedio</span>
+          </div>
+          <div>
+            <h2 id="student-name-display" class="text-base font-bold text-brand-text">Nombre del Alumno</h2>
+            <p id="student-group-display" class="text-xs text-brand-muted mt-0.5">Grupo y matrícula</p>
+            <span id="student-status-badge" class="inline-block mt-2 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+              Aprobado regular
+            </span>
+          </div>
+        </div>
+
+        <div class="text-left sm:text-right border-t sm:border-t-0 pt-4 sm:pt-0 border-brand-border text-xs text-brand-muted">
+          <span>Escala numérica: <strong class="text-brand-text">0.0 a 10.0</strong></span>
+          <p class="mt-1">Acreditación mínima: <strong class="text-brand-primary">6.0</strong></p>
+        </div>
+      </div>
+
+      <!-- Tarjetas de Notas por Módulo -->
+      <div>
+        <h3 class="text-sm font-bold uppercase tracking-wider text-brand-muted mb-3 flex items-center gap-2">
+          <Icon name="lucide:layers" class="h-4 w-4" />
+          <span>Calificaciones por Módulo</span>
+        </h3>
+        <div id="student-modules-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+          <!-- Renderizado dinámicamente con JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Vista de Profesor (Grades Spreadsheet) -->
+    <div id="view-teacher" class="space-y-6 hidden">
+      <!-- Selector de Grupo -->
+      <div class="flex items-center justify-between gap-4 flex-wrap">
+        <div class="flex border-b border-brand-border gap-2">
+          <button
+            type="button"
+            id="tab-sabado"
+            class="pb-2 px-3 text-xs font-semibold border-b-2 border-brand-primary text-brand-text transition-all flex items-center gap-1.5"
+          >
+            <span class="w-2 h-2 rounded-full bg-amber-400 inline-block"></span>
+            <span>Clase Sábado</span>
+          </button>
+          <button
+            type="button"
+            id="tab-domingo"
+            class="pb-2 px-3 text-xs font-semibold border-b-2 border-transparent text-brand-muted hover:text-brand-text transition-all flex items-center gap-1.5"
+          >
+            <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
+            <span>Clase Domingo</span>
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            id="btn-save-grades"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-all shadow-xs"
+          >
+            <Icon name="lucide:save" class="h-4 w-4" />
+            <span>Guardar Calificaciones</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="save-status-indicator" class="hidden text-xs p-3 rounded-xl border border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 flex items-center gap-2">
+        <Icon name="lucide:check-circle-2" class="h-4 w-4 shrink-0" />
+        <span id="save-status-text">Calificaciones sincronizadas con éxito.</span>
+      </div>
+
+      <!-- Tabla de Calificaciones -->
+      <div class="rounded-2xl border border-brand-border bg-white dark:bg-brand-sidebar-bg overflow-hidden shadow-xs">
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left">
+            <thead class="bg-brand-callout-bg/60 border-b border-brand-border text-brand-muted uppercase font-bold text-[10px] tracking-wider">
+              <tr>
+                <th class="py-3 px-4 min-w-[170px]">Estudiante</th>
+                <th class="py-3 px-1 text-center w-12" title="M01: Hardware, SO y Linux Mint">M01</th>
+                <th class="py-3 px-1 text-center w-12" title="M02: Productividad y Ofimática en la Nube">M02</th>
+                <th class="py-3 px-1 text-center w-12" title="M03: Multimedia Práctica (Imagen y Video)">M03</th>
+                <th class="py-3 px-1 text-center w-12" title="M04: Redes, Conectividad e Internet Seguro">M04</th>
+                <th class="py-3 px-1 text-center w-12" title="M05: Programación I (Lógica y Python)">M05</th>
+                <th class="py-3 px-1 text-center w-12" title="M06: Programación II (Apps Gráficas y Videojuegos)">M06</th>
+                <th class="py-3 px-1 text-center w-12" title="M07: Bases de Datos y Persistencia (SQLite)">M07</th>
+                <th class="py-3 px-1 text-center w-12" title="M08: Desarrollo Web (Frontend y Frameworks)">M08</th>
+                <th class="py-3 px-1 text-center w-12" title="M09: Backend Conceptual, APIs y Automatización">M09</th>
+                <th class="py-3 px-1 text-center w-12" title="M10: Ingeniería de Software y Ciberseguridad">M10</th>
+                <th class="py-3 px-1 text-center w-12" title="M11: Proyecto Final Integrador y Cierre">M11</th>
+                <th class="py-3 px-3 text-center w-20">Promedio</th>
+              </tr>
+            </thead>
+            <tbody id="teacher-table-body" class="divide-y divide-brand-border">
+              <!-- Renderizado dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p class="text-[11px] text-brand-muted">
+        Ingresa notas numéricas de 0 a 10 con hasta 1 decimal. Se guardan en almacenamiento local y se sincronizan con Supabase cuando la base de datos está configurada.
+      </p>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  import { getPortalDB, getCurrentUser, savePortalDB, type GroupId } from '../features/portal/db';
+  import { isSupabaseConfigured, saveRemoteGrade, fetchStudentKardex, fetchStudentsFromSupabase, fetchRemoteGradesForGroup } from '../lib/supabase';
+
+  let currentTeacherGroup: GroupId = 'sabado';
+
+  function renderView() {
+    const user = getCurrentUser();
+
+    const roleText = document.getElementById('role-text');
+    const viewUnauth = document.getElementById('view-unauthenticated');
+    const viewStudent = document.getElementById('view-student');
+    const viewTeacher = document.getElementById('view-teacher');
+
+    if (!user) {
+      if (roleText) roleText.textContent = 'Sin sesión';
+      viewUnauth?.classList.remove('hidden');
+      viewStudent?.classList.add('hidden');
+      viewTeacher?.classList.add('hidden');
+      return;
+    }
+
+    viewUnauth?.classList.add('hidden');
+
+    if (user.rol === 'profesor') {
+      if (roleText) roleText.textContent = 'Modo Docente (Edición)';
+      viewTeacher?.classList.remove('hidden');
+      viewStudent?.classList.add('hidden');
+      renderTeacherTable();
+    } else {
+      if (roleText) roleText.textContent = `Boleta de Calificaciones · ${user.nombre}`;
+      viewStudent?.classList.remove('hidden');
+      viewTeacher?.classList.add('hidden');
+      renderStudentView();
+    }
+  }
+
+  function renderStudentView() {
+    const user = getCurrentUser();
+    if (!user) return;
+    const db = getPortalDB();
+    const claseKey = user.clase || user.grupo || 'sabado';
+    const claseNombre = claseKey === 'sabado' ? 'Clase Sábado' : 'Clase Domingo';
+    const grades: Record<string, number | null | undefined> = { ...(db.calificaciones[claseKey]?.[user.id] || {}) };
+
+    const nameEl = document.getElementById('student-name-display');
+    const groupEl = document.getElementById('student-group-display');
+    const avgEl = document.getElementById('student-average');
+    const gridEl = document.getElementById('student-modules-grid');
+
+    if (nameEl) nameEl.textContent = user.nombre;
+    if (groupEl) groupEl.textContent = user.matricula ? `Clave: ${user.matricula} · ${claseNombre}` : claseNombre;
+
+    const MODULE_TITLES = [
+      'Hardware, SO y Linux Mint',
+      'Productividad, Ofimática y Colaboración en la Nube',
+      'Multimedia Práctica — Imagen y Video',
+      'Redes, Conectividad e Internet Seguro',
+      'Programación I — Lógica Algorítmica y Python',
+      'Programación II — Apps Gráficas, Videojuegos y Distribución',
+      'Bases de Datos y Persistencia Local (SQLite)',
+      'Desarrollo Web — Frontend Esencial y Frameworks',
+      'Backend Conceptual, APIs y Automatización',
+      'Ingeniería de Software, Arquitectura y Ciberseguridad',
+      'Proyecto Final Integrador y Cierre Profesional',
+    ];
+
+    function updateGrid(currentGrades: Record<string, number | null | undefined>) {
+      const values = Object.values(currentGrades).filter((v): v is number => typeof v === 'number');
+      const average = values.length > 0 ? (values.reduce((a, b) => a + b, 0) / values.length).toFixed(1) : '—';
+      if (avgEl) avgEl.textContent = average;
+
+      if (gridEl) {
+        gridEl.innerHTML = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(num => {
+          const key = `m${num}`;
+          const val = currentGrades[key];
+          const isGraded = typeof val === 'number';
+          const modTitle = MODULE_TITLES[num - 1] || `Módulo ${num}`;
+          return `
+            <div class="p-4 rounded-xl border border-brand-border bg-white dark:bg-brand-sidebar-bg flex items-center justify-between shadow-2xs">
+              <div class="min-w-0 pr-2">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-brand-muted block">Módulo ${num < 10 ? '0' + num : num}</span>
+                <p class="text-xs font-semibold text-brand-text truncate max-w-[160px]" title="${modTitle}">${modTitle}</p>
+              </div>
+              <div class="text-right shrink-0">
+                <span class="text-base font-mono font-bold ${isGraded ? (val >= 6 ? 'text-brand-primary' : 'text-rose-500') : 'text-brand-muted'}">
+                  ${isGraded ? val.toFixed(1) : '—'}
+                </span>
+                <span class="block text-[9px] text-brand-muted">${isGraded ? 'Calificado' : 'Pendiente'}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    // Render inmediato con almacenamiento local
+    updateGrid(grades);
+
+    // Sincronización asíncrona con Supabase si está configurado
+    if (isSupabaseConfigured() && user.id) {
+      fetchStudentKardex(user.id).then(remoteKardex => {
+        if (remoteKardex && remoteKardex.length > 0) {
+          remoteKardex.forEach(item => {
+            if (typeof item.calificacion === 'number') {
+              grades[`m${item.orden}`] = item.calificacion;
+            }
+          });
+          updateGrid(grades);
+        }
+      }).catch(console.warn);
+    }
+  }
+
+  function calculateRowAverage(row: HTMLTableRowElement) {
+    const inputs = row.querySelectorAll<HTMLInputElement>('.grade-input');
+    const values: number[] = [];
+    inputs.forEach(input => {
+      const val = parseFloat(input.value);
+      if (!isNaN(val)) values.push(val);
+    });
+    const avgCell = row.querySelector<HTMLTableCellElement>('.row-avg');
+    if (avgCell) {
+      avgCell.textContent = values.length > 0 ? (values.reduce((a, b) => a + b, 0) / values.length).toFixed(1) : '—';
+    }
+  }
+
+  function renderTeacherTable() {
+    const db = getPortalDB();
+    const students = db.usuarios.filter(u => u.rol === 'alumno' && (u.clase === currentTeacherGroup || u.grupo === currentTeacherGroup));
+    const tbody = document.getElementById('teacher-table-body');
+    if (!tbody) return;
+
+    if (students.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="13" class="py-8 text-center text-xs text-brand-muted">
+            No hay alumnos registrados en la ${currentTeacherGroup === 'sabado' ? 'Clase Sábado' : 'Clase Domingo'}.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = students.map((st, rIdx) => {
+      const groupGrades = (db.calificaciones as Record<string, Record<string, Record<string, number>>>)[currentTeacherGroup] || {};
+      const grades = groupGrades[st.id] || {};
+      const values = Object.values(grades).filter(v => typeof v === 'number');
+      const avg = values.length > 0 ? (values.reduce((a, b) => a + b, 0) / values.length).toFixed(1) : '—';
+
+      const inputs = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((num, cIdx) => {
+        const val = grades[`m${num}`] ?? '';
+        return `
+          <td class="py-2 px-0.5 text-center">
+            <input
+              type="number"
+              min="0"
+              max="10"
+              step="0.1"
+              data-row="${rIdx}"
+              data-col="${cIdx}"
+              data-student="${st.id}"
+              data-mod="m${num}"
+              value="${val}"
+              placeholder="—"
+              class="grade-input w-11 text-center py-1 rounded border border-brand-border bg-brand-bg text-xs font-mono outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/20 transition-all"
+            />
+          </td>
+        `;
+      }).join('');
+
+      return `
+        <tr class="hover:bg-brand-hover-bg/10 transition-colors" data-student-row="${st.id}">
+          <td class="py-3 px-4 font-semibold text-brand-text">
+            <div>${st.nombre}</div>
+            <div class="text-[10px] text-brand-muted font-normal">${st.matricula || ''}</div>
+          </td>
+          ${inputs}
+          <td class="row-avg py-3 px-3 text-center font-mono font-bold text-brand-primary">${avg}</td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // Sincronización en segundo plano con Supabase (independiente del render)
+  let isSyncingRemote = false;
+  async function syncTeacherData() {
+    if (!isSupabaseConfigured() || isSyncingRemote) return;
+    isSyncingRemote = true;
+
+    try {
+      const db = getPortalDB();
+      let hasChanges = false;
+
+      // 1. Traer lista real de alumnos desde Supabase
+      const remoteStudents = await fetchStudentsFromSupabase();
+      if (remoteStudents && remoteStudents.length > 0) {
+        const prof = db.usuarios.find(u => u.rol === 'profesor') || db.usuarios[0];
+        db.usuarios = [prof, ...remoteStudents];
+        hasChanges = true;
+      }
+
+      // 2. Traer calificaciones remotas
+      const remoteGrades = await fetchRemoteGradesForGroup();
+      if (remoteGrades) {
+        if (!db.calificaciones[currentTeacherGroup]) db.calificaciones[currentTeacherGroup] = {};
+        Object.assign(db.calificaciones[currentTeacherGroup], remoteGrades);
+        hasChanges = true;
+      }
+
+      if (hasChanges) {
+        // Persistir silenciosamente en localStorage sin disparar re-render destructivo
+        if (typeof window !== 'undefined' && window.localStorage) {
+          window.localStorage.setItem('cpi_portal_db_v2', JSON.stringify(db));
+        }
+
+        // Si el docente no está interactuando con un input, refrescar los valores de la tabla
+        const activeInput = document.activeElement;
+        const isEditing = activeInput && activeInput.classList.contains('grade-input');
+        if (!isEditing) {
+          renderTeacherTable();
+        }
+      }
+    } catch (err) {
+      console.warn('Error sincronizando con Supabase:', err);
+    } finally {
+      isSyncingRemote = false;
+    }
+  }
+
+  // Delegación de eventos para la tabla tipo hoja de cálculo
+  const teacherTableBody = document.getElementById('teacher-table-body');
+
+  teacherTableBody?.addEventListener('input', (e) => {
+    const input = e.target as HTMLInputElement;
+    if (!input.classList.contains('grade-input')) return;
+    const row = input.closest('tr');
+    if (row) calculateRowAverage(row);
+  });
+
+  teacherTableBody?.addEventListener('change', async (e) => {
+    const input = e.target as HTMLInputElement;
+    if (!input.classList.contains('grade-input')) return;
+    const studentId = input.dataset.student;
+    const modKey = input.dataset.mod;
+    if (!studentId || !modKey) return;
+
+    const val = input.value.trim();
+    const numVal = val === '' ? null : parseFloat(val);
+
+    // Actualizar base local directamente sin re-renderizar la fila
+    const db = getPortalDB();
+    if (!db.calificaciones[currentTeacherGroup]) db.calificaciones[currentTeacherGroup] = {};
+    if (!db.calificaciones[currentTeacherGroup][studentId]) db.calificaciones[currentTeacherGroup][studentId] = {};
+
+    if (numVal === null || isNaN(numVal)) {
+      delete db.calificaciones[currentTeacherGroup][studentId][modKey];
+    } else {
+      db.calificaciones[currentTeacherGroup][studentId][modKey] = Math.round(Math.max(0, Math.min(10, numVal)) * 10) / 10;
+    }
+
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.setItem('cpi_portal_db_v2', JSON.stringify(db));
+    }
+
+    const row = input.closest('tr');
+    if (row) calculateRowAverage(row);
+
+    // Sincronizar en la nube si Supabase está activo
+    if (isSupabaseConfigured()) {
+      input.classList.add('opacity-40');
+      const ok = await saveRemoteGrade(currentTeacherGroup, studentId, modKey, numVal);
+      input.classList.remove('opacity-40');
+      if (!ok) {
+        console.warn(`No se pudo sincronizar la nota del alumno ${studentId} en Supabase`);
+      }
+    }
+  });
+
+  teacherTableBody?.addEventListener('keydown', (e) => {
+    const input = e.target as HTMLInputElement;
+    if (!input.classList.contains('grade-input')) return;
+
+    const rIdx = parseInt(input.dataset.row || '0', 10);
+    const cIdx = parseInt(input.dataset.col || '0', 10);
+
+    if (e.key === 'Enter' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      const nextInput = teacherTableBody.querySelector<HTMLInputElement>(`input[data-row="${rIdx + 1}"][data-col="${cIdx}"]`);
+      if (nextInput) {
+        nextInput.focus();
+        nextInput.select();
+      }
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      const prevInput = teacherTableBody.querySelector<HTMLInputElement>(`input[data-row="${rIdx - 1}"][data-col="${cIdx}"]`);
+      if (prevInput) {
+        prevInput.focus();
+        prevInput.select();
+      }
+    }
+  });
+
+  // Tabs de grupo
+  const tabSab = document.getElementById('tab-sabado');
+  const tabDom = document.getElementById('tab-domingo');
+  const TAB_ACTIVE = 'pb-2 px-3 text-xs font-semibold border-b-2 border-brand-primary text-brand-text transition-all flex items-center gap-1.5';
+  const TAB_INACTIVE = 'pb-2 px-3 text-xs font-semibold border-b-2 border-transparent text-brand-muted hover:text-brand-text transition-all flex items-center gap-1.5';
+
+  tabSab?.addEventListener('click', () => {
+    if (currentTeacherGroup === 'sabado') return;
+    currentTeacherGroup = 'sabado';
+    tabSab.className = TAB_ACTIVE;
+    tabDom!.className = TAB_INACTIVE;
+    renderTeacherTable();
+    syncTeacherData();
+  });
+
+  tabDom?.addEventListener('click', () => {
+    if (currentTeacherGroup === 'domingo') return;
+    currentTeacherGroup = 'domingo';
+    tabDom.className = TAB_ACTIVE;
+    tabSab!.className = TAB_INACTIVE;
+    renderTeacherTable();
+    syncTeacherData();
+  });
+
+  // Botón guardar todo
+  document.getElementById('btn-save-grades')?.addEventListener('click', async () => {
+    const btn = document.getElementById('btn-save-grades') as HTMLButtonElement | null;
+    if (btn) btn.disabled = true;
+
+    const inputs = document.querySelectorAll<HTMLInputElement>('.grade-input');
+    const isRemote = isSupabaseConfigured();
+    const db = getPortalDB();
+    if (!db.calificaciones[currentTeacherGroup]) db.calificaciones[currentTeacherGroup] = {};
+
+    const syncPromises: Promise<boolean>[] = [];
+
+    inputs.forEach(input => {
+      const studentId = input.dataset.student;
+      const modKey = input.dataset.mod;
+      const val = input.value.trim();
+      if (!studentId || !modKey) return;
+
+      if (!db.calificaciones[currentTeacherGroup][studentId]) {
+        db.calificaciones[currentTeacherGroup][studentId] = {};
+      }
+
+      const numVal = val === '' ? null : parseFloat(val);
+      if (numVal === null || isNaN(numVal)) {
+        delete db.calificaciones[currentTeacherGroup][studentId][modKey];
+      } else {
+        db.calificaciones[currentTeacherGroup][studentId][modKey] = Math.round(Math.max(0, Math.min(10, numVal)) * 10) / 10;
+      }
+
+      if (isRemote) {
+        syncPromises.push(saveRemoteGrade(currentTeacherGroup, studentId, modKey, numVal));
+      }
+    });
+
+    savePortalDB(db);
+
+    if (isRemote && syncPromises.length > 0) {
+      await Promise.allSettled(syncPromises);
+    }
+
+    if (btn) btn.disabled = false;
+
+    const indicator = document.getElementById('save-status-indicator');
+    const indicatorText = document.getElementById('save-status-text');
+    if (indicator && indicatorText) {
+      indicatorText.textContent = isRemote
+        ? 'Calificaciones guardadas y sincronizadas con Supabase.'
+        : 'Calificaciones guardadas exitosamente en el almacenamiento local.';
+      indicator.classList.remove('hidden');
+      setTimeout(() => indicator.classList.add('hidden'), 4000);
+    }
+  });
+
+  // Render inicial
+  renderView();
+  syncTeacherData();
+
+  // Escuchar cambios de sesión de usuario sin resetear mientras se edita
+  let lastKnownUserId: string | null = getCurrentUser()?.id || null;
+  window.addEventListener('cpi-portal-update', () => {
+    const user = getCurrentUser();
+    const currentUserId = user?.id || null;
+    if (currentUserId !== lastKnownUserId) {
+      lastKnownUserId = currentUserId;
+      renderView();
+    }
+  });
+</script>

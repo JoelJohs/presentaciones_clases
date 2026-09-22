@@ -56,3 +56,8 @@ objectives:
 - `npm run dev`: Iniciar servidor de desarrollo en local.
 - `npm test`: Ejecutar suite de pruebas con Vitest.
 - `npm run check`: Validar tipos y sintaxis de Astro.
+
+### Herramientas y plugins: nunca se instalan sin pedir
+
+Ningún agente instala dependencias de tooling (plugins de su propio runtime, paquetes npm/pip fuera del stack del proyecto, extensiones) sin mostrarle a Joel qué es, para qué sirve, y esperar confirmación explícita — igual que con los comandos privilegiados. Esto incluye plugins del propio agente (ej. plugins de OpenCode/Antigravity), no solo dependencias del proyecto.
+

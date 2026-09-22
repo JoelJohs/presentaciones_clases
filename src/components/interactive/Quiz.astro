@@ -1,0 +1,118 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  question: string;
+  options: string[];
+  correctIndex: number;
+  explanation?: string;
+}
+
+const { question, options, correctIndex, explanation = '¡Excelente comprensión del concepto!' } = Astro.props;
+---
+
+<div
+  x-data={`{
+    selected: null,
+    answered: false,
+    correct: ${correctIndex},
+    explanation: '${explanation.replace(/'/g, "\\'")}',
+    check(idx) {
+      if (this.answered) return;
+      this.selected = idx;
+      this.answered = true;
+    },
+    reset() {
+      this.selected = null;
+      this.answered = false;
+    }
+  }`}
+  class="interactive-quiz not-prose"
+>
+  <div class="flex items-center justify-between gap-3 mb-4">
+    <div class="flex items-center gap-2">
+      <span class="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-brand-primary/10 text-brand-primary">
+        <Icon name="lucide:help-circle" class="h-4 w-4" />
+      </span>
+      <span class="text-xs font-bold uppercase tracking-wider text-brand-primary">Pregunta de Comprobación</span>
+    </div>
+    <template x-if="answered">
+      <button
+        type="button"
+        @click="reset()"
+        class="text-xs font-semibold text-brand-muted hover:text-brand-primary transition-colors flex items-center gap-1"
+      >
+        <Icon name="lucide:rotate-ccw" class="h-3 w-3" />
+        <span>Reintentar</span>
+      </button>
+    </template>
+  </div>
+
+  <p class="font-display font-semibold text-base sm:text-lg text-brand-navy dark:text-white mb-4">
+    {question}
+  </p>
+
+  <div class="space-y-2.5">
+    {options.map((opt, index) => (
+      <button
+        type="button"
+        @click={`check(${index})`}
+        class="w-full text-left p-3.5 rounded-xl border text-sm font-medium transition-all duration-200 flex items-center justify-between gap-3 cursor-pointer"
+        :class={`{
+          'hover:bg-brand-hover-bg/40 border-brand-border bg-brand-bg dark:bg-brand-sidebar-bg/50': !answered,
+          'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 font-semibold ring-2 ring-emerald-500/20': answered && ${index} === correct,
+          'border-rose-400 bg-rose-50 dark:bg-rose-950/30 text-rose-900 dark:text-rose-200': answered && selected === ${index} && ${index} !== correct,
+          'opacity-50 border-brand-border': answered && selected !== ${index} && ${index} !== correct
+        }`}
+        :disabled="answered"
+      >
+        <div class="flex items-center gap-3 min-w-0">
+          <span
+            class="h-6 w-6 rounded-md flex items-center justify-center text-xs font-bold shrink-0 border"
+            :class={`{
+              'bg-white dark:bg-brand-sidebar-bg border-brand-border text-brand-text': !answered,
+              'bg-emerald-500 border-emerald-500 text-white': answered && ${index} === correct,
+              'bg-rose-500 border-rose-500 text-white': answered && selected === ${index} && ${index} !== correct,
+              'bg-transparent border-brand-border text-brand-muted': answered && selected !== ${index} && ${index} !== correct
+            }`}
+          >
+            {String.fromCharCode(65 + index)}
+          </span>
+          <span class="truncate">{opt}</span>
+        </div>
+
+        <template x-if="answered && selected === index">
+          <span class="shrink-0">
+            <template x-if="selected === correct">
+              <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                <Icon name="lucide:check-circle-2" class="h-4 w-4" />
+                <span>¡Correcto!</span>
+              </span>
+            </template>
+            <template x-if="selected !== correct">
+              <span class="text-xs font-bold text-rose-600 dark:text-rose-400 flex items-center gap-1">
+                <Icon name="lucide:x-circle" class="h-4 w-4" />
+                <span>Incorrecto</span>
+              </span>
+            </template>
+          </span>
+        </template>
+      </button>
+    ))}
+  </div>
+
+  <template x-if="answered">
+    <div
+      class="mt-4 p-3.5 rounded-xl border text-xs leading-relaxed transition-all"
+      :class="selected === correct ? 'border-emerald-500/30 bg-emerald-50/70 dark:bg-emerald-950/20 text-emerald-800 dark:text-emerald-200' : 'border-amber-500/30 bg-amber-50/70 dark:bg-amber-950/20 text-amber-800 dark:text-amber-200'"
+    >
+      <div class="flex items-start gap-2">
+        <Icon name="lucide:info" class="h-4 w-4 shrink-0 mt-0.5" />
+        <div class="flex-1">
+          <strong class="font-bold block mb-0.5" x-text="selected === correct ? '¡Respuesta Acertada!' : 'Explicación del Concepto:'"></strong>
+          <span x-text="explanation"></span>
+        </div>
+      </div>
+    </div>
+  </template>
+</div>

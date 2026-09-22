@@ -1,4 +1,5 @@
 ---
+import { Icon } from 'astro-icon/components';
 import type { NavigationResult } from '../utils/navigation';
 
 interface Props {
@@ -12,67 +13,115 @@ function moduleNumber(title: string): number {
   const match = title.match(/^(\d+)/);
   return match ? parseInt(match[1], 10) : 0;
 }
-function moduleBadgeClass(title: string): string {
-  return `module-badge-m${Math.min(moduleNumber(title), 11)}`;
-}
 ---
 
-<aside id="sidebar" aria-label="Temario del curso" class="fixed inset-y-0 left-0 z-40 w-72 -translate-x-full border-r border-brand-border bg-brand-sidebar-bg transition-transform duration-300 lg:translate-x-0 overflow-y-auto flex flex-col">
-  <div class="p-5 border-b border-brand-border flex items-center justify-between">
-    <a href="/" class="flex items-center gap-2 font-display font-bold text-brand-navy dark:text-white text-lg tracking-tight hover:text-brand-primary transition-colors duration-200">
-      <svg class="h-6 w-6 text-brand-primary flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342" />
-      </svg>
-      Plataforma de Estudios
+<aside
+  id="sidebar"
+  aria-label="Temario del curso"
+  class="fixed inset-y-0 left-0 z-40 w-72 -translate-x-full border-r border-white/10 bg-brand-sidebar-bg text-slate-100 transition-transform duration-300 lg:translate-x-0 flex flex-col"
+>
+  <!-- Encabezado Sidebar -->
+  <div class="h-14 px-4 border-b border-white/10 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2 font-semibold text-white hover:text-sky-200 text-sm transition-colors">
+      <div class="h-6 w-6 rounded-md bg-brand-primary text-white flex items-center justify-center font-bold text-xs shadow-xs">
+        CPI
+      </div>
+      <span>Plataforma de Estudios</span>
+    </a>
+    <span class="text-xs text-sky-200/70 font-mono"><span class="sr-only text-brand-primary">Temario</span>{nav.modules.length} mods</span>
+  </div>
+
+  <!-- Hub de Secciones Principales (Estilo Teams / LMS) -->
+  <div class="p-3 border-b border-white/10 space-y-1">
+    <a
+      href="/"
+      class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-200 hover:text-white hover:bg-white/10 transition-colors"
+    >
+      <Icon name="lucide:home" class="h-4 w-4 text-sky-400" />
+      <span>Inicio</span>
+    </a>
+    <a
+      href="/calificaciones"
+      class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-200 hover:text-white hover:bg-white/10 transition-colors"
+    >
+      <Icon name="lucide:graduation-cap" class="h-4 w-4 text-amber-400" />
+      <span>Calificaciones</span>
+    </a>
+    <a
+      href="/plan-de-estudios"
+      class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-200 hover:text-white hover:bg-white/10 transition-colors"
+    >
+      <Icon name="lucide:map" class="h-4 w-4 text-sky-400" />
+      <span>Plan de Estudios</span>
+    </a>
+    <!-- Solo visible para docentes -->
+    <a
+      id="side-link-induction"
+      href="/00-inicio"
+      class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-200 hover:text-white hover:bg-white/10 transition-colors"
+      style="display: none;"
+    >
+      <Icon name="lucide:presentation" class="h-4 w-4 text-purple-400" />
+      <span>Presentación Inducción</span>
+    </a>
+    <a
+      id="side-link-teacher"
+      href="/panel"
+      class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-200 hover:text-white hover:bg-white/10 transition-colors"
+      style="display: none;"
+    >
+      <Icon name="lucide:settings" class="h-4 w-4 text-emerald-400" />
+      <span>Panel del Docente</span>
     </a>
   </div>
 
-  <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
+  <!-- Temario de Módulos y Lecciones -->
+  <div class="px-4 pt-3 pb-1 text-[11px] font-bold uppercase tracking-wider text-sky-200/60 flex items-center justify-between">
+    <span>Módulos y Clases</span>
+    <Icon name="lucide:book-open" class="h-3.5 w-3.5 text-sky-200/60" />
+  </div>
+
+  <nav class="flex-1 overflow-y-auto p-3 space-y-1">
     {nav.modules.map((mod) => {
       const allLessons = mod.topics.flatMap(t => t.lessons);
       const isModuleActive = allLessons.some(l => l.slug === activeSlug);
 
       return (
         <details class="group mb-1" open={isModuleActive}>
-          <summary class="list-none cursor-pointer flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-semibold uppercase tracking-wider text-brand-muted hover:text-brand-primary hover:bg-brand-hover-bg select-none transition-all duration-200">
-            <span class={`module-badge ${moduleBadgeClass(mod.title)}`}>{moduleNumber(mod.title)}</span>
-            <span class="flex-1 truncate text-left">{mod.title}</span>
-            <span class="text-[10px] font-mono font-normal text-brand-muted/60 shrink-0">{allLessons.length}</span>
-            <svg class="h-3.5 w-3.5 transition-transform duration-200 group-open:rotate-180 text-brand-muted shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
+          <summary class="list-none cursor-pointer flex items-center justify-between gap-2 px-2.5 py-2 rounded-md text-xs font-semibold text-slate-300 hover:bg-white/10 hover:text-white transition-colors select-none">
+            <span class="flex items-center gap-2 min-w-0">
+              <span class="inline-flex h-5 w-5 items-center justify-center rounded bg-white/10 text-[10px] font-mono text-sky-200 shrink-0">
+                {moduleNumber(mod.title)}
+              </span>
+              <span class="truncate">{mod.title}</span>
+            </span>
+            <Icon name="lucide:chevron-down" class="h-3.5 w-3.5 transition-transform duration-200 group-open:rotate-180 shrink-0 text-slate-400" />
           </summary>
 
-          <ul class="mt-1 ml-1 space-y-0.5">
+          <ul class="mt-1 ml-4 border-l border-white/10 space-y-0.5 pl-2">
             {allLessons.map((lesson) => {
-              const isRepaso = lesson.slug.endsWith('/repaso');
               const isActive = activeSlug === lesson.slug;
+              const isRepaso = lesson.slug.endsWith('/repaso');
               return (
                 <li>
                   <a
                     href={`/${lesson.slug}`}
                     data-sidebar-slug={lesson.slug}
-                    data-is-repaso={isRepaso ? 'true' : 'false'}
-                    class={`flex items-center gap-2 rounded-md px-2.5 py-1.5 text-xs font-medium border-l-[3px] transition-all duration-200 ${
+                    data-sidebar-week={lesson.semana || 0}
+                    class={`flex items-center gap-2 px-2 py-1.5 rounded text-xs transition-colors ${
                       isActive
-                        ? 'bg-brand-hover-bg text-brand-primary border-brand-primary font-semibold'
-                        : 'text-brand-muted hover:bg-brand-hover-bg hover:text-brand-primary border-transparent'
-                    } ${isRepaso ? 'pl-8' : 'pl-5'}`}
+                        ? 'bg-sky-500/20 text-sky-300 font-semibold border-l-2 border-sky-400'
+                        : 'text-slate-300 hover:text-white hover:bg-white/10'
+                    }`}
                   >
-                    {!isRepaso ? (
-                      <span
-                        class="sidebar-progress-dot shrink-0"
-                        data-dot-slug={lesson.slug}
-                        title="Estado de lección"
-                      ></span>
-                    ) : (
-                      <svg class="h-3 w-3 shrink-0 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182" />
-                      </svg>
-                    )}
+                    <span
+                      class="sidebar-progress-dot shrink-0 h-1.5 w-1.5 rounded-full bg-slate-600"
+                      data-dot-slug={lesson.slug}
+                      title="Estado de lección"
+                    />
                     <span class="truncate flex-1">{isRepaso ? 'Repaso' : lesson.title}</span>
                     {isRepaso && (
-                      <span class="text-[9px] font-mono px-1 py-0.2 rounded bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 shrink-0">
+                      <span class="text-[9px] px-1 rounded bg-amber-400/20 text-amber-300 font-mono">
                         Práctica
                       </span>
                     )}
@@ -85,40 +134,109 @@ function moduleBadgeClass(title: string): string {
       );
     })}
   </nav>
+
+  <!-- Tarjeta Inferior de Perfil de Usuario -->
+  <div class="p-3 border-t border-white/10 bg-black/20">
+    <button
+      type="button"
+      id="btn-sidebar-user"
+      class="w-full flex items-center gap-2.5 p-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-sky-400/40 text-left transition-all shadow-xs"
+    >
+      <div id="side-user-avatar" class="h-8 w-8 rounded-lg bg-brand-primary text-white flex items-center justify-center font-bold text-xs shrink-0">
+        CPI
+      </div>
+      <div class="min-w-0 flex-1">
+        <span id="side-user-name" class="block text-xs font-bold text-white truncate">Usuario</span>
+        <span id="side-user-group" class="block text-[10px] text-sky-200/70 truncate">Cargando perfil...</span>
+      </div>
+      <Icon name="lucide:arrow-right-left" class="h-3.5 w-3.5 text-slate-400 shrink-0" />
+    </button>
+  </div>
 </aside>
 
 <script>
   import { initializeProgress, subscribeToProgress } from '../features/progress';
+  import { getCurrentUser, getPortalDB } from '../features/portal/db';
 
-  (function () {
-    function updateSidebarProgressDots(completedSlugs: string[]) {
-      const dots = document.querySelectorAll<HTMLElement>('.sidebar-progress-dot[data-dot-slug]');
-      dots.forEach((dot) => {
-        const slug = dot.getAttribute('data-dot-slug');
-        if (slug && completedSlugs.includes(slug)) {
-          dot.classList.add('completed');
-          dot.setAttribute('title', 'Lección completada');
-        } else {
-          dot.classList.remove('completed');
-          dot.setAttribute('title', 'Lección pendiente');
-        }
-      });
+  function updateDots(completedSlugs: string[]) {
+    const dots = document.querySelectorAll<HTMLElement>('.sidebar-progress-dot[data-dot-slug]');
+    dots.forEach((dot) => {
+      const slug = dot.getAttribute('data-dot-slug');
+      if (slug && completedSlugs.includes(slug)) {
+        dot.classList.add('completed', 'bg-emerald-400');
+        dot.classList.remove('bg-slate-600');
+        dot.setAttribute('title', 'Completada');
+      } else {
+        dot.classList.remove('completed', 'bg-emerald-400');
+        dot.classList.add('bg-slate-600');
+        dot.setAttribute('title', 'Pendiente');
+      }
+    });
+  }
+
+  function updateSideUser() {
+    const user = getCurrentUser();
+    const db = getPortalDB();
+    const nameEl = document.getElementById('side-user-name');
+    const groupEl = document.getElementById('side-user-group');
+    const avatarEl = document.getElementById('side-user-avatar');
+    const teacherLink = document.getElementById('side-link-teacher');
+    const inductionLink = document.getElementById('side-link-induction');
+
+    const isTeacher = Boolean(user && user.rol === 'profesor');
+    if (teacherLink) {
+      teacherLink.style.display = isTeacher ? 'flex' : 'none';
+    }
+    if (inductionLink) {
+      inductionLink.style.display = isTeacher ? 'flex' : 'none';
     }
 
-    const initialCompleted = initializeProgress();
-    updateSidebarProgressDots(initialCompleted);
+    if (user && nameEl) {
+      nameEl.textContent = user.nombre;
+      if (groupEl) {
+        groupEl.textContent = user.rol === 'profesor' ? 'Docente · Administrador' : (user.grupo === 'sabado' ? 'Grupo 1 Sábado' : 'Grupo 2 Domingo');
+      }
+      if (avatarEl) {
+        const initials = user.nombre.split(' ').filter(w => w.length > 2).slice(0, 2).map(w => w[0]).join('');
+        avatarEl.textContent = initials || 'CPI';
+      }
+    } else if (nameEl) {
+      nameEl.textContent = 'Estudiante';
+      if (groupEl) groupEl.textContent = 'CPI Plataforma';
+      if (avatarEl) avatarEl.textContent = 'CPI';
+    }
 
-    subscribeToProgress((completedSlugs) => {
-      updateSidebarProgressDots(completedSlugs);
-    });
-  })();
+    // Bloqueo visual de enlaces a lecciones futuras para alumnos
+    if (user && user.rol === 'alumno') {
+      const groupKey = (user.clase || user.grupo || 'sabado') as 'sabado' | 'domingo';
+      const groupWeek = db.grupos[groupKey]?.semanaActual || 1;
+      document.querySelectorAll<HTMLElement>('a[data-sidebar-week]').forEach((link) => {
+        const week = parseInt(link.getAttribute('data-sidebar-week') || '0', 10);
+        if (week > 0 && week > groupWeek) {
+          link.classList.add('opacity-40', 'cursor-not-allowed');
+          link.setAttribute('title', `Se desbloquea en la semana ${week}`);
+        } else {
+          link.classList.remove('opacity-40', 'cursor-not-allowed');
+          link.removeAttribute('title');
+        }
+      });
+    } else {
+      document.querySelectorAll<HTMLElement>('a[data-sidebar-week]').forEach((link) => {
+        link.classList.remove('opacity-40', 'cursor-not-allowed');
+        link.removeAttribute('title');
+      });
+    }
+  }
+
+  const initial = initializeProgress();
+  updateDots(initial);
+  subscribeToProgress((state) => updateDots(state));
+
+  updateSideUser();
+  window.addEventListener('cpi-portal-update', updateSideUser);
+
+  document.getElementById('btn-sidebar-user')?.addEventListener('click', () => {
+    const modal = document.getElementById('auth-modal') as HTMLDialogElement | null;
+    modal?.showModal();
+  });
 </script>
-
-<style>
-  summary::-webkit-details-marker {
-    display: none;
-  }
-  summary {
-    list-style: none;
-  }
-</style>

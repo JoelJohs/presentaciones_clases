@@ -2,6 +2,9 @@
 import { getCollection, render } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import { getNavigationStructure } from '../utils/navigation';
+import { findLessonBySlug } from '../config/curriculum';
+import LessonCompletionBar from '../components/interactive/LessonCompletionBar.astro';
+import { Icon } from 'astro-icon/components';
 
 export async function getStaticPaths() {
   const lecciones = await getCollection('lecciones');
@@ -20,69 +23,212 @@ const { leccion, lecciones, nav: propsNav } = Astro.props;
 const { Content } = await render(leccion);
 
 const nav = propsNav || getNavigationStructure(lecciones);
-
 const activeSlug = leccion.id.replace(/\.(mdx|md)$/, '').replace(/\/index$/, '');
 const currentIndex = nav.allLessonsOrdered.findIndex(l => l.slug === activeSlug);
 
 const prevLesson = currentIndex > 0 ? nav.allLessonsOrdered[currentIndex - 1] : null;
 const nextLesson = currentIndex < nav.allLessonsOrdered.length - 1 ? nav.allLessonsOrdered[currentIndex + 1] : null;
+
+const meta = findLessonBySlug(activeSlug);
+const isInduction = activeSlug === '00-inicio' || activeSlug.startsWith('00-');
+const duration = leccion.data.duration || meta?.duration || 45;
+const kind = leccion.data.kind || meta?.kind || 'lesson';
+const objectives = leccion.data.objectives || [];
+const leccionSemana = leccion.data.semana || 0;
 ---
 
-<Layout title={leccion.data.title} nav={nav} activeSlug={activeSlug}>
-  <!-- Breadcrumb -->
-  {leccion.data.moduleTitle && (
-    <div class="mb-8">
-      <nav aria-label="Navegación de lección" class="flex items-center gap-2 text-xs font-medium text-brand-muted mb-4 flex-wrap">
-        <a href="/" class="hover:text-brand-primary transition-colors flex items-center gap-1" aria-label="Inicio">
-          <svg class="h-3.5 w-3.5 inline" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-          </svg>
-          <span>Inicio</span>
-        </a>
-        <svg class="h-3 w-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-        </svg>
-        <span class="font-semibold uppercase tracking-wider text-brand-primary">{leccion.data.moduleTitle}</span>
+<Layout title={leccion.data.title} nav={nav} activeSlug={activeSlug} isLesson={true}>
+  <div class="space-y-6">
+    <!-- Migas de pan y metadatos de lección -->
+    <header class="border-b border-brand-border pb-6 space-y-3">
+      <nav aria-label="Ruta de navegación" class="flex items-center gap-1.5 text-xs text-brand-muted flex-wrap">
+        <a href="/" class="hover:text-brand-text transition-colors">Inicio</a>
+        {leccion.data.moduleTitle && (
+          <>
+            <Icon name="lucide:chevron-right" class="h-3 w-3" />
+            <span class="font-medium text-brand-primary">{leccion.data.moduleTitle}</span>
+          </>
+        )}
         {leccion.data.topicTitle && (
           <>
-            <svg class="h-3 w-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-            </svg>
+            <Icon name="lucide:chevron-right" class="h-3 w-3" />
             <span class="truncate max-w-[200px]">{leccion.data.topicTitle}</span>
           </>
         )}
       </nav>
 
-      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-2">
-        <h1 class="font-display font-extrabold text-brand-navy dark:text-white text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-tight">
-          {leccion.data.title}
-        </h1>
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-brand-text">
+        {leccion.data.title}
+      </h1>
+
+      <!-- Etiquetas informativas -->
+      <div class="flex flex-wrap items-center gap-2 text-xs">
+        {isInduction ? (
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-50 dark:bg-purple-950/40 border border-purple-300 dark:border-purple-800 text-purple-700 dark:text-purple-300 font-semibold shadow-xs">
+            <Icon name="lucide:presentation" class="h-3.5 w-3.5" />
+            <span>Presentación Oficial del Curso</span>
+          </span>
+        ) : (
+          <>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-brand-sidebar-bg border border-brand-border text-brand-text font-medium shadow-xs">
+              <Icon name="lucide:clock" class="h-3.5 w-3.5 text-brand-primary" />
+              <span>{duration} min</span>
+            </span>
+
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-brand-primary/10 border border-brand-primary/20 text-brand-primary font-semibold">
+              <Icon name="lucide:book-open" class="h-3.5 w-3.5" />
+              <span class="capitalize">{kind}</span>
+            </span>
+          </>
+        )}
+
         {leccion.data.fecha && (
-          <span class="text-xs text-brand-muted font-mono whitespace-nowrap shrink-0">
-            <svg class="h-3 w-3 inline mr-1" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
-            </svg>
-            {leccion.data.fecha}
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-brand-sidebar-bg border border-brand-border text-brand-text font-mono shadow-xs">
+            <Icon name="lucide:calendar" class="h-3.5 w-3.5 text-brand-primary" />
+            <span>{leccion.data.fecha}</span>
           </span>
         )}
       </div>
+
+      <!-- Objetivos pedagógicos -->
+      {objectives.length > 0 && (
+        <div class="mt-4 p-4 rounded-xl border border-brand-border bg-brand-callout-bg text-xs space-y-2">
+          <span class="font-bold text-brand-text uppercase tracking-wider block">Objetivos de la sesión</span>
+          <ul class="list-disc list-inside space-y-1.5 text-brand-text/90 marker:text-brand-primary">
+            {objectives.map((obj: string) => (
+              <li>{obj}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </header>
+
+    <!-- Guard de bloqueo para alumnos si la lección es futura -->
+    <div
+      id="lesson-locked-guard"
+      class="hidden rounded-2xl border border-amber-300 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/40 p-6 sm:p-8 text-center space-y-4 shadow-xs"
+    >
+      <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200">
+        <Icon name="lucide:lock" class="h-6 w-6" />
+      </div>
+      <div class="space-y-1">
+        <h2 class="text-lg font-bold text-amber-950 dark:text-amber-200">
+          Clase no disponible para tu grupo
+        </h2>
+        <p id="lesson-guard-message" class="text-xs sm:text-sm text-amber-800 dark:text-amber-300 max-w-md mx-auto leading-relaxed">
+          Esta lección corresponde a una semana posterior del curso. Se habilitará cuando tu grupo alcance esta semana.
+        </p>
+      </div>
+      <div class="pt-2">
+        <a
+          href="/"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-primary hover:bg-brand-accent text-white text-xs font-semibold transition-colors shadow-xs"
+        >
+          <Icon name="lucide:arrow-left" class="h-4 w-4" />
+          <span>Volver a mi clase activa</span>
+        </a>
+      </div>
     </div>
-  )}
 
-  <!-- Article Content -->
-  <article class="prose" data-lesson-content data-slug={activeSlug}>
-    <Content />
-  </article>
+    <!-- Contenido de la Lección en MDX -->
+    <article class="prose max-w-none" data-lesson-content data-slug={activeSlug} data-lesson-week={leccionSemana}>
+      <Content />
+    </article>
 
-  <!-- Script de Inicialización del Motor de Diapositivas y Tablas Responsive (Fase 4C) -->
+    <!-- Barra de Completar Lección (Solo para lecciones regulares de alumnos) -->
+    {!isInduction && (
+      <LessonCompletionBar
+        slug={activeSlug}
+        nextLesson={nextLesson ? { slug: nextLesson.slug, title: nextLesson.title } : null}
+      />
+    )}
+
+    <!-- Navegación al pie de página -->
+    {!isInduction ? (
+      <nav class="flex items-center justify-between gap-4 border-t border-brand-border pt-6 text-xs">
+        {prevLesson ? (
+          <a
+            href={`/${prevLesson.slug}`}
+            class="flex items-center gap-2 px-3 py-2 rounded-lg border border-brand-border text-brand-text hover:bg-brand-callout-bg dark:hover:bg-brand-sidebar-bg transition-colors"
+          >
+            <Icon name="lucide:arrow-left" class="h-4 w-4" />
+            <span>{prevLesson.title}</span>
+          </a>
+        ) : <span />}
+
+        {nextLesson ? (
+          <a
+            href={`/${nextLesson.slug}`}
+            class="flex items-center gap-2 px-3 py-2 rounded-lg bg-brand-primary text-white font-medium hover:bg-brand-accent transition-colors"
+          >
+            <span>{nextLesson.title}</span>
+            <Icon name="lucide:arrow-right" class="h-4 w-4" />
+          </a>
+        ) : <span />}
+      </nav>
+    ) : (
+      <nav class="flex items-center justify-between gap-4 border-t border-brand-border pt-6 text-xs flex-wrap">
+        <a
+          href="/"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-brand-border text-brand-text hover:bg-brand-callout-bg dark:hover:bg-brand-sidebar-bg font-semibold transition-colors"
+        >
+          <Icon name="lucide:arrow-left" class="h-4 w-4" />
+          <span>Volver al Inicio</span>
+        </a>
+        <a
+          href="/plan-de-estudios"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-primary hover:bg-brand-accent text-white font-semibold transition-colors shadow-xs"
+        >
+          <Icon name="lucide:map" class="h-4 w-4" />
+          <span>Consultar Plan de Estudios Completo</span>
+        </a>
+      </nav>
+    )}
+  </div>
+
+  <!-- Inicializador de Diapositivas y Envoltorios de Tablas -->
   <script>
     import { presentationStore } from '../features/presentation';
+    import { getCurrentUser, getPortalDB } from '../features/portal/db';
+
+    function checkWeekAccess() {
+      const user = getCurrentUser();
+      const db = getPortalDB();
+      const article = document.querySelector<HTMLElement>('article[data-lesson-content]');
+      const guard = document.getElementById('lesson-locked-guard');
+      const completionBar = document.querySelector<HTMLElement>('[data-lesson-completion-bar]');
+      if (!article || !guard) return;
+
+      const weekAttr = article.getAttribute('data-lesson-week');
+      const lessonWeek = weekAttr ? parseInt(weekAttr, 10) : 0;
+
+      if (lessonWeek > 0 && user && user.rol === 'alumno') {
+        const groupKey = (user.clase || user.grupo || 'sabado') as 'sabado' | 'domingo';
+        const groupWeek = db.grupos[groupKey]?.semanaActual || 1;
+        if (lessonWeek > groupWeek) {
+          article.classList.add('hidden');
+          guard.classList.remove('hidden');
+          if (completionBar) completionBar.classList.add('hidden');
+          const msg = document.getElementById('lesson-guard-message');
+          if (msg) {
+            msg.textContent = `Esta clase corresponde a la Semana ${lessonWeek}. Tu grupo (${groupKey === 'sabado' ? 'Clase Sábado' : 'Clase Domingo'}) está actualmente en la Semana ${groupWeek}. El acceso se activará en la fecha programada.`;
+          }
+          return;
+        }
+      }
+      article.classList.remove('hidden');
+      guard.classList.add('hidden');
+      if (completionBar) completionBar.classList.remove('hidden');
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
+      checkWeekAccess();
+      window.addEventListener('cpi-portal-update', checkWeekAccess);
+
       const article = document.querySelector<HTMLElement>('article.prose[data-lesson-content]');
       if (!article) return;
 
-      // 1. Envolver tablas MDX en .prose-table-wrapper (RESP-001)
+      // Envolver tablas para scroll responsivo con indicador final
       const tables = article.querySelectorAll('table');
       tables.forEach((table) => {
         if (!table.parentElement?.classList.contains('prose-table-wrapper')) {
@@ -102,44 +248,9 @@ const nextLesson = currentIndex < nav.allLessonsOrdered.length - 1 ? nav.allLess
         }
       });
 
-      // 2. Inicializar Motor de Diapositivas para esta lección
+      // Inicializar el store de presentación
       const slug = article.getAttribute('data-slug') || '';
       presentationStore.init(slug, article);
     });
   </script>
-
-  <!-- Prev/Next Navigation -->
-  <div class="mt-16 flex flex-col sm:flex-row gap-3 border-t border-brand-border pt-8">
-    {prevLesson ? (
-      <a
-        href={`/${prevLesson.slug}`}
-        class="nav-card-lift flex-1 inline-flex items-center gap-3 justify-start rounded-xl px-5 py-4 text-sm font-semibold min-h-[52px]"
-        aria-label={`Lección anterior: ${prevLesson.title}`}
-      >
-        <svg class="h-5 w-5 shrink-0 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-        </svg>
-        <div class="text-left min-w-0">
-          <span class="block text-xs font-normal text-brand-muted uppercase tracking-wider">Lección Anterior</span>
-          <span class="block truncate text-brand-text dark:text-white">{prevLesson.title}</span>
-        </div>
-      </a>
-    ) : <div class="flex-1"></div>}
-
-    {nextLesson ? (
-      <a
-        href={`/${nextLesson.slug}`}
-        class="nav-card-lift flex-1 inline-flex items-center gap-3 justify-end rounded-xl px-5 py-4 text-sm font-semibold min-h-[52px] text-right"
-        aria-label={`Siguiente lección: ${nextLesson.title}`}
-      >
-        <div class="text-right min-w-0">
-          <span class="block text-xs font-normal text-brand-muted uppercase tracking-wider">Siguiente Lección</span>
-          <span class="block truncate text-brand-text dark:text-white">{nextLesson.title}</span>
-        </div>
-        <svg class="h-5 w-5 shrink-0 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-        </svg>
-      </a>
-    ) : <div class="flex-1"></div>}
-  </div>
 </Layout>

@@ -1,0 +1,109 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  slug: string;
+  nextLesson?: { slug: string; title: string } | null;
+}
+
+const { slug, nextLesson } = Astro.props;
+---
+
+<div
+  id="lesson-completion-card"
+  data-lesson-slug={slug}
+  class="not-prose mt-12 p-5 sm:p-6 rounded-2xl border border-brand-border bg-white dark:bg-brand-sidebar-bg shadow-xs transition-all duration-200"
+>
+  <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-3.5 text-center sm:text-left">
+      <div
+        id="completion-icon-wrapper"
+        class="h-11 w-11 rounded-xl bg-brand-primary/10 text-brand-primary flex items-center justify-center shrink-0"
+      >
+        <Icon name="lucide:check-circle-2" class="h-5 w-5" id="completion-icon-pending" />
+        <Icon name="lucide:check-check" class="h-5 w-5 hidden text-emerald-600" id="completion-icon-done" />
+      </div>
+      <div>
+        <h3 class="font-display font-bold text-sm sm:text-base text-brand-navy dark:text-white" id="completion-status-title">
+          ¿Has completado esta lección?
+        </h3>
+        <p class="text-xs text-brand-muted mt-0.5" id="completion-status-desc">
+          Márcala como realizada para registrar tu avance en el temario.
+        </p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2.5 w-full sm:w-auto">
+      <button
+        type="button"
+        id="btn-toggle-completion"
+        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-brand-primary text-white text-xs font-bold hover:bg-brand-accent active:scale-95 transition-all shadow-xs cursor-pointer"
+      >
+        <Icon name="lucide:check" class="h-4 w-4" />
+        <span id="btn-toggle-text">Marcar como Realizada</span>
+      </button>
+
+      {nextLesson && (
+        <a
+          href={`/${nextLesson.slug}`}
+          id="btn-next-lesson-shortcut"
+          class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-brand-border bg-brand-bg dark:bg-brand-hover-bg/40 text-xs font-semibold hover:border-brand-primary text-brand-text dark:text-white transition-all"
+        >
+          <span>Siguiente</span>
+          <Icon name="lucide:arrow-right" class="h-3.5 w-3.5" />
+        </a>
+      )}
+    </div>
+  </div>
+</div>
+
+<script>
+  import { isLessonCompleted, toggleLessonCompleted, subscribeToProgress } from '../../features/progress';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const card = document.getElementById('lesson-completion-card');
+    if (!card) return;
+
+    const slug = card.getAttribute('data-lesson-slug') || '';
+
+    const btnToggle = document.getElementById('btn-toggle-completion');
+    const btnText = document.getElementById('btn-toggle-text');
+    const iconPending = document.getElementById('completion-icon-pending');
+    const iconDone = document.getElementById('completion-icon-done');
+    const statusTitle = document.getElementById('completion-status-title');
+    const statusDesc = document.getElementById('completion-status-desc');
+
+    function updateUI(completed: boolean) {
+      if (completed) {
+        card?.classList.add('border-emerald-500/40', 'bg-emerald-50/20');
+        btnToggle?.classList.remove('bg-brand-primary', 'hover:bg-brand-accent');
+        btnToggle?.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+        if (btnText) btnText.textContent = 'Completada ✓';
+        iconPending?.classList.add('hidden');
+        iconDone?.classList.remove('hidden');
+        if (statusTitle) statusTitle.textContent = 'Lección Completada';
+        if (statusDesc) statusDesc.textContent = 'Tu avance ha sido registrado en el temario.';
+      } else {
+        card?.classList.remove('border-emerald-500/40', 'bg-emerald-50/20');
+        btnToggle?.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
+        btnToggle?.classList.add('bg-brand-primary', 'hover:bg-brand-accent');
+        if (btnText) btnText.textContent = 'Marcar como Realizada';
+        iconPending?.classList.remove('hidden');
+        iconDone?.classList.add('hidden');
+        if (statusTitle) statusTitle.textContent = '¿Has completado esta lección?';
+        if (statusDesc) statusDesc.textContent = 'Márcala como realizada para registrar tu avance.';
+      }
+    }
+
+    updateUI(isLessonCompleted(slug));
+
+    btnToggle?.addEventListener('click', () => {
+      const nowDone = toggleLessonCompleted(slug);
+      updateUI(nowDone.includes(slug));
+    });
+
+    subscribeToProgress((completedSlugs) => {
+      updateUI(completedSlugs.includes(slug));
+    });
+  });
+</script>

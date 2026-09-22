@@ -1,0 +1,105 @@
+---
+title: "Hojas de Cálculo I: Lógica y Fórmulas"
+moduleTitle: "2 - Productividad, Ofimática y Colaboración en la Nube"
+topicTitle: "Tema 2: Hojas de Cálculo"
+subtopicTitle: "Celdas, Operadores y Lógica Condicional"
+semana: 7
+fecha: "01-08-2026"
+published: true
+description: "Organiza datos en celdas, domina referencias relativas y absolutas, y programa fórmulas condicionales con la función SI en el aula."
+duration: 45
+objectives:
+  - "Diferenciar entre datos de texto, valores numéricos, fechas y booleanos en celdas"
+  - "Construir fórmulas utilizando referencias relativas (A1) y absolutas ($A$1)"
+  - "Implementar la función lógica condicional SI / IF para automatizar decisiones"
+---
+import { Icon } from "astro-icon/components";
+
+# Hojas de Cálculo I: Lógica y Fórmulas
+
+Organiza datos en celdas, domina referencias relativas y absolutas, y programa fórmulas condicionales con la función SI en el aula.
+
+## 1. Datos y Anatomía de una Celda <Icon name="lucide:grid" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Una hoja de cálculo es una cuadrícula donde las columnas se identifican con letras (A, B, C...) y las filas con números (1, 2, 3...). La intersección es una celda única (ej. B4).
+
+* **Texto:** Se alinea automáticamente a la izquierda.
+* **Números:** Se alinean automáticamente a la derecha. Si un número queda a la izquierda, la hoja lo interpretó como texto y no podrás sumarlo.
+* **Toda fórmula inicia con el signo igual (`=`):** Le indica al motor de cálculo que debe procesar una instrucción y no mostrar texto literal.
+
+---
+
+## 2. Referencias Relativas vs Absolutas <Icon name="lucide:anchor" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Al arrastrar una fórmula hacia abajo, las celdas se ajustan automáticamente. Esto se llama referencia relativa.
+
+Cuando necesitas multiplicar muchas celdas por un valor fijo (ejemplo: la tasa de IVA o un porcentaje de descuento), debes fijar la celda con el símbolo **$**. Esto se llama referencia absoluta.
+
+* **Referencia relativa (`A1`):** Al copiar una fila hacia abajo, se convierte en `A2`.
+* **Referencia absoluta (`$A$1`):** Al copiar a cualquier celda, siempre apunta a `A1`.
+* **Atajo:** Presiona la tecla **F4** al escribir una celda para alternar el signo `$`.
+
+---
+
+## 3. Operadores y Funciones Matemáticas Esenciales <Icon name="lucide:calculator" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Fórmulas fundamentales que usarás en clase:
+
+<table>
+  <thead>
+    <tr>
+      <th>Operación / Función</th>
+      <th>Sintaxis en la Hoja</th>
+      <th>Propósito Técnico</th>
+      <th>Ejemplo de Resultado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Suma de rango</td>
+      <td><code>=SUMA(B2:B10)</code></td>
+      <td>Totaliza todos los valores numéricos del intervalo</td>
+      <td>Suma de calificaciones o ventas</td>
+    </tr>
+    <tr>
+      <td>Promedio aritmético</td>
+      <td><code>=PROMEDIO(C2:C15)</code></td>
+      <td>Calcula la media sin contar celdas vacías</td>
+      <td>Promedio general del alumno</td>
+    </tr>
+    <tr>
+      <td>Máximo y Mínimo</td>
+      <td><code>=MAX(D2:D20)</code> / <code>=MIN(D2:D20)</code></td>
+      <td>Obtiene el valor tope y el más bajo de una lista</td>
+      <td>Nota más alta del grupo</td>
+    </tr>
+    <tr>
+      <td>Lógica condicional SI</td>
+      <td><code>=SI(B2>=7, "Aprobado", "Reprobado")</code></td>
+      <td>Evalúa una condición y devuelve un valor si es cierta y otro si es falsa</td>
+      <td>Estatus de acreditación automático</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 4. Práctica en Laboratorio: Control de Calificaciones <Icon name="lucide:table" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Crea tu libro de cálculo de práctica:
+
+1. Crea las columnas: *Alumno*, *Parcial 1*, *Parcial 2*, *Proyecto*, *Promedio*, *Estatus*.
+2. Captura datos para 5 estudiantes ficticios con notas del 0 al 10.
+3. En la columna *Promedio*, calcula el promedio con la fórmula `=PROMEDIO(B2:D2)`.
+4. En la columna *Estatus*, coloca la fórmula: `=SI(E2>=6, "Aprobado", "Reprobado")`.
+5. Aplica **Formato Condicional** para que las celdas "Reprobado" se pinten con fondo rojo claro.
+
+---
+
+## 5. Reto de Fórmulas: Condición Compuesta <Icon name="lucide:check-circle-2" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Desafío de lógica en tu hoja:
+
+* Modifica la fórmula de estatus para que exija dos condiciones a la vez: el promedio debe ser mayor o igual a 6 **Y** la nota de *Proyecto* debe ser al menos 7 para aprobar.
+* Pista: Usa la función `=SI(Y(E2>=6, D2>=7), "Aprobado", "Requiere Proyecto")`.
+* Muestra al docente la tabla funcionando al cambiar notas de prueba.

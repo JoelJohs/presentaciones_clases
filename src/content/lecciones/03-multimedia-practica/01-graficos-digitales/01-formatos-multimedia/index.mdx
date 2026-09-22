@@ -1,0 +1,107 @@
+---
+title: "Fundamentos Visuales y Formatos Multimedia"
+moduleTitle: "3 - Multimedia Práctica: Imagen y Video"
+topicTitle: "Tema 1: Gráficos Digitales"
+subtopicTitle: "Píxeles, Vectores y Espacios de Color"
+semana: 10
+fecha: "22-08-2026"
+published: true
+description: "Distingue entre mapa de bits y gráficos vectoriales. Domina espacios de color RGB vs CMYK y optimiza imágenes sin perder calidad visual."
+duration: 45
+objectives:
+  - "Identificar la diferencia estructural entre gráficos rasterizados (píxeles) y vectoriales (fórmulas matemáticas)"
+  - "Seleccionar el espacio de color adecuado (RGB para pantallas, CMYK para impresión)"
+  - "Optimizar imágenes exportadas en formatos PNG, JPG, WebP y SVG según el canal de distribución"
+---
+import { Icon } from "astro-icon/components";
+
+# Fundamentos Visuales y Formatos Multimedia
+
+Distingue entre mapa de bits y gráficos vectoriales. Domina espacios de color RGB vs CMYK y optimiza imágenes sin perder calidad visual.
+
+## 1. Mapa de Bits vs Gráficos Vectoriales <Icon name="lucide:image" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Todas las imágenes digitales pertenecen a uno de estos dos mundos:
+
+* **Mapa de bits (Raster):** Rejilla de pequeños cuadros de color llamados **píxeles**. Al ampliar la imagen, los píxeles se hacen visibles y la imagen se pixela o pierde nitidez (ejemplos: fotografías, capturas de pantalla, archivos JPG y PNG).
+* **Gráficos vectoriales:** Definidos por **fórmulas matemáticas** de líneas, curvas y coordenadas. Puedes escalarlos al tamaño de una valla publicitaria sin perder ni un solo gramo de nitidez (ejemplos: logotipos, iconos, tipografías, archivos SVG).
+
+---
+
+## 2. Espacios de Color: Luz (RGB) vs Tinta (CMYK) <Icon name="lucide:palette" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+El mismo color no se construye igual en una pantalla que sobre un papel impreso:
+
+* **RGB (Rojo, Verde, Azul):** Modelo aditivo. Se utiliza en pantallas, teléfonos y proyectores. La suma de los tres colores al 100% genera **luz blanca**.
+* **CMYK (Cian, Magenta, Amarillo, Negro):** Modelo sustractivo. Se utiliza en impresoras y litografía. La suma de tintas sobre papel blanco absorbe la luz hasta aproximarse al negro.
+
+> **Regla de oro:** Si diseñas para sitios web, aplicaciones o presentaciones, usa siempre **RGB**. Si envías a imprimir en plotter, folletos o camisetas, convierte a **CMYK**.
+
+---
+
+## 3. Matriz de Formatos de Imagen Digital <Icon name="lucide:file-type" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Elige el formato adecuado según la necesidad técnica:
+
+<table>
+  <thead>
+    <tr>
+      <th>Formato</th>
+      <th>Naturaleza</th>
+      <th>Canal Alfa (Transparencia)</th>
+      <th>Tipo de Compresión</th>
+      <th>Uso Principal</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>PNG</td>
+      <td>Mapa de bits</td>
+      <td>Sí (Transparencia perfecta)</td>
+      <td>Sin pérdida (Lossless)</td>
+      <td>Capturas técnicas, logos con fondo transparente y diagramas</td>
+    </tr>
+    <tr>
+      <td>JPG / JPEG</td>
+      <td>Mapa de bits</td>
+      <td>No (Fondo blanco opaco)</td>
+      <td>Con pérdida (Lossy)</td>
+      <td>Fotografías del mundo real donde el peso de archivo es crítico</td>
+    </tr>
+    <tr>
+      <td>WebP</td>
+      <td>Mapa de bits</td>
+      <td>Sí</td>
+      <td>Híbrida (Con o sin pérdida)</td>
+      <td>Imágenes modernas para sitios web con 30% menos peso que JPG</td>
+    </tr>
+    <tr>
+      <td>SVG</td>
+      <td>Vectorial (XML)</td>
+      <td>Sí</td>
+      <td>Código matemático ligero</td>
+      <td>Iconos de interfaz, logotipos institucionales e ilustraciones web</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 4. Práctica en Aula: Inspección y Comparativa de Formatos <Icon name="lucide:zoom-in" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Ejecuta la prueba con los assets provistos en el laboratorio:
+
+1. Descarga la carpeta de imágenes de práctica en tu estación de trabajo.
+2. Abre la fotografía en formato JPG y el logotipo en formato SVG dentro del visor de imágenes.
+3. Aplica un zoom de 500% sobre el contorno de ambos archivos. Observa la pixelación en el JPG y la línea perfecta en el SVG.
+4. Exporta la misma fotografía en tres calidades de compresión (100%, 70% y 20%) y compara el peso en kilobytes de cada archivo.
+
+---
+
+## 5. Reto de Optimización Web <Icon name="lucide:check-circle-2" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Demuestra la optimización de archivos:
+
+* Toma una imagen de alta resolución provista por el docente (mayor a 5 MB).
+* Redimensiónala a 1920x1080 píxeles a 72 DPI y expórtala en formato WebP con un peso final inferior a 250 KB sin degradación visual notable.
+* Presenta ambos archivos al docente para verificar resolución y peso.

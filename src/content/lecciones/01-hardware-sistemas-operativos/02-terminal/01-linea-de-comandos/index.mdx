@@ -1,0 +1,120 @@
+---
+title: "Línea de Comandos y Terminal (CLI)"
+moduleTitle: "1 - Hardware, Sistemas Operativos y Software de Base"
+topicTitle: "Tema 2: Administración y Terminal"
+subtopicTitle: "Navegación y Operaciones de Archivos"
+semana: 3
+fecha: "04-07-2026"
+published: true
+description: "Opera la terminal de comandos: navegación de rutas, creación y manipulación de archivos, permisos de acceso y automatización de tareas."
+duration: 45
+objectives:
+  - "Navegar por el árbol de directorios usando rutas relativas y absolutas"
+  - "Crear, copiar, mover y eliminar archivos y carpetas desde la terminal"
+  - "Interpretar y modificar permisos de usuario en sistemas tipo Unix"
+---
+import { Icon } from "astro-icon/components";
+
+# Línea de Comandos y Terminal (CLI)
+
+Opera la terminal de comandos: navegación de rutas, creación y manipulación de archivos, permisos de acceso y automatización de tareas.
+
+## 1. ¿Por Qué Usar la Terminal? <Icon name="lucide:terminal" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+La interfaz gráfica oculta detalles y consume recursos. La línea de comandos te da acceso directo y repetible a las funciones internas de la máquina.
+
+Los servidores en internet, los contenedores y los sistemas automatizados no tienen ratón ni ventanas gráficas: se administran exclusivamente mediante comandos de texto.
+
+* **Shell:** El intérprete que lee tus comandos (ej. Bash, Zsh, PowerShell).
+* **Prompt:** La línea que espera tu instrucción indicando usuario, equipo y ruta actual.
+
+---
+
+## 2. El Árbol de Rutas: Absolutas vs Relativas <Icon name="lucide:folder-tree" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Todo archivo tiene una ubicación exacta en la estructura de almacenamiento.
+
+* **Ruta absoluta:** Inicia desde la raíz del sistema (/ en Linux o C:\ en Windows). Funciona desde cualquier lugar donde estés parado.
+* **Ruta relativa:** Inicia desde tu carpeta actual. Ahorra tiempo al moverte entre subdirectorios cercanos.
+* **Atajos clave:**
+  * `.` representa el directorio actual.
+  * `..` representa el directorio padre (un nivel arriba).
+  * `~` representa la carpeta personal del usuario (home).
+
+---
+
+## 3. Comandos de Navegación y Manipulación <Icon name="lucide:command" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Aprende estos comandos indispensables:
+
+<table>
+  <thead>
+    <tr>
+      <th>Comando</th>
+      <th>Parámetros Comunes</th>
+      <th>Función Directa</th>
+      <th>Ejemplo en Clase</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>pwd</code></td>
+      <td>Ninguno</td>
+      <td>Imprime la ruta absoluta del directorio actual</td>
+      <td><code>pwd</code></td>
+    </tr>
+    <tr>
+      <td><code>ls</code></td>
+      <td><code>-la</code></td>
+      <td>Lista archivos con permisos, tamaño y ocultos</td>
+      <td><code>ls -la</code></td>
+    </tr>
+    <tr>
+      <td><code>cd</code></td>
+      <td><code>[ruta]</code></td>
+      <td>Cambia de directorio de trabajo</td>
+      <td><code>cd proyectos/clase-03</code></td>
+    </tr>
+    <tr>
+      <td><code>mkdir</code></td>
+      <td><code>-p</code></td>
+      <td>Crea carpetas (con padres recursivos)</td>
+      <td><code>mkdir -p mod1/lab/assets</code></td>
+    </tr>
+    <tr>
+      <td><code>cp</code></td>
+      <td><code>-r</code></td>
+      <td>Copia archivos o directorios completos</td>
+      <td><code>cp archivo.txt copia.txt</code></td>
+    </tr>
+    <tr>
+      <td><code>rm</code></td>
+      <td><code>-r -i</code></td>
+      <td>Elimina archivos o carpetas</td>
+      <td><code>rm -i prueba.tmp</code></td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 4. Práctica en el Laboratorio: Construcción de Estructura <Icon name="lucide:code-2" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Ejecuta la siguiente secuencia de comandos en tu terminal:
+
+1. Ve a tu carpeta personal: `cd ~`
+2. Crea el directorio de trabajo del curso: `mkdir -p cpi/modulo-01/semana-03`
+3. Entra en la carpeta recién creada: `cd cpi/modulo-01/semana-03`
+4. Crea tres archivos vacíos: `touch notas.txt comandos.md bitacora.log`
+5. Lista los archivos con detalle: `ls -lh`
+
+---
+
+## 5. Reto de Terminal: El Desafío de Archivos <Icon name="lucide:check-circle-2" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Resuelve sin usar el explorador de archivos con ratón:
+
+1. Crea una carpeta llamada `respaldo` dentro de tu directorio actual.
+2. Copia `notas.txt` dentro de `respaldo`.
+3. Renombra `comandos.md` a `guia-comandos.md` usando el comando `mv`.
+4. Muestra al docente la salida final del comando `ls -R` en tu terminal.
