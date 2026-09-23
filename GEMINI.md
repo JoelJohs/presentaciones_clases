@@ -49,5 +49,9 @@ objectives:
 - Importar siempre: `import { Icon } from "astro-icon/components";`
 - Usar iconos de `@iconify-json/lucide` (`lucide:*`) y `@iconify-json/simple-icons` (`simple-icons:*`).
 
+### 7. Criterios de Evaluación
+- **Sin ponderación de asistencia:** La asistencia NO se califica ni tiene ponderación porcentual (0% de validez).
+- La calificación se basa al 100% en el desempeño demostrable del estudiante: proyectos prácticos, retos en clase, tareas y exámenes.
+
 ### Skill de Referencia
 Para consultar la guía detallada, checklist y plantilla completa, activa la skill: `skills/crear-clase/SKILL.md`.

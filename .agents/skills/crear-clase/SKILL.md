@@ -41,6 +41,10 @@ Esta skill define el estándar obligatorio y la metodología pedagógica para cr
 5. **Analogías Visuales y Tangibles:**
    - Todo concepto abstracto debe explicarse con una analogía del mundo real (ejemplo: CPU = Chef, RAM = Mesa de trabajo, Disco Duro = Mochila/Alacena).
 
+6. **Criterios de Evaluación y Calificación:**
+   - La asistencia **NO** se pondera ni se califica (0% de validez).
+   - Las calificaciones se estructuran 100% en función del desempeño técnico y entregables prácticos: proyectos, retos en laboratorio, tareas y exámenes modulares.
+
 ---
 
 ## 2. Estructura de Carpetas y Nomenclatura

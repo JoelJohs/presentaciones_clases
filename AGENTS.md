@@ -48,6 +48,10 @@ objectives:
 - Iconos de `lucide:*` y `simple-icons:*` con clases Tailwind: `<Icon name="lucide:cpu" class="inline w-5 h-5 align-text-bottom text-sky-600" />`.
 - Imágenes referenciadas con `@assets/images/...` o `/images/...`.
 
+### 7. Criterios de Evaluación
+- **Sin ponderación de asistencia:** La asistencia NO se califica ni tiene ponderación porcentual (0% de validez).
+- La evaluación es 100% basada en desempeño técnico y entregables prácticos (proyectos, retos de código, tareas de investigación y exámenes).
+
 ## Skills del Proyecto
 - `skills/crear-clase/SKILL.md`: Guía exhaustiva, checklist y plantilla para la creación de clases.
 - `skills/stop-slop/SKILL.md`: Directrices para eliminar patrones y muletillas de IA en la redacción.
