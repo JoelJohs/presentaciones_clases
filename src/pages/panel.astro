@@ -29,10 +29,10 @@ const nav = getNavigationStructure(lecciones);
       <div class="flex items-center gap-2 flex-wrap">
         <a
           href="/00-inicio"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-purple-300 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/60 text-xs font-semibold transition-colors"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-brand-border bg-brand-callout-bg dark:bg-brand-sidebar-bg hover:border-brand-primary text-brand-text text-xs font-semibold transition-colors shadow-xs"
           title="Diapositivas para proyectar e inducir a nuevos grupos"
         >
-          <Icon name="lucide:presentation" class="h-3.5 w-3.5" />
+          <Icon name="lucide:presentation" class="h-3.5 w-3.5 text-brand-primary" />
           <span>Presentación Inducción</span>
         </a>
         <a
@@ -255,6 +255,7 @@ const nav = getNavigationStructure(lecciones);
 <script>
   import { getPortalDB, getCurrentUser, updateWeek, exportDB, importDB, savePortalDB, SEED_PORTAL_DB, syncRemoteGroups } from '../features/portal/db';
   import { isSupabaseConfigured, fetchStudentsFromSupabase } from '../lib/supabase';
+  import { escapeHtml } from '../utils/security';
 
   let isSyncingStudents = false;
 
@@ -330,20 +331,20 @@ const nav = getNavigationStructure(lecciones);
     }
     studentsTbody.innerHTML = students.map(st => `
       <tr class="hover:bg-brand-hover-bg/20 transition-colors">
-        <td class="py-2.5 px-3 font-semibold text-brand-text">${st.nombre}</td>
+        <td class="py-2.5 px-3 font-semibold text-brand-text">${escapeHtml(st.nombre)}</td>
         <td class="py-2.5 px-3">
-          <code class="font-mono text-xs px-2 py-0.5 rounded bg-brand-border/40 text-brand-primary font-bold select-all">${st.username || st.id}</code>
+          <code class="font-mono text-xs px-2 py-0.5 rounded bg-brand-border/40 text-brand-primary font-bold select-all">${escapeHtml(st.username || st.id)}</code>
         </td>
-        <td class="py-2.5 px-3 text-center font-mono text-[11px] text-brand-muted">${st.matricula || '—'}</td>
+        <td class="py-2.5 px-3 text-center font-mono text-[11px] text-brand-muted">${escapeHtml(st.matricula || '—')}</td>
         <td class="py-2.5 px-3 text-center">
-          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold ${st.grupo === 'sabado' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400' : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'}">
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold ${st.grupo === 'sabado' ? 'bg-amber-500/10 text-amber-700 dark:text-amber-300' : 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300'}">
             ${st.grupo === 'sabado' ? 'Sábado' : 'Domingo'}
           </span>
         </td>
         <td class="py-2.5 px-3 text-right">
           <button
             type="button"
-            data-copy-user="${st.username || st.id}"
+            data-copy-user="${escapeHtml(st.username || st.id)}"
             class="btn-copy-user px-2 py-1 rounded-md text-[11px] font-semibold border border-brand-border bg-white dark:bg-brand-sidebar-bg hover:border-brand-primary text-brand-text transition-all"
             title="Copiar usuario y contraseña provisional"
           >

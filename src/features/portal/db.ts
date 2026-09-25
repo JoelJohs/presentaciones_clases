@@ -1,4 +1,5 @@
 import type { PortalDB, PortalUser, GroupId, SessionState, TareaSemanal } from './types';
+import { sanitizeWeekNumber } from '../../utils/security';
 export type { GroupId, PortalUser, PortalDB, SessionState, TareaSemanal } from './types';
 
 export const SEED_PORTAL_DB: PortalDB = {
@@ -219,10 +220,11 @@ export function loginWithKey(rawKey: string): { success: boolean; user?: PortalU
   return { success: false, error: 'Clave no válida. Consulta con tu docente.' };
 }
 
-export function updateWeek(group: GroupId, week: number): void {
+export function updateWeek(group: GroupId, rawWeek: number): void {
+  const week = sanitizeWeekNumber(rawWeek);
   const db = getPortalDB();
   if (db.grupos[group]) {
-    db.grupos[group].semanaActual = Math.max(1, Math.min(db.meta.totalSemanas, week));
+    db.grupos[group].semanaActual = week;
     savePortalDB(db);
   }
   // Sincronizar en tiempo real con Supabase
@@ -264,13 +266,15 @@ export async function syncRemoteGroups(): Promise<boolean> {
   return false;
 }
 
-export function getTaskForWeek(group: GroupId, week: number): TareaSemanal | null {
+export function getTaskForWeek(group: GroupId, rawWeek: number): TareaSemanal | null {
+  const week = sanitizeWeekNumber(rawWeek);
   const db = getPortalDB();
   if (!db.tareas) return null;
   return db.tareas[`${group}-${week}`] || null;
 }
 
-export function saveTask(group: GroupId, week: number, titulo: string, descripcion: string, fechaEntrega?: string): TareaSemanal {
+export function saveTask(group: GroupId, rawWeek: number, titulo: string, descripcion: string, fechaEntrega?: string): TareaSemanal {
+  const week = sanitizeWeekNumber(rawWeek);
   const db = getPortalDB();
   if (!db.tareas) db.tareas = {};
   const taskId = `${group}-${week}`;

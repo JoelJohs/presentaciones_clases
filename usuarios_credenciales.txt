@@ -1,0 +1,45 @@
+==============================================================================
+CPI - CAPACITACIÓN PROFESIONAL EN INFORMÁTICA
+LISTADO DE USUARIOS Y CREDENCIALES DE ACCESO
+==============================================================================
+
+Contraseña genérica / provisional para alumnos: sabcpi
+(Al ingresar por primera vez, el sistema solicita cambiarla por una personalizada de mínimo 8 caracteres)
+
+------------------------------------------------------------------------------
+ALUMNOS REGISTRADOS - GRUPO SÁBADO (09:00 - 13:00 h)
+------------------------------------------------------------------------------
+
+Matrícula | Usuario (Login)       | Contraseña Inicial | Nombre Completo
+----------+-----------------------+--------------------+---------------------------------------
+SAB-01    | erandi.alvarado       | sabcpi             | Erandi Alvarado Morales
+SAB-02    | camila.lopez          | sabcpi             | Camila Lopez Valdez
+SAB-03    | fernando.madrigal     | sabcpi             | Fernando Alexander Madrigal Saldaña
+SAB-04    | helen.moreno          | sabcpi             | Helen Judith Moreno Bernal
+SAB-05    | mariana.negrete       | sabcpi             | Mariana Guadalupe Negrete Aguilera
+SAB-06    | elizabeth.negrete     | sabcpi             | Elizabeth Negrete
+SAB-07    | alejandro.rangel      | sabcpi             | Alejandro Rangel Valdez
+SAB-08    | jose.soto             | sabcpi             | Jose Eduardo Soto Zavala
+SAB-09    | ana.aguilera          | sabcpi             | Ana Jazmin Aguilera Alvarado
+SAB-10    | mateo.urueta          | sabcpi             | Mateo Urueta Nara
+SAB-11    | alumno.prueba         | sabcpi             | Alumno Prueba (Test)
+
+------------------------------------------------------------------------------
+MÉTODOS DE ACCESO AL PORTAL (CPI ESTUDIOS)
+------------------------------------------------------------------------------
+
+1. Acceso con cuenta individual (Recomendado / Con Supabase):
+   - Pestaña: "Alumno"
+   - Usuario: Nombre de usuario (ej. erandi.alvarado) o Matrícula (ej. SAB-01)
+   - Contraseña: sabcpi (o la que hayan configurado tras el primer cambio)
+
+2. Acceso rápido sin contraseña (Modo local / Respaldo):
+   - Escribir únicamente en el campo de clave:
+     * sabado  -> Acceso general al Grupo Sábado
+     * domingo -> Acceso general al Grupo Domingo
+     * SAB-01 a SAB-11 -> Acceso directo al perfil de cada alumno
+
+3. Acceso Docente:
+   - Con Supabase: Pestaña "Docente" con correo y contraseña de Supabase Auth
+   - Acceso rápido: Escribir la clave "profesor" en el campo de acceso
+==============================================================================

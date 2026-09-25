@@ -8,6 +8,8 @@ import {
   logout,
   updateWeek,
   updateGrade,
+  getTaskForWeek,
+  saveTask,
   exportDB,
   importDB,
   SEED_PORTAL_DB,
@@ -57,6 +59,45 @@ describe('Portal DB & BaaS Data Layer', () => {
   it('permite actualizar la semana de un grupo', () => {
     updateWeek('sabado', 6);
     expect(getPortalDB().grupos.sabado.semanaActual).toBe(6);
+  });
+
+  it('[US1] gestiona semanas de Sábado y Domingo de forma completamente independiente', () => {
+    updateWeek('sabado', 8);
+    updateWeek('domingo', 2);
+    const db = getPortalDB();
+    expect(db.grupos.sabado.semanaActual).toBe(8);
+    expect(db.grupos.domingo.semanaActual).toBe(2);
+
+    // Modificar uno no afecta al otro
+    updateWeek('sabado', 10);
+    const db2 = getPortalDB();
+    expect(db2.grupos.sabado.semanaActual).toBe(10);
+    expect(db2.grupos.domingo.semanaActual).toBe(2);
+  });
+
+  it('[US2] gestiona tareas por grupo y semana, y maneja semanas sin tarea', () => {
+    // Semana sin tarea asignada
+    expect(getTaskForWeek('domingo', 1)).toBeNull();
+
+    // Asignar tarea a grupo sábado
+    const tarea = saveTask('sabado', 5, 'Investigación BIOS', 'Detalla POST y UEFI', 'Próxima clase');
+    expect(tarea.titulo).toBe('Investigación BIOS');
+    expect(tarea.semana).toBe(5);
+
+    const obtenida = getTaskForWeek('sabado', 5);
+    expect(obtenida?.titulo).toBe('Investigación BIOS');
+    expect(obtenida?.descripcion).toBe('Detalla POST y UEFI');
+
+    // No se filtra al grupo domingo
+    expect(getTaskForWeek('domingo', 5)).toBeNull();
+  });
+
+  it('[US4] sanitiza y acota el rango de semanas a 1..54', () => {
+    updateWeek('sabado', 0);
+    expect(getPortalDB().grupos.sabado.semanaActual).toBe(1);
+
+    updateWeek('sabado', 999);
+    expect(getPortalDB().grupos.sabado.semanaActual).toBe(54);
   });
 
   it('permite calificar alumnos y calcular notas redondeadas a 1 decimal', () => {
