@@ -1,0 +1,248 @@
+---
+title: "Edición de Video: Línea de Tiempo y Montaje"
+moduleTitle: "3 - Multimedia Práctica: Imagen y Video"
+topicTitle: "Tema 2: Edición de Video"
+subtopicTitle: "Línea de Tiempo, Montaje y Composición"
+semana: 12
+fecha: "26-09-2026"
+published: true
+description: "Configura proyectos en Kdenlive a 1080p, optimiza con clips proxy, domina cortes con atajos de teclado, transiciones suaves, titulación animada y exportación H.264."
+duration: 240
+objectives:
+  - "Configurar perfiles de proyecto a 1080p 30 fps y habilitar clips proxy para edición fluida"
+  - "Ejecutar cortes precisos con Shift + R, gestionar pistas independientes y suavizar audio"
+  - "Personalizar transiciones funcionales ajustando suavidad e invertir el sentido del barrido"
+  - "Componer imágenes PNG, crear títulos dinámicos con keyframes y exportar en MP4 H.264"
+---
+
+import { Icon } from "astro-icon/components";
+
+# Edición de Video: Línea de Tiempo y Montaje
+
+Domina el entorno de Kdenlive en este taller técnico. Aprende a configurar proyectos estandarizados, cortar tomas con agilidad de teclado, aislar audio, aplicar transiciones cinematográficas, animar títulos con fotogramas clave y exportar tu montaje final en alta definición.
+
+---
+
+## 1. Configuración de Proyecto y Perfiles Fijos <Icon name="lucide:settings-2" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Al arrastrar un primer clip a la línea de tiempo, Kdenlive suele mostrar la alerta: _"La resolución/FPS del clip no coincide con el proyecto"_. Si aceptas sin revisar, cada integrante del taller trabajará con resoluciones y frecuencias de cuadro desiguales.
+
+Fija el estándar técnico antes de importar material:
+
+1. Ve a **Configuración > Opciones predeterminadas de proyecto**.
+2. Selecciona el perfil **HD 1080p 30 fps** (o 60 fps si grabaste tomas de acción).
+3. Establece la carpeta de trabajo del proyecto en una ruta local accesible del disco duro (por ejemplo, `D:\TallerVideo\MiProyecto`).
+
+> **Regla de taller:** Rechaza siempre el cambio automático de perfil al arrastrar tomas grabadas en teléfonos verticales. El lienzo maestro debe mantenerse en 1920x1080 horizontal para garantizar uniformidad en la entrega.
+
+---
+
+## 2. Clips Proxy: Edición Fluida sin Saturar el Equipo <Icon name="lucide:zap" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Editar video en alta resolución (1080p o 4K) satura la memoria RAM y el procesador de las computadoras del aula durante la previsualización. Para trabajar sin tirones, utiliza el flujo de trabajo **offline vs online** mediante clips proxy:
+
+- **¿Qué es un clip proxy?** Es una copia réplica de tu video original generada automáticamente en baja resolución (por ejemplo, a 500 píxeles de ancho) y bajo peso.
+- **Comportamiento en edición:** Mientras montas, cortas y aplicas efectos, reproduces el archivo ligero sin esfuerzo técnico.
+- **Comportamiento al renderizar:** Al exportar el video final, Kdenlive sustituye de forma transparente los proxies por los archivos maestros en máxima calidad.
+
+Activa los proxies desde el menú: **Proyecto > Ajustes del proyecto > Pestaña Clips de reemplazo (Proxy)** y marca la casilla **Habilitar clips de reemplazo**.
+
+---
+
+## 3. Anatomía de la Interfaz: Espacio Modular <Icon name="lucide:layout-grid" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Kdenlive organiza su espacio de trabajo en cuatro cuadrantes principales que puedes redimensionar o desacoplar según tu comodidad:
+
+- **Carpeta del Proyecto (Project Bin):** El archivador donde importas y organizas tus tomas de video, pistas de música, grabaciones de voz e imágenes. Usa carpetas internas (`Video`, `Audio`, `Graficos`) para mantener el orden.
+- **Monitor de Clip:** Ventana para inspeccionar el material en crudo antes de bajarlo al montaje. Aquí marcas puntos de entrada (`I`) y salida (`O`).
+- **Monitor de Proyecto:** Ventana de salida que reproduce exactamente lo que está montado en la línea de tiempo.
+- **Línea de Tiempo (Timeline):** La cinta horizontal donde apilas capas de video (V1, V2, V3) y pistas de audio (A1, A2).
+
+---
+
+## 4. Navegación Ágil y Cortes de Precisión <Icon name="lucide:scissors" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Olvídate de hacer clic continuo con el ratón sobre la herramienta de navaja. Los editores profesionales controlan la línea de tiempo con la mano izquierda sobre el teclado:
+
+- **Reproducción y pausa:** Presiona `Espacio` para arrancar y detener el cabezal al instante.
+- **Zoom milimétrico:** Mantén presionado `Ctrl` y mueve la rueda del ratón hacia adelante para ampliar fotogramas individuales, o hacia atrás para ver la secuencia completa.
+- **Corte instantáneo en el cabezal:** Coloca la aguja de reproducción en el punto deseado y pulsa **`Shift + R`**. El clip se divide limpiamente en dos sin cambiar de herramienta.
+- **Selección múltiple:** Mantén presionado `Shift` y haz clic en los fragmentos sobrantes para eliminarlos en bloque con la tecla `Supr`.
+
+---
+
+## 5. Organización Multipista y Separación de Audio <Icon name="lucide:layers" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Por defecto, una toma importada viene con su pista de video y su pista de audio agrupadas en una sola entidad. Si intentas borrar el audio ambiente ruidoso, también borrarás la imagen.
+
+Aprende a separar y reestructurar tus capas:
+
+1. Haz clic derecho sobre el clip en la línea de tiempo y selecciona **Desagrupar clips**.
+2. Haz clic fuera para deseleccionar. Ahora selecciona únicamente la pista de audio verde y elimínala o muévela a otra pista.
+3. Para insertar pistas nuevas de música o efectos de sonido, haz clic derecho en el encabezado izquierdo de las pistas y elige **Insertar pista**.
+
+> **Estructura recomendada:** Mantén el video principal en `V1`, títulos y logotipos en `V2`, voces en `A1` y música ambiental en `A2`.
+
+---
+
+## 6. Limpieza Sonora: Desvanecimientos y Ganancia <Icon name="lucide:volume-2" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Un corte de audio abrupto produce un clic acústico molesto en los altavoces. Aplica siempre transiciones de entrada y salida sonora para cuidar los oídos de la audiencia:
+
+- **Atenuación rápida (Fade In / Fade Out):** Acerca el cursor a las esquinas superiores de cualquier clip de audio. Verás aparecer un pequeño círculo verde (inicio) y uno rojo (final). Arrastra el círculo hacia adentro medio segundo para crear una curva de desvanecimiento suave.
+- **Control de Ganancia (Volumen):** Arrastra el efecto **Volumen** desde la pestaña de efectos sobre la pista de audio. Ajusta los decibelios (`dB`) en el panel de propiedades para evitar que la música tape la voz principal.
+
+> **Regla de mezcla:** La música de fondo debe oscilar entre `-18 dB` y `-24 dB` cuando hay diálogo o voz presente.
+
+---
+
+## 7. Transiciones Funcionales y Control de Suavidad <Icon name="lucide:sparkles" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Una transición no debe ser un adorno vistoso que distraiga, sino un puente que dé continuidad al relato visual:
+
+- **Disolvencia cruzada en la misma pista:** Acerca dos clips adyacentes hasta que se toquen. Haz clic en el círculo interactivo de mezcla que surge en la unión inferior para enlazar ambas tomas.
+- **Métodos de barrido:** En la pestaña de propiedades de la transición, cambia el tipo entre disolvencia estándar, barrido radial o barrido de nubes (_cloud_).
+- **Control de Suavidad (Softness):** Por defecto, los barridos tienen un borde duro y tosco. Aumenta el parámetro de suavidad a 20% o 30% para difuminar la frontera entre tomas y obtener un acabado cinematográfico.
+- **Invertir barrido:** Marca la casilla **Invertir** para alternar la dirección del movimiento si la acción del plano lo requiere.
+
+---
+
+## 8. Sincronía Sonora y Ritmo de Montaje <Icon name="lucide:music" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+El ritmo de un video depende de cómo se coordinan los cortes visuales con los acentos de la banda sonora:
+
+1. Importa una pista instrumental a la pista `A2` y amplía la vista de su forma de onda.
+2. Identifica los golpes de ritmo (bombos, cajas o caídas de bajo) representados como picos verticales en la onda de audio.
+3. Ajusta la duración de cada toma de video para que el corte coincida exactamente con ese acento rítmico.
+4. Recorta las colas sobrantes de audio al final del video para impedir que la música continúe sonando sobre una pantalla negra.
+
+---
+
+## 9. Composición, Canales Alfa y Posición <Icon name="lucide:move" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Para superponer logotipos, firmas de autor o cuadros secundarios sobre el video, domina el canal alfa y las transformaciones:
+
+- **JPG vs PNG:** Una imagen JPG siempre tiene un fondo opaco (habitualmente blanco) que cubre el video inferior. Un archivo PNG con **canal alfa** conserva áreas transparentes, dejando ver únicamente el gráfico o isotipo.
+- **Efecto Transformar:** Aplica el efecto **Transformar** sobre el clip de video o imagen ubicado en la pista `V2`.
+- **Escala y encuadre:** Usa los nodos rojos que aparecen en el monitor de proyecto para redimensionar el elemento o cambiar su escala porcentual. Arrástralo a una esquina para construir un recuadro de imagen en imagen (_Picture-in-Picture_).
+
+---
+
+## 10. Generador de Títulos y Legibilidad Visual <Icon name="lucide:type" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Crea títulos y rótulos informativos directamente en Kdenlive sin necesidad de programas externos:
+
+1. En la Carpeta del Proyecto, abre el menú desplegable y selecciona **Agregar clip de título**.
+2. Escribe tu texto en el lienzo del titulador.
+3. Elige una tipografía sin remates (Sans Serif) con peso grueso (Bold) para asegurar lectura rápida en pantallas pequeñas.
+4. Centra el rótulo utilizando los botones de alineación horizontal y vertical.
+5. Activa la opción **Sombra (Shadow)** con un leve desenfoque para separar las letras del fondo.
+
+> **Truco de legibilidad:** Si el fondo de video tiene demasiado detalle o movimiento, aplica el efecto **Desenfoque (Blur)** a la toma inferior mientras el título permanezca en pantalla.
+
+---
+
+## 11. Animación con Fotogramas Clave (Keyframes) <Icon name="lucide:play-circle" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Un fotograma clave (_keyframe_) registra las propiedades espaciales (posición, tamaño, opacidad) de un elemento en un segundo específico del tiempo. El programa interpola suavemente el movimiento entre dos puntos:
+
+1. Selecciona tu clip de título en la pista `V2` y abre el efecto **Transformar**.
+2. **Punto de inicio:** Sitúa el cabezal al principio del clip, presiona el botón `+` para agregar un keyframe y arrastra el título completamente fuera del lienzo (por la izquierda o por abajo).
+3. **Punto de lectura:** Avanza 1 segundo en el tiempo, crea otro keyframe y coloca el título en el centro de la pantalla.
+4. **Punto de salida:** Avanza hasta medio segundo antes del final del clip, marca la posición central, y en el último fotograma desplaza el título hacia fuera de la pantalla.
+
+Prueba la reproducción con `Espacio` para verificar la fluidez del desplazamiento.
+
+---
+
+## 12. Guardado Seguro del Proyecto y Rutas de Archivo <Icon name="lucide:folder-check" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Comprende con claridad la diferencia entre tu archivo de trabajo y los archivos multimedia reales:
+
+- **El archivo `.kdenlive`:** Es un documento de texto en formato XML que solo contiene coordenadas, listas de cortes, efectos aplicados y rutas relativas a tus archivos. **No contiene los videos físicamente**.
+- **Pérdida de enlaces (Missing clips):** Si mueves tus videos crudos a otra carpeta, borras una descarga o cambias de memoria USB, Kdenlive mostrará un aviso de archivos perdidos en rojo.
+- **Práctica de aula:** Guarda siempre todos los videos, audios y el propio archivo `.kdenlive` juntos dentro de una misma carpeta raíz de tu estación de trabajo.
+
+---
+
+## 13. Procesado Final (Render) en MP4 <Icon name="lucide:film" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+El renderizado procesa todos los cortes, títulos y pistas de audio para fusionarlos en un único archivo de video reproducible en cualquier dispositivo:
+
+1. Haz clic en el botón superior **Procesar** (_Render_) o presiona el atajo `Ctrl + Return`.
+2. Selecciona la categoría **Generar archivo** y el formato contenedor **MP4**.
+3. Verifica que el perfil de codificación indique **H.264 / AAC**, el estándar universal para la web.
+4. Comprueba que la opción seleccionada sea **Proyecto completo** (y no solo la zona de previsualización).
+5. Asigna el nombre de salida formal: `Apellido_Nombre_Semana12.mp4` y presiona **Procesar a archivo**.
+
+Espera a que la barra de progreso alcance el 100% antes de cerrar el programa.
+
+---
+
+## Ficha Técnica: Atajos de Teclado en Kdenlive <Icon name="lucide:keyboard" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Memoriza estos atajos para multiplicar tu velocidad de edición en la sala de cómputo:
+
+<table>
+  <thead>
+    <tr>
+      <th>Acción Técnica</th>
+      <th>Atajo de Teclado</th>
+      <th>Resultado en el Espacio de Trabajo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Reproducir / Pausar</td>
+      <td>Espacio</td>
+      <td>Arranca o detiene la reproducción sobre el monitor activo</td>
+    </tr>
+    <tr>
+      <td>Cortar en el cabezal</td>
+      <td>Shift + R</td>
+      <td>Divide el clip activo en la posición exacta de la aguja</td>
+    </tr>
+    <tr>
+      <td>Zoom en línea de tiempo</td>
+      <td>Ctrl + Rueda del ratón</td>
+      <td>Amplía o reduce la escala temporal para cortes precisos</td>
+    </tr>
+    <tr>
+      <td>Desplazamiento horizontal</td>
+      <td>Shift + Rueda del ratón</td>
+      <td>
+        Avanza o retrocede por la línea de tiempo sin tocar la barra inferior
+      </td>
+    </tr>
+    <tr>
+      <td>Selección múltiple</td>
+      <td>Shift + Clic izquierdo</td>
+      <td>Añade clips contiguos o separados a la selección actual</td>
+    </tr>
+    <tr>
+      <td>Deshacer acción</td>
+      <td>Ctrl + Z</td>
+      <td>Revierte el último corte, movimiento o efecto aplicado</td>
+    </tr>
+    <tr>
+      <td>Ventana de Renderizado</td>
+      <td>Ctrl + Return</td>
+      <td>Abre directamente el menú de exportación de video</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## Reto Técnico de Taller: Montaje de Microvideo <Icon name="lucide:check-circle" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Aplica los conocimientos de la sesión para entregar tu producto audiovisual al término de las 4 horas:
+
+### Requisitos del Entregable
+
+- **Duración total:** Entre 30 y 45 segundos exactos.
+- **Tomas mínimas:** 4 planos de video distintos en la pista `V1`, recortados con `Shift + R` sin cuadros muertos.
+- **Banda sonora:** 1 pista de música en `A2` con atenuaciones suaves (_Fade In_ de 1 segundo al inicio y _Fade Out_ de 2 segundos al cierre).
+- **Transición funcional:** Al menos 1 disolvencia o barrido con suavidad ajustada entre dos tomas clave.
+- **Título animado:** Rótulo con tu nombre y apellido en `V2`, animado con fotogramas clave de entrada y salida, con sombra o desenfoque de fondo.
+- **Exportación:** Archivo final en formato `MP4` a 1080p, sin barras negras ni desincronización de audio.

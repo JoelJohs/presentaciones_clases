@@ -1,0 +1,202 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-25T21:59:50-06:00",
+  "title": "Design System: Plataforma de Estudios y Presentación de Clases",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Azul Técnico CPI",
+        "canonical": "#0868A8",
+        "tonalRamp": ["#032640", "#05406B", "#0868A8", "#1E82C6", "#4CA3E0", "#84C2EC", "#C4E2F6", "#EEF6FC"]
+      },
+      "navy": {
+        "role": "neutral",
+        "displayName": "Navy Naval Profundo",
+        "canonical": "#0E2A44",
+        "tonalRamp": ["#05111C", "#0E2A44", "#18446D", "#235F97", "#3B81C4", "#72A7DB", "#B3D1EE", "#EBF2F9"]
+      },
+      "accent": {
+        "role": "secondary",
+        "displayName": "Ámbar Acento",
+        "canonical": "#E8A800",
+        "tonalRamp": ["#423000", "#7A5900", "#B38200", "#E8A800", "#FFC526", "#FFD766", "#FFE9A6", "#FFF7E0"]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Superficie Hielo",
+        "canonical": "#F3F8FC",
+        "tonalRamp": ["#16232F", "#32485C", "#57728B", "#859FB6", "#B5C8D8", "#D9E5EE", "#EDF4FA", "#F3F8FC"]
+      },
+      "surface-elevated": {
+        "role": "neutral",
+        "displayName": "Superficie Elevada",
+        "canonical": "#FFFFFF",
+        "tonalRamp": ["#202428", "#42474E", "#666D77", "#8E96A1", "#B8BFC9", "#DEE2E8", "#F3F5F8", "#FFFFFF"]
+      },
+      "border-subtle": {
+        "role": "neutral",
+        "displayName": "Borde Sutil",
+        "canonical": "#D8E4EE",
+        "tonalRamp": ["#1C2630", "#334454", "#50657A", "#748AA1", "#9EB2C7", "#C5D4E3", "#D8E4EE", "#F2F6FA"]
+      },
+      "text-main": {
+        "role": "neutral",
+        "displayName": "Texto Principal",
+        "canonical": "#12293E",
+        "tonalRamp": ["#07111A", "#12293E", "#204262", "#325E89", "#4E7FB1", "#7EA4CA", "#B7CEE4", "#EBF1F7"]
+      },
+      "success": {
+        "role": "tertiary",
+        "displayName": "Verde Práctico",
+        "canonical": "#107C41",
+        "tonalRamp": ["#052E18", "#0B522B", "#107C41", "#1DA75B", "#3ED27F", "#78E2A7", "#BAF2D3", "#ECFBF3"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display / H1 Lección",
+        "purpose": "Encabezado principal único al inicio del documento MDX."
+      },
+      "headline": {
+        "displayName": "Headline / H2 Diapositiva",
+        "purpose": "Delimitador de cada diapositiva interactiva y sección temática."
+      },
+      "title": {
+        "displayName": "Title / H3 Subtema",
+        "purpose": "Subsecciones internas, retos y bloques de demostración."
+      },
+      "body": {
+        "displayName": "Body / Prosa Pedagógica",
+        "purpose": "Texto de lectura e instrucciones en 2ª persona imperativo."
+      },
+      "label": {
+        "displayName": "Label / Badge",
+        "purpose": "Etiquetas de módulos, pasos y estados técnicos."
+      }
+    },
+    "shadows": [
+      {
+        "name": "ambient-low",
+        "value": "0 2px 10px rgba(0, 0, 0, 0.03)",
+        "purpose": "Sombra ambiental para tarjetas de contenido en estado de reposo."
+      },
+      {
+        "name": "hover-lift",
+        "value": "0 4px 16px rgba(13, 148, 136, 0.10)",
+        "purpose": "Elevación y micro-resplandor durante el hover en tarjetas interactivas."
+      },
+      {
+        "name": "slide-dock",
+        "value": "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+        "purpose": "Elevación tridimensional máxima para el muelle de controles de diapositivas."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-standard",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Curva estándar para micro-interacciones de hover y clics."
+      },
+      {
+        "name": "duration-fast",
+        "value": "150ms",
+        "purpose": "Transición rápida de colores y bordes de enfoque."
+      },
+      {
+        "name": "duration-normal",
+        "value": "200ms",
+        "purpose": "Micro-elevación de tarjetas y botones (-2px)."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Botón de acción principal en el sistema.",
+      "html": "<button class=\"ds-btn-primary\">Iniciar Lección</button>",
+      "css": ".ds-btn-primary { background-color: #0868A8; color: #FFFFFF; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.875rem; font-weight: 600; padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; transition: background-color 150ms ease, transform 150ms ease; } .ds-btn-primary:hover { background-color: #075886; transform: translateY(-1px); } .ds-btn-primary:focus-visible { outline: 2px solid #0868A8; outline-offset: 2px; }"
+    },
+    {
+      "name": "Download Resource Button",
+      "kind": "button",
+      "refersTo": "button-download",
+      "description": "Botón de acción para descarga de material y archivos de laboratorio.",
+      "html": "<button class=\"ds-btn-download\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"><path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/><polyline points=\"7 10 12 15 17 10\"/><line x1=\"12\" y1=\"15\" x2=\"12\" y2=\"3\"/></svg> Descargar Archivo</button>",
+      "css": ".ds-btn-download { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #107C41 0%, #059669 100%); color: #FFFFFF; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.925rem; font-weight: 700; padding: 12px 22px; border-radius: 12px; border: none; cursor: pointer; box-shadow: 0 4px 14px rgba(16, 124, 65, 0.35); transition: transform 200ms ease, box-shadow 200ms ease; } .ds-btn-download:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(16, 124, 65, 0.45); }"
+    },
+    {
+      "name": "Mode Switcher",
+      "kind": "custom",
+      "refersTo": "mode-switcher",
+      "description": "Alternador entre modo lectura y modo diapositivas.",
+      "html": "<div class=\"ds-mode-switcher\"><button class=\"ds-mode-btn is-active\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M8 2h8a2 2 0 0 1 2 2v14a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V4a2 2 0 0 1 2-2z\"/><path d=\"M8 7h8\"/><path d=\"M8 11h8\"/></svg> Scroll</button><button class=\"ds-mode-btn\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M2 3h20v14H2z\"/><path d=\"M12 17v4\"/><path d=\"M8 21h8\"/></svg> Diapositivas</button></div>",
+      "css": ".ds-mode-switcher { display: inline-flex; align-items: center; padding: 4px; border-radius: 12px; border: 1px solid #D8E4EE; background: #F1F5F9; gap: 4px; font-family: ui-sans-serif, system-ui, sans-serif; } .ds-mode-btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 0.75rem; font-weight: 600; color: #5B6B7C; border: none; background: transparent; border-radius: 8px; cursor: pointer; transition: all 150ms ease; } .ds-mode-btn.is-active { background: #FFFFFF; color: #0868A8; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); }"
+    },
+    {
+      "name": "Resource Download Card",
+      "kind": "card",
+      "refersTo": "card-elevated",
+      "description": "Tarjeta para descarga de plantillas y recursos complementarios.",
+      "html": "<div class=\"ds-card-download\"><div class=\"ds-card-icon\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z\"/><polyline points=\"14 2 14 8 20 8\"/></svg></div><div class=\"ds-card-content\"><span class=\"ds-card-tag\">Material Práctico</span><h4 class=\"ds-card-title\">Plantilla de Inventario de Hardware</h4><p class=\"ds-card-desc\">Archivo XLSX listo para registrar componentes de laboratorio.</p></div></div>",
+      "css": ".ds-card-download { display: flex; align-items: center; gap: 16px; padding: 18px 22px; border-radius: 16px; border: 1px solid #D8E4EE; background: #FFFFFF; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03); transition: transform 200ms ease, box-shadow 200ms ease; font-family: ui-sans-serif, system-ui, sans-serif; } .ds-card-download:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(13, 148, 136, 0.08); } .ds-card-icon { width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #107C41 0%, #059669 100%); color: #ffffff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; } .ds-card-content { display: flex; flex-direction: column; gap: 4px; } .ds-card-tag { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: #107C41; background: rgba(16, 124, 65, 0.1); padding: 2px 8px; border-radius: 6px; width: fit-content; } .ds-card-title { margin: 0; font-size: 1.05rem; font-weight: 700; color: #0E2A44; } .ds-card-desc { margin: 0; font-size: 0.825rem; color: #5B6B7C; }"
+    },
+    {
+      "name": "Slide Controls Dock",
+      "kind": "custom",
+      "refersTo": "slide-dock",
+      "description": "Muelle flotante de controles para Modo Presentación.",
+      "html": "<div class=\"ds-slide-dock\"><button class=\"ds-dock-btn\" aria-label=\"Anterior\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"><path d=\"M15 18l-6-6 6-6\"/></svg></button><div class=\"ds-dock-counter\"><span>3</span><span class=\"ds-dock-sep\">/</span><span>12</span></div><button class=\"ds-dock-btn\" aria-label=\"Siguiente\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"><path d=\"M9 18l6-6-6-6\"/></svg></button><div class=\"ds-dock-divider\"></div><button class=\"ds-dock-btn\" aria-label=\"Pantalla completa\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3\"/></svg></button></div>",
+      "css": ".ds-slide-dock { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 16px; background: rgba(28, 25, 23, 0.92); border: 1px solid rgba(87, 83, 78, 0.6); backdrop-filter: blur(12px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35); font-family: ui-sans-serif, system-ui, sans-serif; } .ds-dock-btn { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 10px; background: #292524; color: #E7E5E4; border: none; cursor: pointer; transition: all 150ms ease; } .ds-dock-btn:hover { background: #0D9488; color: #FFFFFF; } .ds-dock-counter { display: flex; align-items: center; gap: 6px; padding: 0 6px; font-family: ui-monospace, monospace; font-size: 0.8rem; font-weight: 700; color: #E7E5E4; } .ds-dock-sep { color: #78716C; } .ds-dock-divider { width: 1px; height: 18px; background: #44403C; margin: 0 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "El Manual de Taller Digital",
+    "overview": "Este sistema de diseño fue concebido para eliminar la fricción entre la explicación técnica proyectada en un aula de cómputo y el autoestudio individual frente al monitor. Inspirado en la precisión de los manuales de ingeniería y guías de taller práctico, la interfaz prioriza el contenido técnico, la jerarquía limpia y la legibilidad inmediata sobre cualquier adorno decorativo. Cada componente visual existe para facilitar la comprensión de conceptos y la ejecución de comandos.\n\nRechaza categóricamente la estética de los 'LMS corporativos obsoletos' (estructuras sobrecargadas, paneles densos de menús laberínticos) y las distracciones de gamificación infantil (confeti, animaciones innecesarias, recompensas ruidosas). En su lugar, proyecta una atmósfera de concentración profesional: fondos pulcros color hielo, tipografía técnica de alto contraste, acentos de color deliberados vinculados a la identidad CPI y micro-interacciones ágiles que responden al instante.",
+    "keyCharacteristics": [
+      "Dualidad de Escala Dinámica: Tamaño estándar y compacto para lectura personal frente al monitor, y escala ampliada de alto impacto para proyección en proyector de laboratorio.",
+      "Jerarquía Tonal Estructurada: Superficies diferenciadas por tono y bordes nítidos de 1px en lugar de sombras pesadas o elevaciones falsas.",
+      "Enfoque Técnico Funcional: Bloques de código con marcado semántico, tablas HTML nítidas y retos prácticos destacados como puntos focales.",
+      "Eficiencia y Calma Visual: Fondos hielo azulado (#F3F8FC) que reducen la fatiga visual frente a pantallas durante sesiones intensivas de laboratorio."
+    ],
+    "rules": [
+      {
+        "name": "The High-Contrast Legibility Rule",
+        "body": "Ningún texto de contenido ni bloque de código puede quedar por debajo del ratio WCAG AA (4.5:1). En proyector, los títulos y comandos deben ser legibles desde el fondo del laboratorio sin forzar la vista.",
+        "section": "colors"
+      },
+      {
+        "name": "The Dual-Scale Projection Rule",
+        "body": "En Modo Presentación (.presentation-mode), el cuerpo del texto escala obligatoriamente a 22px y los títulos a 46px para garantizar visibilidad nítida en proyectores de baja resolución o iluminación ambiental difusa.",
+        "section": "typography"
+      },
+      {
+        "name": "The Rest-Is-Flat Rule",
+        "body": "En estado de reposo las superficies son predominantemente planas con bordes de 1px. La elevación tridimensional y sombras se reservan exclusivamente para indicar interactividad (hover) o elementos flotantes de control global.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do redactar todas las lecciones en 2ª persona imperativo dirigida directamente al estudiante ('Observa', 'Prueba', 'Crea', 'Compara', 'Comprueba').",
+      "Do utilizar exclusivamente tablas semánticas en HTML estándar (<table><thead>...</thead><tbody>...</tbody></table>) dentro de contenedores con scroll horizontal adaptativo.",
+      "Do verificar que las combinaciones de color en texto, bloques de código y llamadas editoriales cumplan con un ratio mínimo de contraste de 4.5:1 (WCAG AA).",
+      "Do separar cada diapositiva con un encabezado ## y una línea divisoria ---.",
+      "Do mantener el tiempo de respuesta de las micro-interacciones en 150-200ms con transiciones fluidas."
+    ],
+    "donts": [
+      "Don't utilizar tablas de Markdown con barras pipes (|---|), ya que quiebran el formateo y la adaptabilidad móvil de la plataforma.",
+      "Don't incluir notas, recordatorios ni instrucciones dirigidas al profesor ('agenda de la clase', 'explica al grupo', 'muestra en la pantalla').",
+      "Don't introducir animaciones intrusivas, gamificación con confeti ni temporizadores estresantes que distraigan de la concentración en el laboratorio.",
+      "Don't alterar la paleta hacia tonos fluorescentes o neón saturados que deslumbren en proyectores de aula.",
+      "Don't calcular o ponderar la asistencia del alumno en ninguna tabla de notas (la asistencia tiene 0% de validez numérica)."
+    ]
+  }
+}

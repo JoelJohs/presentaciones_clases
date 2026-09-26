@@ -4,8 +4,20 @@ import { getCollection } from 'astro:content';
 import { getNavigationStructure } from '../utils/navigation';
 import { Icon } from 'astro-icon/components';
 
+import { getTodasLasSemanas } from '../data/plan-estudios';
+
 const lecciones = await getCollection('lecciones');
 const nav = getNavigationStructure(lecciones);
+const todasLasSemanas = getTodasLasSemanas();
+
+const leccionesData = lecciones
+  .filter(l => l.data.published !== false)
+  .map(l => ({
+    slug: l.id.replace(/\.(mdx|md)$/, '').replace(/\/index$/, ''),
+    title: l.data.title,
+    semana: l.data.semana || 0,
+    moduleTitle: l.data.moduleTitle || '',
+  }));
 ---
 
 <Layout title="Panel del Docente" nav={nav} isLesson={false}>
@@ -114,6 +126,9 @@ const nav = getNavigationStructure(lecciones);
             </button>
             <span id="feedback-sabado" class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hidden"></span>
           </div>
+
+          <!-- Vista de Lección para Sábado -->
+          <div id="panel-sabado-lesson-details" class="pt-3 border-t border-brand-border space-y-2"></div>
         </div>
 
         <!-- Clase Domingo -->
@@ -157,6 +172,48 @@ const nav = getNavigationStructure(lecciones);
             </button>
             <span id="feedback-domingo" class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hidden"></span>
           </div>
+
+          <!-- Vista de Lección para Domingo -->
+          <div id="panel-domingo-lesson-details" class="pt-3 border-t border-brand-border space-y-2"></div>
+        </div>
+      </div>
+
+      <!-- Proyector Directo de Clases para Docente -->
+      <div class="p-5 sm:p-6 rounded-2xl border border-purple-500/30 bg-white dark:bg-brand-sidebar-bg space-y-4 shadow-xs">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <div class="flex items-center gap-2.5">
+            <div class="h-8 w-8 rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center">
+              <Icon name="lucide:presentation" class="h-4 w-4" />
+            </div>
+            <div>
+              <h2 class="text-sm font-bold text-brand-text">Proyector Directo de Clases para Docente</h2>
+              <p class="text-xs text-brand-muted">Proyecta directamente cualquier lección disponible en el aula sin alterar el avance de los grupos.</p>
+            </div>
+          </div>
+          <span class="text-xs font-mono font-semibold px-2.5 py-1 rounded-lg bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+            Acceso Docente
+          </span>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
+          <div class="flex-1">
+            <label for="select-quick-project-lesson" class="sr-only">Seleccionar clase para proyectar</label>
+            <select
+              id="select-quick-project-lesson"
+              class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-white dark:bg-brand-bg text-xs font-medium text-brand-text outline-none focus:border-brand-primary"
+            >
+              <!-- Llenado dinámicamente -->
+            </select>
+          </div>
+          <button
+            type="button"
+            id="btn-quick-project-go"
+            class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs transition-colors shadow-xs shrink-0 cursor-pointer"
+          >
+            <Icon name="lucide:presentation" class="h-4 w-4" />
+            <span>Proyectar en pantalla de aula</span>
+            <Icon name="lucide:arrow-right" class="h-3.5 w-3.5" />
+          </button>
         </div>
       </div>
 
@@ -250,6 +307,10 @@ const nav = getNavigationStructure(lecciones);
       </div>
     </div>
   </div>
+
+  <!-- Datos del Plan de Estudio y Lecciones para el cliente -->
+  <script is:inline id="panel-semanas-json" type="application/json" set:html={JSON.stringify(todasLasSemanas)}></script>
+  <script is:inline id="panel-lecciones-json" type="application/json" set:html={JSON.stringify(leccionesData)}></script>
 </Layout>
 
 <script>
@@ -258,6 +319,89 @@ const nav = getNavigationStructure(lecciones);
   import { escapeHtml } from '../utils/security';
 
   let isSyncingStudents = false;
+
+  const semanasDataEl = document.getElementById('panel-semanas-json');
+  const leccionesDataEl = document.getElementById('panel-lecciones-json');
+  const allSemanas = semanasDataEl ? JSON.parse(semanasDataEl.textContent || '[]') : [];
+  const allLecciones = leccionesDataEl ? JSON.parse(leccionesDataEl.textContent || '[]') : [];
+
+  function getBadgeConfig(tipo: string): { bg: string; text: string; label: string } {
+    switch (tipo) {
+      case 'laboratorio':
+        return { bg: 'bg-sky-50 dark:bg-sky-950/50 border border-sky-200 dark:border-sky-800', text: 'text-sky-800 dark:text-sky-300', label: 'Laboratorio' };
+      case 'proyecto':
+        return { bg: 'bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800', text: 'text-indigo-800 dark:text-indigo-300', label: 'Proyecto' };
+      case 'evaluacion':
+        return { bg: 'bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800', text: 'text-rose-800 dark:text-rose-300', label: 'Evaluación' };
+      default:
+        return { bg: 'bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800', text: 'text-amber-800 dark:text-amber-300', label: 'Práctica de Aula' };
+    }
+  }
+
+  function renderGroupLessonPreview(containerId: string, weekNum: number) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const sem = allSemanas.find((s: any) => s.semana === weekNum) || allSemanas[0];
+    if (!sem) return;
+    const matchLesson = allLecciones.find((l: any) => l.semana === sem.semana);
+    const b = getBadgeConfig(sem.claseTipo);
+
+    container.innerHTML = `
+      <div class="space-y-1.5">
+        <div class="flex items-center justify-between gap-2 flex-wrap text-xs">
+          <span class="font-mono font-semibold text-brand-muted text-[11px]">
+            Módulo ${escapeHtml(sem.moduloNumeroStr)}: ${escapeHtml(sem.moduloTitulo)}
+          </span>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold ${b.bg} ${b.text}">
+            ${escapeHtml(b.label)}
+          </span>
+        </div>
+        <h5 class="text-sm font-bold text-brand-text leading-snug">
+          Semana ${sem.semana}: ${escapeHtml(sem.claseTitulo)}
+        </h5>
+        <p class="text-xs text-brand-muted line-clamp-2 leading-relaxed">
+          ${escapeHtml(sem.claseDescripcion)}
+        </p>
+      </div>
+
+      <div class="pt-2 flex items-center justify-between gap-2 flex-wrap">
+        ${matchLesson ? `
+          <a
+            href="/${matchLesson.slug}?mode=slides"
+            class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-brand-primary hover:bg-brand-accent text-white font-semibold text-xs transition-colors shadow-xs"
+            title="Abrir presentación de clase para proyectar en aula"
+          >
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/>
+            </svg>
+            <span>Proyectar clase activa en aula</span>
+            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/>
+            </svg>
+          </a>
+        ` : `
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-callout-bg border border-brand-border text-xs text-brand-muted font-medium">
+            <svg class="h-4 w-4 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+            <span>Sesión práctica en aula de cómputo</span>
+          </span>
+        `}
+      </div>
+    `;
+  }
+
+  function initQuickProjectDropdown() {
+    const selectQuick = document.getElementById('select-quick-project-lesson') as HTMLSelectElement | null;
+    if (selectQuick && allLecciones.length > 0 && selectQuick.children.length === 0) {
+      const sorted = [...allLecciones].sort((a: any, b: any) => (a.semana || 0) - (b.semana || 0));
+      selectQuick.innerHTML = sorted.map((l: any) => `
+        <option value="${l.slug}">
+          Semana ${l.semana || '—'}: ${escapeHtml(l.title)}
+        </option>
+      `).join('');
+    }
+  }
 
   function showFeedback(id: string, message: string) {
     const el = document.getElementById(id);
@@ -318,6 +462,12 @@ const nav = getNavigationStructure(lecciones);
         inputDom.value = String(db.grupos.domingo?.semanaActual || 1);
       }
     }
+
+    const sabWeek = parseInt(inputSab?.value || String(db.grupos.sabado?.semanaActual || 4), 10);
+    const domWeek = parseInt(inputDom?.value || String(db.grupos.domingo?.semanaActual || 1), 10);
+    renderGroupLessonPreview('panel-sabado-lesson-details', sabWeek);
+    renderGroupLessonPreview('panel-domingo-lesson-details', domWeek);
+    initQuickProjectDropdown();
 
     renderStudentsTable(db.usuarios.filter(u => u.rol === 'alumno'));
   }
@@ -392,7 +542,7 @@ const nav = getNavigationStructure(lecciones);
             const prof = db.usuarios.find(u => u.rol === 'profesor') || db.usuarios[0];
             db.usuarios = [prof, ...remoteStudents];
             // Guardar localmente de forma directa sin disparar cpi-portal-update recursivo
-            localStorage.setItem('cpi_portal_db_v1', JSON.stringify(db));
+            savePortalDB(db);
             renderStudentsTable(remoteStudents);
           }
         } catch (err) {
@@ -404,6 +554,17 @@ const nav = getNavigationStructure(lecciones);
     }
   }
 
+  // Escuchar cambios de escritura directa en inputs de semana
+  document.getElementById('week-sabado')?.addEventListener('input', (e) => {
+    const val = parseInt((e.target as HTMLInputElement).value || '1', 10) || 1;
+    renderGroupLessonPreview('panel-sabado-lesson-details', val);
+  });
+
+  document.getElementById('week-domingo')?.addEventListener('input', (e) => {
+    const val = parseInt((e.target as HTMLInputElement).value || '1', 10) || 1;
+    renderGroupLessonPreview('panel-domingo-lesson-details', val);
+  });
+
   // Eventos de fijar / avanzar semana
   document.getElementById('btn-save-sabado')?.addEventListener('click', () => {
     const input = document.getElementById('week-sabado') as HTMLInputElement | null;
@@ -411,6 +572,7 @@ const nav = getNavigationStructure(lecciones);
       const val = Math.max(1, Math.min(54, parseInt(input.value) || 1));
       input.value = String(val);
       updateWeek('sabado', val);
+      renderGroupLessonPreview('panel-sabado-lesson-details', val);
       showFeedback('feedback-sabado', `✓ Semana ${val} guardada`);
     }
   });
@@ -421,6 +583,7 @@ const nav = getNavigationStructure(lecciones);
     const nextVal = Math.min(54, current + 1);
     if (input) input.value = String(nextVal);
     updateWeek('sabado', nextVal);
+    renderGroupLessonPreview('panel-sabado-lesson-details', nextVal);
     showFeedback('feedback-sabado', `✓ Semana ${nextVal} guardada`);
   });
 
@@ -430,6 +593,7 @@ const nav = getNavigationStructure(lecciones);
       const val = Math.max(1, Math.min(54, parseInt(input.value) || 1));
       input.value = String(val);
       updateWeek('domingo', val);
+      renderGroupLessonPreview('panel-domingo-lesson-details', val);
       showFeedback('feedback-domingo', `✓ Semana ${val} guardada`);
     }
   });
@@ -440,7 +604,16 @@ const nav = getNavigationStructure(lecciones);
     const nextVal = Math.min(54, current + 1);
     if (input) input.value = String(nextVal);
     updateWeek('domingo', nextVal);
+    renderGroupLessonPreview('panel-domingo-lesson-details', nextVal);
     showFeedback('feedback-domingo', `✓ Semana ${nextVal} guardada`);
+  });
+
+  // Botón proyector directo de clases
+  document.getElementById('btn-quick-project-go')?.addEventListener('click', () => {
+    const sel = document.getElementById('select-quick-project-lesson') as HTMLSelectElement | null;
+    if (sel && sel.value) {
+      window.location.href = `/${sel.value}?mode=slides`;
+    }
   });
 
   // Exportar Respaldo

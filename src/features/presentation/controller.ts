@@ -43,6 +43,17 @@ class PresentationController {
     this.containerEl = container;
     this.mode = getStoredViewMode();
 
+    if (typeof window !== 'undefined') {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const modeParam = params.get('mode');
+        if (modeParam === 'slides' || modeParam === 'presentation-slides' || params.has('proyectar')) {
+          this.mode = 'presentation-slides';
+          setStoredViewMode('presentation-slides');
+        }
+      } catch {}
+    }
+
     if (this.containerEl && typeof window !== 'undefined') {
       this.slides = segmentDomContainer(this.containerEl);
       if (this.slides.length > 0) {
@@ -51,6 +62,7 @@ class PresentationController {
     }
 
     this.applyModeToDom();
+    this.notifySubscribers();
   }
 
   public getMode(): ViewMode {

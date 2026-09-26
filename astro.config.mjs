@@ -8,5 +8,6 @@ export default defineConfig({
   integrations: [mdx(), icon()],
   vite: {
     plugins: [tailwindcss()],
-  }
+  },
 });
+

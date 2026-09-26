@@ -1,0 +1,600 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { getNavigationStructure } from '../utils/navigation';
+import { Icon } from 'astro-icon/components';
+
+const lecciones = await getCollection('lecciones');
+const nav = getNavigationStructure(lecciones);
+---
+
+<Layout title="Sistema de Diseño | CPI" nav={nav} isLesson={false}>
+  <div class="space-y-12 pb-16">
+    <!-- Encabezado / Hero del Sistema de Diseño -->
+    <header class="border-b border-brand-border pb-8">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-brand-primary/10 text-brand-primary border border-brand-primary/20">
+              v2.0 • Canonical DESIGN.md
+            </span>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20">
+              Uso Interno
+            </span>
+          </div>
+          <h1 class="text-3xl sm:text-4xl font-extrabold text-brand-navy dark:text-white tracking-tight">
+            El Manual de Taller Digital
+          </h1>
+          <p class="text-sm sm:text-base text-brand-muted mt-2 max-w-3xl leading-relaxed">
+            Catálogo técnico, banco de pruebas y especificación de tokens para la Plataforma de Estudios CPI.
+            Garantiza máxima legibilidad en proyección de aula (1080p) y confort visual en autoestudio frente al monitor.
+          </p>
+        </div>
+
+        <!-- Barra de estado y saltos rápidos -->
+        <div class="flex flex-wrap items-center gap-2 shrink-0">
+          <a
+            href="#tokens"
+            class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-brand-border hover:bg-brand-hover-bg text-brand-muted hover:text-brand-text transition-colors"
+          >
+            Tokens
+          </a>
+          <a
+            href="#tipografia"
+            class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-brand-border hover:bg-brand-hover-bg text-brand-muted hover:text-brand-text transition-colors"
+          >
+            Tipografía
+          </a>
+          <a
+            href="#componentes"
+            class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-brand-border hover:bg-brand-hover-bg text-brand-muted hover:text-brand-text transition-colors"
+          >
+            Componentes
+          </a>
+          <a
+            href="#editorial"
+            class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-brand-border hover:bg-brand-hover-bg text-brand-muted hover:text-brand-text transition-colors"
+          >
+            Editorial
+          </a>
+          <a
+            href="#reglas"
+            class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-brand-border hover:bg-brand-hover-bg text-brand-muted hover:text-brand-text transition-colors"
+          >
+            Reglas
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- 1. TOKENS CROMÁTICOS -->
+    <section id="tokens" class="space-y-6 scroll-mt-20">
+      <div class="flex items-center justify-between border-b border-brand-border pb-3">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-bold text-brand-text flex items-center gap-2">
+            <Icon name="lucide:palette" class="w-6 h-6 text-brand-primary" />
+            1. Tokens Cromáticos y Superficies
+          </h2>
+          <p class="text-xs sm:text-sm text-brand-muted mt-0.5">
+            Anclados en la identidad CPI (Azul Técnico #0868A8 + Ámbar #F8C808). Ratios WCAG AA mínimos de 4.5:1.
+          </p>
+        </div>
+      </div>
+
+      <!-- Cuadrícula de Muestras -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Azul Primario Técnico -->
+        <div class="p-4 rounded-xl border border-brand-border bg-surface-elevated shadow-xs space-y-3">
+          <div class="h-20 rounded-lg bg-[#0868A8] flex items-center justify-center text-white font-bold text-sm shadow-inner">
+            #0868A8
+          </div>
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-brand-text">Azul Técnico CPI</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300 font-mono">Primary</span>
+            </div>
+            <p class="text-xs text-brand-muted mt-1">Botones principales, enlaces, barras de llamada y foco.</p>
+            <div class="mt-2 text-xs font-mono text-brand-muted">var(--color-brand-primary)</div>
+          </div>
+        </div>
+
+        <!-- Azul Navy Profundo -->
+        <div class="p-4 rounded-xl border border-brand-border bg-surface-elevated shadow-xs space-y-3">
+          <div class="h-20 rounded-lg bg-[#0E2A44] flex items-center justify-center text-white font-bold text-sm shadow-inner">
+            #0E2A44
+          </div>
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-brand-text">Navy Naval Profundo</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300 font-mono">Sidebar/H1</span>
+            </div>
+            <p class="text-xs text-brand-muted mt-1">Fondo de barra lateral, títulos H1 y contraste estructural.</p>
+            <div class="mt-2 text-xs font-mono text-brand-muted">var(--color-brand-navy)</div>
+          </div>
+        </div>
+
+        <!-- Ámbar Acento -->
+        <div class="p-4 rounded-xl border border-brand-border bg-surface-elevated shadow-xs space-y-3">
+          <div class="h-20 rounded-lg bg-[#E8A800] flex items-center justify-center text-slate-900 font-bold text-sm shadow-inner">
+            #E8A800 / #F8C808
+          </div>
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-brand-text">Ámbar Acento</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 font-mono">Accent</span>
+            </div>
+            <p class="text-xs text-brand-muted mt-1">Acentos del logo, badges pendientes y estados de alerta.</p>
+            <div class="mt-2 text-xs font-mono text-brand-muted">var(--color-brand-accent)</div>
+          </div>
+        </div>
+
+        <!-- Verde Práctico -->
+        <div class="p-4 rounded-xl border border-brand-border bg-surface-elevated shadow-xs space-y-3">
+          <div class="h-20 rounded-lg bg-[#107C41] flex items-center justify-center text-white font-bold text-sm shadow-inner">
+            #107C41
+          </div>
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-brand-text">Verde Práctico</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-mono">Success</span>
+            </div>
+            <p class="text-xs text-brand-muted mt-1">Descarga de recursos, retos superados y estados completados.</p>
+            <div class="mt-2 text-xs font-mono text-brand-muted">var(--color-success)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Superficies y Capas -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+        <div class="p-4 rounded-xl border border-brand-border bg-brand-bg">
+          <div class="font-bold text-xs uppercase tracking-wider text-brand-muted mb-1">Superficie Base</div>
+          <div class="font-semibold text-brand-text text-sm">Hielo Azulado (#F3F8FC / #0B1620)</div>
+          <p class="text-xs text-brand-muted mt-1">Fondo general para reducir fatiga visual en pantallas.</p>
+        </div>
+        <div class="p-4 rounded-xl border border-brand-border bg-surface-elevated">
+          <div class="font-bold text-xs uppercase tracking-wider text-brand-muted mb-1">Superficie Elevada</div>
+          <div class="font-semibold text-brand-text text-sm">Blanco Puro (#FFFFFF / #16283A)</div>
+          <p class="text-xs text-brand-muted mt-1">Tarjetas de contenido, modales y bloques de interactividad.</p>
+        </div>
+        <div class="p-4 rounded-xl border border-brand-border bg-slate-100 dark:bg-brand-sidebar-bg">
+          <div class="font-bold text-xs uppercase tracking-wider text-brand-muted mb-1">Superficie Muted</div>
+          <div class="font-semibold text-brand-text text-sm">Gris Frío (#E9F0F7 / #101E2B)</div>
+          <p class="text-xs text-brand-muted mt-1">Fondos de toggles, bloques de atajos y paneles secundarios.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. TIPOGRAFÍA Y ESCALA DUAL -->
+    <section id="tipografia" class="space-y-6 scroll-mt-20">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-brand-border pb-3 gap-3">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-bold text-brand-text flex items-center gap-2">
+            <Icon name="lucide:type" class="w-6 h-6 text-brand-primary" />
+            2. Tipografía y Escala Dual Dinámica
+          </h2>
+          <p class="text-xs sm:text-sm text-brand-muted mt-0.5">
+            Fuente del sistema de carga instantánea sin FOUC. The Dual-Scale Projection Rule.
+          </p>
+        </div>
+
+        <!-- Conmutador de Escala de Demostración -->
+        <div class="inline-flex items-center gap-1.5 p-1 rounded-xl border border-brand-border bg-slate-100 dark:bg-brand-sidebar-bg">
+          <button
+            id="demo-scale-reading"
+            type="button"
+            class="px-3 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-brand-bg text-brand-primary shadow-xs transition-all"
+          >
+            Monitor (18px)
+          </button>
+          <button
+            id="demo-scale-presentation"
+            type="button"
+            class="px-3 py-1 rounded-lg text-xs font-semibold text-brand-muted hover:text-brand-text transition-all"
+          >
+            Proyector (22px)
+          </button>
+        </div>
+      </div>
+
+      <!-- Lienzo interactivo de espécimen tipográfico -->
+      <div id="typography-specimen-container" class="reading-mode p-6 sm:p-8 rounded-2xl border border-brand-border bg-surface-elevated transition-all duration-300">
+        <div class="prose max-w-none">
+          <h1>H1: Hardware y Sistemas Operativos de Computadoras</h1>
+          <p class="text-brand-muted text-xs sm:text-sm -mt-3 mb-6">
+            Display 800 • 2.50rem (40px) en lectura / 2.875rem (46px) en presentación
+          </p>
+
+          <h2>H2: 1. Anatomía de una Unidad Central de Procesamiento</h2>
+          <p class="text-brand-muted text-xs sm:text-sm -mt-2 mb-4">
+            Headline 700 • 2.00rem (32px) en lectura / 2.25rem (36px) en presentación • Delimita cada diapositiva
+          </p>
+
+          <h3>H3: Reto de Exploración: Identificación del Socket y Memoria RAM</h3>
+          <p class="text-brand-muted text-xs sm:text-sm -mt-2 mb-4">
+            Title 600 • 1.50rem (24px) en lectura / 1.75rem (28px) en presentación • Subsección interna
+          </p>
+
+          <p>
+            Observa con detenimiento la placa base. Desbloquea la palanca de seguridad del zócalo con firmeza y comprueba
+            la orientación de los pines triangulares en la esquina inferior izquierda. Ejecuta el comando <code class="font-mono">dxdiag</code> en la terminal de Windows para verificar la memoria total reconocida por el sistema operativo.
+          </p>
+
+          <p class="text-xs text-brand-muted italic border-t border-brand-border pt-4 mt-6">
+            Límite óptimo de lectura fijado en un máximo de <strong>75ch</strong> de ancho para proteger la vista durante sesiones largas.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. BOTONES Y CONTROLES INTERACTIVOS -->
+    <section id="componentes" class="space-y-6 scroll-mt-20">
+      <div class="border-b border-brand-border pb-3">
+        <h2 class="text-xl sm:text-2xl font-bold text-brand-text flex items-center gap-2">
+          <Icon name="lucide:layers" class="w-6 h-6 text-brand-primary" />
+          3. Botones y Controles de Interacción
+        </h2>
+        <p class="text-xs sm:text-sm text-brand-muted mt-0.5">
+          Micro-interacciones rápidas (150-200ms ease), radio estándar de 8-12px y anillos de foco visibles.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Botones de Acción -->
+        <div class="p-6 rounded-2xl border border-brand-border bg-surface-elevated space-y-4">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-brand-muted">Variantes de Botones</h3>
+          <div class="flex flex-wrap items-center gap-3">
+            <!-- Primario -->
+            <button
+              type="button"
+              class="px-4 py-2 rounded-lg bg-brand-primary hover:bg-brand-primary-hover text-white text-sm font-semibold shadow-xs hover:-translate-y-0.5 transition-all duration-150 focus-visible:outline-2 focus-visible:outline-brand-primary focus-visible:outline-offset-2"
+            >
+              Botón Primario
+            </button>
+
+            <!-- Secundario / Outline -->
+            <button
+              type="button"
+              class="px-4 py-2 rounded-lg border border-brand-border hover:bg-brand-hover-bg text-brand-text text-sm font-semibold hover:-translate-y-0.5 transition-all duration-150"
+            >
+              Secundario
+            </button>
+
+            <!-- Botón Descarga con Gradiente -->
+            <a
+              href="#descarga"
+              class="btn-download"
+            >
+              <Icon name="lucide:download" class="w-4 h-4" />
+              <span>Descargar Archivo</span>
+            </a>
+          </div>
+
+          <div class="pt-2 text-xs text-brand-muted">
+            Hover lift: <code class="font-mono text-brand-primary">translateY(-2px)</code> con elevación de sombra esmeralda para descargas.
+          </div>
+        </div>
+
+        <!-- Alternadores y Badges -->
+        <div class="p-6 rounded-2xl border border-brand-border bg-surface-elevated space-y-4">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-brand-muted">Alternador de Modo & Badges</h3>
+          
+          <!-- Mode Switcher -->
+          <div class="inline-flex items-center rounded-xl border border-brand-border bg-slate-100 dark:bg-brand-sidebar-bg p-1">
+            <button
+              type="button"
+              class="flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-lg bg-white dark:bg-brand-bg text-brand-primary shadow-xs"
+            >
+              <Icon name="lucide:scroll" class="h-3.5 w-3.5" />
+              <span>Scroll Continuo</span>
+            </button>
+            <button
+              type="button"
+              class="flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-lg text-brand-muted hover:text-brand-text"
+            >
+              <Icon name="lucide:presentation" class="h-3.5 w-3.5" />
+              <span>Diapositivas</span>
+            </button>
+          </div>
+
+          <!-- Badges de Módulo -->
+          <div class="pt-2">
+            <div class="text-xs font-semibold text-brand-muted mb-2">Insignias de Módulo (m0..m12):</div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="module-badge module-badge-m0" title="Módulo 0">0</span>
+              <span class="module-badge module-badge-m1" title="Módulo 1">1</span>
+              <span class="module-badge module-badge-m2" title="Módulo 2">2</span>
+              <span class="module-badge module-badge-m3" title="Módulo 3">3</span>
+              <span class="module-badge module-badge-m4" title="Módulo 4">4</span>
+              <span class="module-badge module-badge-m5" title="Módulo 5">5</span>
+              <span class="module-badge module-badge-m6" title="Módulo 6">6</span>
+              <span class="module-badge module-badge-m7" title="Módulo 7">7</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. ELEMENTOS EDITORIALES DE LECCIÓN -->
+    <section id="editorial" class="space-y-6 scroll-mt-20">
+      <div class="border-b border-brand-border pb-3">
+        <h2 class="text-xl sm:text-2xl font-bold text-brand-text flex items-center gap-2">
+          <Icon name="lucide:code-2" class="w-6 h-6 text-brand-primary" />
+          4. Elementos Editoriales y Contenido MDX
+        </h2>
+        <p class="text-xs sm:text-sm text-brand-muted mt-0.5">
+          Tablas HTML semánticas estrictas, callouts directos y citas de advertencia pedagógica.
+        </p>
+      </div>
+
+      <!-- Tablas HTML Estándar Responsive -->
+      <div class="p-6 rounded-2xl border border-brand-border bg-surface-elevated space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-brand-muted">
+            Tabla Semántica HTML (Prohibido sintaxis Markdown |---|)
+          </h3>
+          <span class="text-xs font-mono px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+            Responsive Scroll
+          </span>
+        </div>
+
+        <div class="prose prose-table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Componente</th>
+                <th>Función Primaria</th>
+                <th>Parámetro Crítico</th>
+                <th>Estado en Taller</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>CPU (Microprocesador)</strong></td>
+                <td>Ejecuta el ciclo Fetch-Decode-Execute de instrucciones.</td>
+                <td>Frecuencia en GHz y Socket compatible.</td>
+                <td><span class="text-emerald-600 dark:text-emerald-400 font-bold">Verificado</span></td>
+              </tr>
+              <tr>
+                <td><strong>Memoria RAM</strong></td>
+                <td>Almacenamiento volátil de trabajo ultrarrápido.</td>
+                <td>Capacidad (GB) y canal dual (DDR4/DDR5).</td>
+                <td><span class="text-emerald-600 dark:text-emerald-400 font-bold">Verificado</span></td>
+              </tr>
+              <tr>
+                <td><strong>Unidad NVMe M.2</strong></td>
+                <td>Persistencia rápida del sistema operativo.</td>
+                <td>Lectura secuencial (MB/s) en PCIe 4.0.</td>
+                <td><span class="text-amber-600 dark:text-amber-400 font-bold">Por Instalar</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Callouts y Citas -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Callout Primario -->
+        <div class="prose">
+          <blockquote class="my-0!">
+            <div class="font-bold text-brand-primary text-sm uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              <Icon name="lucide:alert-circle" class="w-4 h-4" />
+              Regla de Taller Obligatoria
+            </div>
+            Descarga siempre la electricidad estática antes de manipular los módulos de memoria RAM o la placa madre tocando una superficie metálica aterrizada.
+          </blockquote>
+        </div>
+
+        <!-- Acordeón Details / Summary -->
+        <div class="prose">
+          <details class="my-0!">
+            <summary>¿Qué ocurre si colocas la memoria RAM en el canal incorrecto?</summary>
+            <blockquote>
+              La placa madre arrancará en modo <em>Single-Channel</em>, perdiendo hasta un 40% de ancho de banda de transferencia de datos en tareas pesadas.
+            </blockquote>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. TARJETAS PRÁCTICAS Y RETOS -->
+    <section class="space-y-6">
+      <div class="border-b border-brand-border pb-3">
+        <h2 class="text-xl sm:text-2xl font-bold text-brand-text flex items-center gap-2">
+          <Icon name="lucide:layout" class="w-6 h-6 text-brand-primary" />
+          5. Tarjetas de Aprendizaje y Retos Prácticos
+        </h2>
+        <p class="text-xs sm:text-sm text-brand-muted mt-0.5">
+          Estructuras de entrega de recursos, cuestionarios formativos y retos "Modo Ninja".
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Download Card -->
+        <div class="download-card my-0!">
+          <div class="download-card__content">
+            <div class="download-card__icon">
+              <Icon name="lucide:download" class="w-7 h-7" />
+            </div>
+            <div class="download-card__body">
+              <div class="download-card__badges">
+                <span class="download-card__tag">Archivo de Práctica</span>
+                <span class="download-card__meta font-mono">XLSX • 45 KB</span>
+              </div>
+              <h4 class="download-card__title">Plantilla de Inventario de Componentes</h4>
+              <p class="download-card__desc">Hoja estructurada para registrar número de serie y especificaciones.</p>
+            </div>
+          </div>
+          <button type="button" class="btn-download">
+            <Icon name="lucide:download" class="w-4 h-4" />
+            <span>Descargar</span>
+          </button>
+        </div>
+
+        <!-- Challenge Card (Modo Ninja) -->
+        <div class="challenge-card my-0! space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded text-xs font-extrabold uppercase tracking-wider bg-teal-500/20 text-teal-800 dark:text-teal-300">
+                Reto en Vivo
+              </span>
+              <h4 class="font-bold text-brand-navy dark:text-white text-base">Modo Ninja: Atajos de Windows</h4>
+            </div>
+            <span class="text-xs font-mono text-teal-700 dark:text-teal-400 font-bold">100% Práctico</span>
+          </div>
+          <p class="text-xs sm:text-sm text-brand-muted">
+            Presiona <kbd class="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 font-mono text-xs">Win + R</kbd>, digita <code class="font-mono text-teal-600 dark:text-teal-400">perfmon /res</code> y comprueba qué proceso consume mayor tiempo de procesador en tu máquina.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. MUELLE DE CONTROLES DE DIAPOSITIVAS (SLIDECONTROLS DEMO) -->
+    <section class="space-y-6">
+      <div class="border-b border-brand-border pb-3">
+        <h2 class="text-xl sm:text-2xl font-bold text-brand-text flex items-center gap-2">
+          <Icon name="lucide:monitor" class="w-6 h-6 text-brand-primary" />
+          6. Componente de Firma: Muelle de Diapositivas Flotante
+        </h2>
+        <p class="text-xs sm:text-sm text-brand-muted mt-0.5">
+          Controles ergonómicos anclados al fondo durante la proyección para navegación rápida y pantalla completa.
+        </p>
+      </div>
+
+      <div class="p-8 rounded-2xl border border-brand-border bg-slate-100 dark:bg-slate-900/60 flex flex-col items-center justify-center gap-4 text-center">
+        <p class="text-xs text-brand-muted max-w-md">
+          Muelle flotante con desenfoque de fondo (<code class="font-mono text-brand-primary">backdrop-blur-md</code>), sombra 2XL y controles táctiles de 36px.
+        </p>
+
+        <!-- Demostración interactiva del Dock -->
+        <div class="inline-flex items-center gap-2 px-3 py-2 rounded-2xl bg-stone-900/95 text-white backdrop-blur-md shadow-2xl border border-stone-700/60">
+          <button
+            type="button"
+            class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-stone-800 hover:bg-teal-600 text-white transition-colors duration-150"
+            aria-label="Diapositiva anterior"
+          >
+            <Icon name="lucide:chevron-right" class="w-4 h-4 rotate-180" />
+          </button>
+
+          <div class="flex items-center gap-1.5 px-3 text-xs font-mono font-bold tracking-wider text-stone-200 select-none">
+            <span class="text-teal-400">4</span>
+            <span class="text-stone-500">/</span>
+            <span>12</span>
+          </div>
+
+          <button
+            type="button"
+            class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-stone-800 hover:bg-teal-600 text-white transition-colors duration-150"
+            aria-label="Siguiente diapositiva"
+          >
+            <Icon name="lucide:chevron-right" class="w-4 h-4" />
+          </button>
+
+          <div class="h-4 w-px bg-stone-700/80 mx-1"></div>
+
+          <button
+            type="button"
+            class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-stone-800 hover:bg-teal-600 text-white transition-colors duration-150"
+            aria-label="Pantalla completa"
+            title="Pantalla completa (F)"
+          >
+            <Icon name="lucide:maximize" class="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. REGLAS MANDATORIAS (DO'S AND DON'TS) -->
+    <section id="reglas" class="space-y-6 scroll-mt-20">
+      <div class="border-b border-brand-border pb-3">
+        <h2 class="text-xl sm:text-2xl font-bold text-brand-text flex items-center gap-2">
+          <Icon name="lucide:shield-check" class="w-6 h-6 text-brand-primary" />
+          7. Criterios Mandatorios de Calidad (Do's & Don'ts)
+        </h2>
+        <p class="text-xs sm:text-sm text-brand-muted mt-0.5">
+          Reglas arquitectónicas inviolables para redactores y agentes en esta plataforma.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- DO'S -->
+        <div class="p-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 space-y-3">
+          <div class="font-bold text-emerald-800 dark:text-emerald-300 text-sm flex items-center gap-2">
+            <Icon name="lucide:check" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+            Lo que DEBES hacer siempre:
+          </div>
+          <ul class="text-xs sm:text-sm space-y-2 text-brand-text">
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-600 font-bold">•</span>
+              <span><strong>Tablas estrictamente en HTML:</strong> usar etiquetas <code class="font-mono">&lt;table&gt;</code> estándar para asegurar compatibilidad móvil.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-600 font-bold">•</span>
+              <span><strong>Redacción en 2ª persona imperativo:</strong> dirigirse al alumno con verbos de acción ("Observa", "Prueba", "Crea", "Comprueba").</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-600 font-bold">•</span>
+              <span><strong>Separador de diapositivas:</strong> usar encabezado <code class="font-mono">##</code> seguido de separador <code class="font-mono">---</code>.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-600 font-bold">•</span>
+              <span><strong>Contraste mínimo WCAG AA:</strong> ratio mínimo de 4.5:1 en todos los textos sobre fondos claros y oscuros.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- DON'TS -->
+        <div class="p-6 rounded-2xl border border-rose-500/20 bg-rose-500/5 space-y-3">
+          <div class="font-bold text-rose-800 dark:text-rose-300 text-sm flex items-center gap-2">
+            <Icon name="lucide:alert-circle" class="w-5 h-5 text-rose-600 dark:text-rose-400" />
+            Lo que está TERMINANTEMENTE PROHIBIDO:
+          </div>
+          <ul class="text-xs sm:text-sm space-y-2 text-brand-text">
+            <li class="flex items-start gap-2">
+              <span class="text-rose-600 font-bold">•</span>
+              <span><strong>Tablas Markdown de barras pipes:</strong> nunca usar sintaxis <code class="font-mono">| a | b |</code> en lecciones MDX.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-rose-600 font-bold">•</span>
+              <span><strong>Notas para el docente:</strong> prohibido incluir frases como "explica al grupo", "agenda de la sesión" o "muestra en pantalla".</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-rose-600 font-bold">•</span>
+              <span><strong>Ponderación de asistencia:</strong> la asistencia NO se califica (0% de validez numérica). La evaluación es 100% técnica demostrable.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-rose-600 font-bold">•</span>
+              <span><strong>Gamificación ruidosa:</strong> sin confeti, sonidos distractores ni elementos infantiles fuera del tono técnico formal.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Script interactivo del Showroom -->
+  <script is:inline>
+    const btnReading = document.getElementById('demo-scale-reading');
+    const btnPresentation = document.getElementById('demo-scale-presentation');
+    const specimenContainer = document.getElementById('typography-specimen-container');
+
+    if (btnReading && btnPresentation && specimenContainer) {
+      btnReading.addEventListener('click', () => {
+        specimenContainer.classList.remove('presentation-mode');
+        specimenContainer.classList.add('reading-mode');
+        btnReading.classList.add('bg-white', 'dark:bg-brand-bg', 'text-brand-primary', 'shadow-xs');
+        btnReading.classList.remove('text-brand-muted');
+        btnPresentation.classList.remove('bg-white', 'dark:bg-brand-bg', 'text-brand-primary', 'shadow-xs');
+        btnPresentation.classList.add('text-brand-muted');
+      });
+
+      btnPresentation.addEventListener('click', () => {
+        specimenContainer.classList.remove('reading-mode');
+        specimenContainer.classList.add('presentation-mode');
+        btnPresentation.classList.add('bg-white', 'dark:bg-brand-bg', 'text-brand-primary', 'shadow-xs');
+        btnPresentation.classList.remove('text-brand-muted');
+        btnReading.classList.remove('bg-white', 'dark:bg-brand-bg', 'text-brand-primary', 'shadow-xs');
+        btnReading.classList.add('text-brand-muted');
+      });
+    }
+  </script>
+</Layout>
