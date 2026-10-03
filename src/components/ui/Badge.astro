@@ -1,0 +1,53 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  variant?: 'primary' | 'accent' | 'success' | 'warning' | 'danger' | 'neutral' | 'module';
+  moduleNumber?: number;
+  size?: 'sm' | 'md';
+  icon?: string;
+  class?: string;
+  [key: string]: any;
+}
+
+const {
+  variant = 'neutral',
+  moduleNumber,
+  size = 'md',
+  icon,
+  class: className = '',
+  ...rest
+} = Astro.props;
+
+const isModule = variant === 'module' || typeof moduleNumber === 'number';
+const modNum = moduleNumber ?? 0;
+
+const variantStyles: Record<string, string> = {
+  primary: 'bg-brand-primary/10 text-brand-primary border-brand-primary/20',
+  accent: 'bg-amber-500/10 text-amber-800 dark:text-amber-300 border-amber-500/20',
+  success: 'bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border-emerald-500/20',
+  warning: 'bg-yellow-500/10 text-yellow-800 dark:text-yellow-300 border-yellow-500/20',
+  danger: 'bg-red-500/10 text-red-800 dark:text-red-300 border-red-500/20',
+  neutral: 'bg-slate-100 dark:bg-brand-sidebar-bg text-brand-muted border-brand-border',
+};
+
+const sizeStyles: Record<string, string> = {
+  sm: 'text-xs px-2 py-0.5 font-semibold',
+  md: 'text-xs px-2.5 py-1 font-bold',
+};
+
+const finalBadgeClass = `inline-flex items-center gap-1.5 rounded-full border ${variantStyles[variant] || variantStyles.neutral} ${sizeStyles[size]} tracking-wide select-none ${className}`;
+---
+
+{
+  isModule ? (
+    <span class={`module-badge module-badge-m${modNum} ${className}`} title={`Módulo ${modNum}`} {...rest}>
+      {modNum}
+    </span>
+  ) : (
+    <span class={finalBadgeClass} {...rest}>
+      {icon && <Icon name={icon} class="w-3.5 h-3.5 shrink-0" />}
+      <slot />
+    </span>
+  )
+}

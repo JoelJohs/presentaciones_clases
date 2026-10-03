@@ -1,0 +1,49 @@
+---
+interface Props {
+  variant?: 'elevated' | 'outline' | 'interactive' | 'challenge' | 'download';
+  padding?: 'none' | 'sm' | 'md' | 'lg';
+  title?: string;
+  subtitle?: string;
+  class?: string;
+  id?: string;
+  [key: string]: any;
+}
+
+const {
+  variant = 'elevated',
+  padding = 'md',
+  title,
+  subtitle,
+  class: className = '',
+  id,
+  ...rest
+} = Astro.props;
+
+const variantStyles: Record<string, string> = {
+  elevated: 'bg-white dark:bg-[#16283A] border border-brand-border rounded-xl shadow-xs',
+  outline: 'border border-brand-border rounded-xl bg-transparent',
+  interactive: 'bg-white dark:bg-[#16283A] border border-brand-border rounded-xl shadow-xs hover:-translate-y-0.5 hover:shadow-md hover:border-brand-primary/40 transition-all duration-200 cursor-pointer',
+  challenge: 'challenge-card my-0!', // Consumes .challenge-card from global.css
+  download: 'download-card my-0!',   // Consumes .download-card from global.css
+};
+
+const paddingStyles: Record<string, string> = {
+  none: '',
+  sm: 'p-3 sm:p-4',
+  md: 'p-5 sm:p-6',
+  lg: 'p-6 sm:p-8',
+};
+
+const activePadding = (variant === 'challenge' || variant === 'download') ? '' : paddingStyles[padding];
+const finalClass = `${variantStyles[variant]} ${activePadding} ${className}`;
+---
+
+<div class={finalClass} id={id} {...rest}>
+  {(title || subtitle) && (
+    <div class="mb-4 space-y-1">
+      {title && <h3 class="text-base sm:text-lg font-bold text-brand-navy dark:text-white tracking-tight">{title}</h3>}
+      {subtitle && <p class="text-xs sm:text-sm text-brand-muted">{subtitle}</p>}
+    </div>
+  )}
+  <slot />
+</div>

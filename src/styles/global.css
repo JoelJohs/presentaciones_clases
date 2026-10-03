@@ -681,8 +681,15 @@ h1, h2, h3, h4, h5, h6 {
   margin-left: auto;
   margin-right: auto;
 }
+.presentation-mode #sidebar {
+  display: none !important;
+}
 .presentation-mode #main-content-wrapper {
   max-width: 100% !important;
+  padding-left: 0 !important;
+}
+.presentation-mode footer {
+  display: none !important;
 }
 .presentation-mode .sidebar-content-toggle {
   display: none !important;

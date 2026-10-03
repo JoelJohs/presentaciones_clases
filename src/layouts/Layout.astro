@@ -2,8 +2,11 @@
 import '../styles/global.css';
 import Sidebar from '../components/Sidebar.astro';
 import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 import SlideControls from '../components/presentation/SlideControls.astro';
 import type { NavigationResult } from '../utils/navigation';
+import { getNavigationStructure } from '../utils/navigation';
+import { getCollection } from 'astro:content';
 
 interface Props {
   title?: string;
@@ -14,10 +17,20 @@ interface Props {
 
 const { 
   title = 'Plataforma de Estudios', 
-  nav = { initialPages: [], modules: [], extras: [], allLessonsOrdered: [] }, 
+  nav: propsNav, 
   activeSlug = '',
   isLesson = false,
 } = Astro.props;
+
+let nav = propsNav;
+if (!nav || !nav.modules || nav.modules.length === 0) {
+  try {
+    const lecciones = await getCollection('lecciones');
+    nav = getNavigationStructure(lecciones);
+  } catch (e) {
+    nav = { initialPages: [], modules: [], extras: [], allLessonsOrdered: [] };
+  }
+}
 ---
 
 <!doctype html>
@@ -78,21 +91,21 @@ const {
     <a href="#main-content" class="skip-link">Saltar al contenido</a>
 
     <div class="flex-1 flex min-h-screen">
-      {isLesson && (
-        <!-- Backdrop móvil -->
-        <div id="sidebar-backdrop" class="fixed inset-0 z-30 bg-black/40 backdrop-blur-xs transition-opacity duration-200 opacity-0 pointer-events-none lg:hidden"></div>
+      <!-- Backdrop móvil (accesible en todas las páginas) -->
+      <div id="sidebar-backdrop" class="fixed inset-0 z-30 bg-black/40 backdrop-blur-xs transition-opacity duration-200 opacity-0 pointer-events-none lg:hidden"></div>
 
-        <!-- Barra lateral de navegación -->
-        <Sidebar nav={nav} activeSlug={activeSlug} />
-      )}
+      <!-- Barra lateral permanente de navegación (colapsable en escritorio) -->
+      <Sidebar nav={nav} activeSlug={activeSlug} />
 
       <!-- Contenedor principal con margen adaptativo -->
-      <div id="main-content-wrapper" class={`flex-1 flex flex-col min-h-screen ${isLesson ? 'lg:pl-72' : 'lg:pl-0'} transition-all duration-300`}>
+      <div id="main-content-wrapper" class="flex-1 flex flex-col min-h-screen lg:pl-72 transition-all duration-300">
         <Header isLesson={isLesson} />
 
-        <main id="main-content" tabindex="-1" class={`flex-1 w-full ${isLesson ? 'max-w-4xl' : 'max-w-6xl'} mx-auto px-4 sm:px-8 py-8`}>
+        <main id="main-content" tabindex="-1" class={`flex-1 w-full ${isLesson ? 'max-w-4xl' : 'max-w-7xl'} mx-auto px-4 sm:px-8 py-8 transition-all`}>
           <slot />
         </main>
+
+        <Footer />
       </div>
     </div>
 
@@ -182,6 +195,15 @@ const {
         .sidebar-collapsed #main-content-wrapper {
           padding-left: 0 !important;
         }
+      }
+      .presentation-mode #sidebar {
+        display: none !important;
+      }
+      .presentation-mode #main-content-wrapper {
+        padding-left: 0 !important;
+      }
+      .presentation-mode footer {
+        display: none !important;
       }
     </style>
   </body>

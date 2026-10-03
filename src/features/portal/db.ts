@@ -34,6 +34,7 @@ export const SEED_PORTAL_DB: PortalDB = {
     { id: 'u_sab_08', nombre: 'Jose Eduardo Soto Zavala', rol: 'alumno', grupo: 'sabado', clase: 'sabado', username: 'jose.soto', matricula: 'SAB-08' },
     { id: 'u_sab_09', nombre: 'Ana Jazmin Aguilera Alvarado', rol: 'alumno', grupo: 'sabado', clase: 'sabado', username: 'ana.aguilera', matricula: 'SAB-09' },
     { id: 'u_sab_10', nombre: 'Mateo Urueta Nara', rol: 'alumno', grupo: 'sabado', clase: 'sabado', username: 'mateo.urueta', matricula: 'SAB-10' },
+    { id: 'u_sab_12', nombre: 'Erika Maciel Hernández', rol: 'alumno', grupo: 'sabado', clase: 'sabado', username: 'erika.maciel', matricula: 'SAB-12' },
     { id: 'u_sab_11', nombre: 'Alumno Prueba (Test)', rol: 'alumno', grupo: 'sabado', clase: 'sabado', username: 'alumno.prueba', matricula: 'SAB-11' },
   ],
   calificaciones: {
@@ -49,6 +50,7 @@ export const SEED_PORTAL_DB: PortalDB = {
       u_sab_09: {},
       u_sab_10: {},
       u_sab_11: {},
+      u_sab_12: { m1: 6.7, m2: 0.0 },
     },
     domingo: {},
   },

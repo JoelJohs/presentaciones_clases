@@ -122,7 +122,6 @@ El progreso y las preferencias del docente:
 La plataforma es una herramienta personal del docente para preparar, organizar y presentar clases de informática. No administra cuentas de alumnos, calificaciones, grupos ni datos personales. Backend, autenticación, cuentas y base de datos son decisiones descartadas de alcance, no requisitos pendientes.
 
 ## Documentación adicional
-* [PROJECT_AUDIT_REPORT.md](PROJECT_AUDIT_REPORT.md) — Reporte técnico exhaustivo y plan de refactorización por fases.
 * [GUIA_CONTENIDO.md](GUIA_CONTENIDO.md) — Guía para la creación y edición de lecciones MDX.
 
 ## Estado actual
@@ -130,4 +129,4 @@ La plataforma es una herramienta personal del docente para preparar, organizar y
 * **Pruebas unitarias**: Todas las pruebas actuales se ejecutan y pasan al 100%.
 * **Compilación de producción**: Funcional y genera 16 páginas estáticas sin errores.
 * **Validación estática**: Configurada mediante `npm run check` (`@astrojs/check` y `typescript`).
-* **Deuda técnica**: El proyecto cuenta con hallazgos de refactorización documentados en `PROJECT_AUDIT_REPORT.md`.
+

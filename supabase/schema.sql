@@ -465,6 +465,7 @@ insert into public.alumnos (username, nombre_completo, password_hash, debe_cambi
   ('jose.soto', 'Jose Eduardo Soto Zavala', extensions.crypt('sabcpi', extensions.gen_salt('bf', 10)), true, 'sabado', 'sabado', 'SAB-08'),
   ('ana.aguilera', 'Ana Jazmin Aguilera Alvarado', extensions.crypt('sabcpi', extensions.gen_salt('bf', 10)), true, 'sabado', 'sabado', 'SAB-09'),
   ('mateo.urueta', 'Mateo Urueta Nara', extensions.crypt('sabcpi', extensions.gen_salt('bf', 10)), true, 'sabado', 'sabado', 'SAB-10'),
+  ('erika.maciel', 'Erika Maciel Hernández', extensions.crypt('sabcpi', extensions.gen_salt('bf', 10)), true, 'sabado', 'sabado', 'SAB-12'),
   ('alumno.prueba', 'Alumno Prueba (Test)', extensions.crypt('sabcpi', extensions.gen_salt('bf', 10)), true, 'sabado', 'sabado', 'SAB-11')
 on conflict (username) do update set
   nombre_completo = excluded.nombre_completo,

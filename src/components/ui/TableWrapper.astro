@@ -1,0 +1,35 @@
+---
+interface Props {
+  caption?: string;
+  label?: string;
+  class?: string;
+  id?: string;
+  [key: string]: any;
+}
+
+const {
+  caption,
+  label = 'Tabla de contenido',
+  class: className = '',
+  id,
+  ...rest
+} = Astro.props;
+---
+
+<div
+  class={`prose-table-wrapper ${className}`}
+  role="region"
+  aria-label={label}
+  tabindex="0"
+  id={id}
+  {...rest}
+>
+  {caption && (
+    <div class="px-4 py-2.5 bg-slate-50 dark:bg-brand-sidebar-bg/60 border-b border-brand-border text-xs font-bold text-brand-navy dark:text-slate-200 uppercase tracking-wider">
+      {caption}
+    </div>
+  )}
+  <div class="overflow-x-auto">
+    <slot />
+  </div>
+</div>

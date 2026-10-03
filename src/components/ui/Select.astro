@@ -1,0 +1,95 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Option {
+  value: string;
+  label: string;
+  disabled?: boolean;
+}
+
+interface Props {
+  label?: string;
+  id: string;
+  name?: string;
+  options: Option[];
+  value?: string;
+  disabled?: boolean;
+  required?: boolean;
+  helperText?: string;
+  error?: string;
+  class?: string;
+  [key: string]: any;
+}
+
+const {
+  label,
+  id,
+  name = id,
+  options = [],
+  value,
+  disabled = false,
+  required = false,
+  helperText,
+  error,
+  class: className = '',
+  ...rest
+} = Astro.props;
+
+const helperId = helperText ? `${id}-helper` : undefined;
+const errorId = error ? `${id}-error` : undefined;
+const describedBy = [errorId, helperId].filter(Boolean).join(' ') || undefined;
+
+const baseSelect = 'w-full appearance-none rounded-lg border bg-white dark:bg-[#101E2B] text-brand-text text-sm transition-colors duration-150 py-2 pl-3 pr-9 focus-visible:outline-2 focus-visible:outline-offset-1 cursor-pointer';
+const borderStyles = error
+  ? 'border-red-500 text-red-950 dark:text-red-200 focus-visible:outline-red-500 focus-visible:border-red-500'
+  : 'border-brand-border focus-visible:outline-brand-primary focus-visible:border-brand-primary';
+const disabledStyles = disabled
+  ? 'opacity-50 cursor-not-allowed bg-slate-100 dark:bg-slate-900/50'
+  : 'hover:border-brand-strong';
+
+const finalSelectClass = `${baseSelect} ${borderStyles} ${disabledStyles} ${className}`;
+---
+
+<div class="space-y-1.5 w-full">
+  {label && (
+    <label for={id} class="block text-xs font-bold text-brand-navy dark:text-slate-200 uppercase tracking-wider">
+      {label} {required && <span class="text-red-500" aria-hidden="true">*</span>}
+    </label>
+  )}
+
+  <div class="relative flex items-center">
+    <select
+      id={id}
+      name={name}
+      disabled={disabled}
+      required={required}
+      aria-invalid={error ? 'true' : undefined}
+      aria-describedby={describedBy}
+      class={finalSelectClass}
+      {...rest}
+    >
+      {options.map((opt) => (
+        <option value={opt.value} selected={opt.value === value} disabled={opt.disabled}>
+          {opt.label}
+        </option>
+      ))}
+    </select>
+
+    <div class="absolute right-3 pointer-events-none text-brand-muted">
+      <Icon name="lucide:chevron-down" class="w-4 h-4" />
+    </div>
+  </div>
+
+  {error && (
+    <p id={errorId} class="text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-1">
+      <Icon name="lucide:alert-circle" class="w-3.5 h-3.5 shrink-0" />
+      <span>{error}</span>
+    </p>
+  )}
+
+  {!error && helperText && (
+    <p id={helperId} class="text-xs text-brand-muted">
+      {helperText}
+    </p>
+  )}
+</div>

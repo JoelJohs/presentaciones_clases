@@ -1,0 +1,78 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  type?: 'info' | 'warning' | 'tip' | 'example' | 'result';
+  title?: string;
+  icon?: string;
+  class?: string;
+  [key: string]: any;
+}
+
+const {
+  type = 'info',
+  title,
+  icon,
+  class: className = '',
+  ...rest
+} = Astro.props;
+
+const config: Record<
+  string,
+  { defaultIcon: string; border: string; bg: string; titleColor: string; defaultTitle: string }
+> = {
+  info: {
+    defaultIcon: 'lucide:info',
+    border: 'border-brand-primary/30',
+    bg: 'bg-brand-callout-bg/60 dark:bg-brand-callout-bg/30',
+    titleColor: 'text-brand-primary',
+    defaultTitle: 'Nota de Aprendizaje',
+  },
+  warning: {
+    defaultIcon: 'lucide:alert-triangle',
+    border: 'border-amber-500/30',
+    bg: 'bg-amber-50/60 dark:bg-amber-950/20',
+    titleColor: 'text-amber-800 dark:text-amber-300',
+    defaultTitle: 'Precaución en Taller',
+  },
+  tip: {
+    defaultIcon: 'lucide:lightbulb',
+    border: 'border-emerald-600/30',
+    bg: 'bg-emerald-50/60 dark:bg-emerald-950/20',
+    titleColor: 'text-emerald-800 dark:text-emerald-300',
+    defaultTitle: 'Consejo Práctico',
+  },
+  example: {
+    defaultIcon: 'lucide:code-2',
+    border: 'border-indigo-600/30',
+    bg: 'bg-indigo-50/60 dark:bg-indigo-950/20',
+    titleColor: 'text-indigo-800 dark:text-indigo-300',
+    defaultTitle: 'Demostración / Ejemplo',
+  },
+  result: {
+    defaultIcon: 'lucide:check-circle-2',
+    border: 'border-teal-600/30',
+    bg: 'bg-teal-50/60 dark:bg-teal-950/20',
+    titleColor: 'text-teal-800 dark:text-teal-300',
+    defaultTitle: 'Resultado Esperado',
+  },
+};
+
+const current = config[type] || config.info;
+const activeIcon = icon || current.defaultIcon;
+const activeTitle = title || current.defaultTitle;
+---
+
+<div
+  class={`my-4 p-4 rounded-xl border ${current.border} ${current.bg} text-brand-text text-sm leading-relaxed space-y-1.5 shadow-xs ${className}`}
+  role="note"
+  {...rest}
+>
+  <div class={`font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 ${current.titleColor}`}>
+    <Icon name={activeIcon} class="w-4 h-4 shrink-0" />
+    <span>{activeTitle}</span>
+  </div>
+  <div class="prose max-w-none text-xs sm:text-sm">
+    <slot />
+  </div>
+</div>
