@@ -2,16 +2,18 @@
 title: "Edición de Video: Línea de Tiempo y Montaje"
 moduleTitle: "3 - Multimedia Práctica: Imagen y Video"
 topicTitle: "Tema 2: Edición de Video"
-subtopicTitle: "Línea de Tiempo, Montaje y Composición"
+subtopicTitle: "Códecs, Formatos y Montaje en Kdenlive"
 semana: 12
 fecha: "26-09-2026"
 published: true
-description: "Configura proyectos en Kdenlive a 1080p, optimiza con clips proxy, domina cortes con atajos de teclado, transiciones suaves, titulación animada y exportación H.264."
+description: "Comprende la anatomía del video digital: códecs, contenedores, FPS y bitrate. Configura proyectos en Kdenlive a 1080p, domina cortes, pistas, títulos y exportación H.264."
 duration: 240
 objectives:
+  - "Diferenciar entre formatos contenedores (.mp4, .mkv, .mov, .webm) y códecs de compresión (H.264, H.265, VP9)"
+  - "Identificar parámetros clave de video digital: fotogramas por segundo (FPS), resolución y tasa de bits (bitrate)"
+  - "Inspeccionar las propiedades técnicas de archivos audiovisuales en Kdenlive antes de iniciar el montaje"
   - "Configurar perfiles de proyecto a 1080p 30 fps y habilitar clips proxy para edición fluida"
   - "Ejecutar cortes precisos con Shift + R, gestionar pistas independientes y suavizar audio"
-  - "Personalizar transiciones funcionales ajustando suavidad e invertir el sentido del barrido"
   - "Componer imágenes PNG, crear títulos dinámicos con keyframes y exportar en MP4 H.264"
 ---
 
@@ -19,11 +21,128 @@ import { Icon } from "astro-icon/components";
 
 # Edición de Video: Línea de Tiempo y Montaje
 
-Domina el entorno de Kdenlive en este taller técnico. Aprende a configurar proyectos estandarizados, cortar tomas con agilidad de teclado, aislar audio, aplicar transiciones cinematográficas, animar títulos con fotogramas clave y exportar tu montaje final en alta definición.
+Domina los fundamentos del video digital y el entorno de Kdenlive en este taller técnico. Conoce qué son los códecs, contenedores, tasas de cuadros (FPS) y bitrate. Aprende a configurar proyectos estandarizados, cortar tomas con agilidad de teclado, aislar pistas de audio, aplicar transiciones cinematográficas, animar títulos con fotogramas clave y exportar tu montaje final en alta definición H.264.
 
 ---
 
-## 1. Configuración de Proyecto y Perfiles Fijos <Icon name="lucide:settings-2" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+## 1. Anatomía del Video Digital: Fotogramas por Segundo (FPS) y Resolución <Icon name="lucide:film" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Un video digital no es una imagen continua. Es una rápida sucesión de imágenes estáticas proyectadas una tras otra para engañar a tu cerebro y crear la ilusión de movimiento:
+
+* **Fotogramas por segundo (FPS / Frames per Second):** La velocidad a la que se capturan y muestran esas imágenes.
+  * **24 fps:** El estándar clásico del cine. Genera un desenfoque de movimiento (*motion blur*) natural que asociamos a las películas cinematográficas.
+  * **30 fps (o 29.97 NTSC):** El estándar de televisión digital, transmisiones web y tutoriales. Ofrece claridad equilibrada para pantallas.
+  * **60 fps:** El estándar de alta fluidez. Indispensable en deportes, grabación de videojuegos y tomas que planeas ralentizar a cámara lenta (*slow motion*) sin que el video dé saltos.
+* **Resolución y Relación de Aspecto (Aspect Ratio):**
+  * **16:9 Panorámico:** 1920x1080 píxeles (Full HD) o 3840x2160 (4K UHD). El formato estándar para computadoras, televisores y YouTube.
+  * **9:16 Vertical:** 1080x1920 píxeles. El formato estándar para teléfonos móviles en TikTok, Instagram Reels y YouTube Shorts.
+  * **1:1 Cuadrado:** 1080x1080 píxeles. Usado en publicaciones de redes sociales y catálogos digitales.
+
+> **Analogía del folioscopio (*flipbook*):** Si tienes una libreta con dibujos en cada página y pasas las hojas despacio (10 fps), ves dibujos individuales entrecortados. Si las pasas a toda velocidad (30 o 60 fps), los trazos cobran vida fluida ante tus ojos.
+
+---
+
+## 2. La Gran Diferencia: Contenedor vs Códec de Video <Icon name="lucide:box" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Uno de los errores más comunes al empezar a editar video es confundir el formato de archivo con el códec:
+
+* **El Contenedor (Formato de archivo / Extensión):** Es la caja o sobre exterior. Su función es empaquetar de forma sincronizada dentro de un solo archivo el flujo de video, una o varias pistas de audio (como idiomas o doblajes), subtítulos y metadatos.
+  * *Extensiones habituales:* `.mp4`, `.mkv`, `.webm`, `.mov`, `.avi`.
+* **El Códec (COdificador / DECodificador):** Es el algoritmo matemático que comprime el video para guardarlo en el disco y lo descomprime en tiempo real al reproducirlo.
+  * *¿Por qué es indispensable comprimir?* Un solo segundo de video 1080p sin comprimir a 30 fps pesa aproximadamente 180 megabytes. ¡Un video de 10 minutos superaría los 100 gigabytes! El códec reduce ese peso más de un 95% descartando información que el ojo humano apenas nota.
+  * *Códecs de video comunes:* H.264 (AVC), H.265 (HEVC), VP9, AV1, Apple ProRes.
+  * *Códecs de audio comunes:* AAC, MP3, Opus, PCM.
+
+> **Analogía de la maleta:** El **contenedor** es una maleta de viaje con varios compartimentos. El **códec** es el método de empaquetado al vacío que usas para comprimir 30 prendas de ropa dentro de esa maleta sin hacerla explotar. Dos maletas idénticas por fuera pueden llevar contenidos empacados con técnicas totalmente distintas por dentro.
+
+---
+
+## 3. Tasa de Bits (Bitrate): Control de Calidad y Peso <Icon name="lucide:gauge" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Dos videos pueden tener exactamente la misma resolución (1920x1080) y la misma duración (1 minuto), pero uno verse cristalino y el otro verse pixelado y borroso. La diferencia reside en la **tasa de bits (bitrate)**:
+
+* **¿Qué es el bitrate?** La cantidad de datos binarios procesados o transmitidos por cada segundo de reproducción. Se mide en kilobits por segundo (kbps) o megabits por segundo (Mbps).
+* **Fórmula de peso:** `Peso del archivo = Bitrate × Duración`. La resolución define el tamaño del lienzo en píxeles; el bitrate define cuánta información sostiene cada uno de esos píxeles.
+* **Modalidades de compresión:**
+  * **CBR (Constant Bitrate / Tasa constante):** Aplica la misma cantidad de datos a cada segundo de video sin importar qué ocurre en pantalla. Desperdicia almacenamiento en escenas estáticas y puede pixelar secuencias de acción rápida.
+  * **VBR (Variable Bitrate / Tasa variable):** Asigna bits de forma inteligente: pocos datos en planos fijos con poco movimiento, y muchos datos en explosiones, persecuciones o escenas con agua y follaje. Es el estándar recomendado para exportar.
+
+> **Regla de taller:** Para exportar un video 1080p a 30 fps en H.264 para internet, un bitrate de **8 a 12 Mbps** (8000 a 12000 kbps) entrega nitidez profesional con un peso de archivo moderado.
+
+---
+
+## 4. Matriz Técnica de Contenedores y Códecs <Icon name="lucide:file-video" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Compara los principales estándares audiovisuales antes de iniciar tu montaje:
+
+<table>
+  <thead>
+    <tr>
+      <th>Contenedor</th>
+      <th>Códec de Video</th>
+      <th>Códec de Audio</th>
+      <th>Compresión y Peso</th>
+      <th>Uso Principal y Compatibilidad</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>MP4 (.mp4)</td>
+      <td>H.264 (AVC)</td>
+      <td>AAC</td>
+      <td>Alta y equilibrada</td>
+      <td>Estándar universal. Compatible con navegadores web, teléfonos, televisores y Kdenlive por defecto.</td>
+    </tr>
+    <tr>
+      <td>MP4 / MKV (.mp4, .mkv)</td>
+      <td>H.265 (HEVC)</td>
+      <td>AAC / AC3</td>
+      <td>Muy alta (50% menor peso que H.264)</td>
+      <td>Producción en 4K/8K, drones y cámaras de acción modernas. Exige mayor potencia de procesador para reproducir.</td>
+    </tr>
+    <tr>
+      <td>WebM (.webm)</td>
+      <td>VP9 / AV1</td>
+      <td>Opus</td>
+      <td>Excelente y de código abierto</td>
+      <td>Páginas web modernas, YouTube HTML5 y proyectos libres sin pagos de patentes o regalías.</td>
+    </tr>
+    <tr>
+      <td>MOV (.mov)</td>
+      <td>Apple ProRes / H.264</td>
+      <td>PCM (sin pérdida) / AAC</td>
+      <td>Baja compresión (archivos pesados)</td>
+      <td>Intercambio profesional entre programas de edición (códec de edición intermedia sin degradación).</td>
+    </tr>
+    <tr>
+      <td>MKV (.mkv)</td>
+      <td>H.264 / H.265 / AV1</td>
+      <td>FLAC / AAC / DTS</td>
+      <td>Muy flexible según el códec</td>
+      <td>Archivo maestro personal. Soporta múltiples pistas de audio en diferentes idiomas y subtítulos conmutables.</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 5. Inspección Técnica de Material en Kdenlive <Icon name="lucide:file-search" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Antes de colocar clips en la línea de tiempo, comprueba sus especificaciones técnicas reales dentro de Kdenlive:
+
+1. Abre Kdenlive e importa tus archivos de video en la **Carpeta del Proyecto (Project Bin)**.
+2. Haz clic derecho sobre cualquier archivo importado y selecciona **Propiedades del clip**.
+3. Inspecciona los parámetros esenciales:
+   * **Tamaño (Resolución):** Verifica si el video fue grabado en `1920x1080` (horizontal) o `1080x1920` (vertical).
+   * **Tasa de fotogramas:** Comprueba si viene a `29.97`, `30` o `60` fps.
+   * **Códec de video y formato de píxel:** Confirma si está codificado en `h264`, `hevc` o `vp9` con espacio de color `yuv420p`.
+   * **Pistas de audio:** Revisa si incluye audio estéreo a `48000 Hz` o si es un clip sin sonido.
+
+> **Comprobación clave:** Si tu proyecto está configurado a 30 fps y añades una toma a 60 fps, Kdenlive mostrará todos los movimientos fluidos o podrás reducir la velocidad del clip al 50% para lograr una cámara lenta suave y limpia sin tirones.
+
+---
+
+## 6. Configuración de Proyecto y Perfiles Fijos <Icon name="lucide:settings-2" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
 
 Al arrastrar un primer clip a la línea de tiempo, Kdenlive suele mostrar la alerta: _"La resolución/FPS del clip no coincide con el proyecto"_. Si aceptas sin revisar, cada integrante del taller trabajará con resoluciones y frecuencias de cuadro desiguales.
 
@@ -37,41 +156,41 @@ Fija el estándar técnico antes de importar material:
 
 ---
 
-## 2. Clips Proxy: Edición Fluida sin Saturar el Equipo <Icon name="lucide:zap" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+## 7. Clips Proxy: Edición Fluida sin Saturar el Equipo <Icon name="lucide:zap" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
 
 Editar video en alta resolución (1080p o 4K) satura la memoria RAM y el procesador de las computadoras del aula durante la previsualización. Para trabajar sin tirones, utiliza el flujo de trabajo **offline vs online** mediante clips proxy:
 
-- **¿Qué es un clip proxy?** Es una copia réplica de tu video original generada automáticamente en baja resolución (por ejemplo, a 500 píxeles de ancho) y bajo peso.
-- **Comportamiento en edición:** Mientras montas, cortas y aplicas efectos, reproduces el archivo ligero sin esfuerzo técnico.
-- **Comportamiento al renderizar:** Al exportar el video final, Kdenlive sustituye de forma transparente los proxies por los archivos maestros en máxima calidad.
+* **¿Qué es un clip proxy?** Es una copia réplica de tu video original generada automáticamente en baja resolución (por ejemplo, a 500 píxeles de ancho) y bajo peso.
+* **Comportamiento en edición:** Mientras montas, cortas y aplicas efectos, reproduces el archivo ligero sin esfuerzo técnico.
+* **Comportamiento al renderizar:** Al exportar el video final, Kdenlive sustituye de forma transparente los proxies por los archivos maestros en máxima calidad.
 
 Activa los proxies desde el menú: **Proyecto > Ajustes del proyecto > Pestaña Clips de reemplazo (Proxy)** y marca la casilla **Habilitar clips de reemplazo**.
 
 ---
 
-## 3. Anatomía de la Interfaz: Espacio Modular <Icon name="lucide:layout-grid" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+## 8. Anatomía de la Interfaz: Espacio Modular <Icon name="lucide:layout-grid" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
 
 Kdenlive organiza su espacio de trabajo en cuatro cuadrantes principales que puedes redimensionar o desacoplar según tu comodidad:
 
-- **Carpeta del Proyecto (Project Bin):** El archivador donde importas y organizas tus tomas de video, pistas de música, grabaciones de voz e imágenes. Usa carpetas internas (`Video`, `Audio`, `Graficos`) para mantener el orden.
-- **Monitor de Clip:** Ventana para inspeccionar el material en crudo antes de bajarlo al montaje. Aquí marcas puntos de entrada (`I`) y salida (`O`).
-- **Monitor de Proyecto:** Ventana de salida que reproduce exactamente lo que está montado en la línea de tiempo.
-- **Línea de Tiempo (Timeline):** La cinta horizontal donde apilas capas de video (V1, V2, V3) y pistas de audio (A1, A2).
+* **Carpeta del Proyecto (Project Bin):** El archivador donde importas y organizas tus tomas de video, pistas de música, grabaciones de voz e imágenes. Usa carpetas internas (`Video`, `Audio`, `Graficos`) para mantener el orden.
+* **Monitor de Clip:** Ventana para inspeccionar el material en crudo antes de bajarlo al montaje. Aquí marcas puntos de entrada (`I`) y salida (`O`).
+* **Monitor de Proyecto:** Ventana de salida que reproduce exactamente lo que está montado en la línea de tiempo.
+* **Línea de Tiempo (Timeline):** La cinta horizontal donde apilas capas de video (V1, V2, V3) y pistas de audio (A1, A2).
 
 ---
 
-## 4. Navegación Ágil y Cortes de Precisión <Icon name="lucide:scissors" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+## 9. Navegación Ágil y Cortes de Precisión <Icon name="lucide:scissors" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
 
 Olvídate de hacer clic continuo con el ratón sobre la herramienta de navaja. Los editores profesionales controlan la línea de tiempo con la mano izquierda sobre el teclado:
 
-- **Reproducción y pausa:** Presiona `Espacio` para arrancar y detener el cabezal al instante.
-- **Zoom milimétrico:** Mantén presionado `Ctrl` y mueve la rueda del ratón hacia adelante para ampliar fotogramas individuales, o hacia atrás para ver la secuencia completa.
-- **Corte instantáneo en el cabezal:** Coloca la aguja de reproducción en el punto deseado y pulsa **`Shift + R`**. El clip se divide limpiamente en dos sin cambiar de herramienta.
-- **Selección múltiple:** Mantén presionado `Shift` y haz clic en los fragmentos sobrantes para eliminarlos en bloque con la tecla `Supr`.
+* **Reproducción y pausa:** Presiona `Espacio` para arrancar y detener el cabezal al instante.
+* **Zoom milimétrico:** Mantén presionado `Ctrl` y mueve la rueda del ratón hacia adelante para ampliar fotogramas individuales, o hacia atrás para ver la secuencia completa.
+* **Corte instantáneo en el cabezal:** Coloca la aguja de reproducción en el punto deseado y pulsa **`Shift + R`**. El clip se divide limpiamente en dos sin cambiar de herramienta.
+* **Selección múltiple:** Mantén presionado `Shift` y haz clic en los fragmentos sobrantes para eliminarlos en bloque con la tecla `Supr`.
 
 ---
 
-## 5. Organización Multipista y Separación de Audio <Icon name="lucide:layers" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+## 10. Organización Multipista y Separación de Audio <Icon name="lucide:layers" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
 
 Por defecto, una toma importada viene con su pista de video y su pista de audio agrupadas en una sola entidad. Si intentas borrar el audio ambiente ruidoso, también borrarás la imagen.
 
@@ -85,29 +204,29 @@ Aprende a separar y reestructurar tus capas:
 
 ---
 
-## 6. Limpieza Sonora: Desvanecimientos y Ganancia <Icon name="lucide:volume-2" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+## 11. Limpieza Sonora: Desvanecimientos y Ganancia <Icon name="lucide:volume-2" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
 
 Un corte de audio abrupto produce un clic acústico molesto en los altavoces. Aplica siempre transiciones de entrada y salida sonora para cuidar los oídos de la audiencia:
 
-- **Atenuación rápida (Fade In / Fade Out):** Acerca el cursor a las esquinas superiores de cualquier clip de audio. Verás aparecer un pequeño círculo verde (inicio) y uno rojo (final). Arrastra el círculo hacia adentro medio segundo para crear una curva de desvanecimiento suave.
-- **Control de Ganancia (Volumen):** Arrastra el efecto **Volumen** desde la pestaña de efectos sobre la pista de audio. Ajusta los decibelios (`dB`) en el panel de propiedades para evitar que la música tape la voz principal.
+* **Atenuación rápida (Fade In / Fade Out):** Acerca el cursor a las esquinas superiores de cualquier clip de audio. Verás aparecer un pequeño círculo verde (inicio) y uno rojo (final). Arrastra el círculo hacia adentro medio segundo para crear una curva de desvanecimiento suave.
+* **Control de Ganancia (Volumen):** Arrastra el efecto **Volumen** desde la pestaña de efectos sobre la pista de audio. Ajusta los decibelios (`dB`) en el panel de propiedades para evitar que la música tape la voz principal.
 
 > **Regla de mezcla:** La música de fondo debe oscilar entre `-18 dB` y `-24 dB` cuando hay diálogo o voz presente.
 
 ---
 
-## 7. Transiciones Funcionales y Control de Suavidad <Icon name="lucide:sparkles" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+## 12. Transiciones Funcionales y Control de Suavidad <Icon name="lucide:sparkles" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
 
 Una transición no debe ser un adorno vistoso que distraiga, sino un puente que dé continuidad al relato visual:
 
-- **Disolvencia cruzada en la misma pista:** Acerca dos clips adyacentes hasta que se toquen. Haz clic en el círculo interactivo de mezcla que surge en la unión inferior para enlazar ambas tomas.
-- **Métodos de barrido:** En la pestaña de propiedades de la transición, cambia el tipo entre disolvencia estándar, barrido radial o barrido de nubes (_cloud_).
-- **Control de Suavidad (Softness):** Por defecto, los barridos tienen un borde duro y tosco. Aumenta el parámetro de suavidad a 20% o 30% para difuminar la frontera entre tomas y obtener un acabado cinematográfico.
-- **Invertir barrido:** Marca la casilla **Invertir** para alternar la dirección del movimiento si la acción del plano lo requiere.
+* **Disolvencia cruzada en la misma pista:** Acerca dos clips adyacentes hasta que se toquen. Haz clic en el círculo interactivo de mezcla que surge en la unión inferior para enlazar ambas tomas.
+* **Métodos de barrido:** En la pestaña de propiedades de la transición, cambia el tipo entre disolvencia estándar, barrido radial o barrido de nubes (_cloud_).
+* **Control de Suavidad (Softness):** Por defecto, los barridos tienen un borde duro y tosco. Aumenta el parámetro de suavidad a 20% o 30% para difuminar la frontera entre tomas y obtener un acabado cinematográfico.
+* **Invertir barrido:** Marca la casilla **Invertir** para alternar la dirección del movimiento si la acción del plano lo requiere.
 
 ---
 
-## 8. Sincronía Sonora y Ritmo de Montaje <Icon name="lucide:music" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+## 13. Sincronía Sonora y Ritmo de Montaje <Icon name="lucide:music" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
 
 El ritmo de un video depende de cómo se coordinan los cortes visuales con los acentos de la banda sonora:
 
@@ -118,17 +237,17 @@ El ritmo de un video depende de cómo se coordinan los cortes visuales con los a
 
 ---
 
-## 9. Composición, Canales Alfa y Posición <Icon name="lucide:move" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+## 14. Composición, Canales Alfa y Posición <Icon name="lucide:move" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
 
 Para superponer logotipos, firmas de autor o cuadros secundarios sobre el video, domina el canal alfa y las transformaciones:
 
-- **JPG vs PNG:** Una imagen JPG siempre tiene un fondo opaco (habitualmente blanco) que cubre el video inferior. Un archivo PNG con **canal alfa** conserva áreas transparentes, dejando ver únicamente el gráfico o isotipo.
-- **Efecto Transformar:** Aplica el efecto **Transformar** sobre el clip de video o imagen ubicado en la pista `V2`.
-- **Escala y encuadre:** Usa los nodos rojos que aparecen en el monitor de proyecto para redimensionar el elemento o cambiar su escala porcentual. Arrástralo a una esquina para construir un recuadro de imagen en imagen (_Picture-in-Picture_).
+* **JPG vs PNG:** Una imagen JPG siempre tiene un fondo opaco (habitualmente blanco) que cubre el video inferior. Un archivo PNG con **canal alfa** conserva áreas transparentes, dejando ver únicamente el gráfico o isotipo.
+* **Efecto Transformar:** Aplica el efecto **Transformar** sobre el clip de video o imagen ubicado en la pista `V2`.
+* **Escala y encuadre:** Usa los nodos rojos que aparecen en el monitor de proyecto para redimensionar el elemento o cambiar su escala porcentual. Arrástralo a una esquina para construir un recuadro de imagen en imagen (_Picture-in-Picture_).
 
 ---
 
-## 10. Generador de Títulos y Legibilidad Visual <Icon name="lucide:type" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+## 15. Generador de Títulos y Legibilidad Visual <Icon name="lucide:type" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
 
 Crea títulos y rótulos informativos directamente en Kdenlive sin necesidad de programas externos:
 
@@ -142,7 +261,7 @@ Crea títulos y rótulos informativos directamente en Kdenlive sin necesidad de 
 
 ---
 
-## 11. Animación con Fotogramas Clave (Keyframes) <Icon name="lucide:play-circle" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+## 16. Animación con Fotogramas Clave (Keyframes) <Icon name="lucide:play-circle" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
 
 Un fotograma clave (_keyframe_) registra las propiedades espaciales (posición, tamaño, opacidad) de un elemento en un segundo específico del tiempo. El programa interpola suavemente el movimiento entre dos puntos:
 
@@ -155,27 +274,28 @@ Prueba la reproducción con `Espacio` para verificar la fluidez del desplazamien
 
 ---
 
-## 12. Guardado Seguro del Proyecto y Rutas de Archivo <Icon name="lucide:folder-check" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+## 17. Guardado Seguro del Proyecto y Rutas de Archivo <Icon name="lucide:folder-check" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
 
 Comprende con claridad la diferencia entre tu archivo de trabajo y los archivos multimedia reales:
 
-- **El archivo `.kdenlive`:** Es un documento de texto en formato XML que solo contiene coordenadas, listas de cortes, efectos aplicados y rutas relativas a tus archivos. **No contiene los videos físicamente**.
-- **Pérdida de enlaces (Missing clips):** Si mueves tus videos crudos a otra carpeta, borras una descarga o cambias de memoria USB, Kdenlive mostrará un aviso de archivos perdidos en rojo.
-- **Práctica de aula:** Guarda siempre todos los videos, audios y el propio archivo `.kdenlive` juntos dentro de una misma carpeta raíz de tu estación de trabajo.
+* **El archivo `.kdenlive`:** Es un documento de texto en formato XML que solo contiene coordenadas, listas de cortes, efectos aplicados y rutas relativas a tus archivos. **No contiene los videos físicamente**.
+* **Pérdida de enlaces (Missing clips):** Si mueves tus videos crudos a otra carpeta, borras una descarga o cambias de memoria USB, Kdenlive mostrará un aviso de archivos perdidos en rojo.
+* **Práctica de aula:** Guarda siempre todos los videos, audios y el propio archivo `.kdenlive` juntos dentro de una misma carpeta raíz de tu estación de trabajo.
 
 ---
 
-## 13. Procesado Final (Render) en MP4 <Icon name="lucide:film" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+## 18. Procesado Final (Render) en MP4 y H.264 <Icon name="lucide:film" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
 
-El renderizado procesa todos los cortes, títulos y pistas de audio para fusionarlos en un único archivo de video reproducible en cualquier dispositivo:
+El renderizado procesa todos los cortes, pistas superpuestas, títulos y mezclas sonoras para consolidarlos en un único archivo de video reproducible en cualquier equipo:
 
-1. Haz clic en el botón superior **Procesar** (_Render_) o presiona el atajo `Ctrl + Return`.
+1. Haz clic en el botón superior **Procesar** (*Render*) o presiona el atajo `Ctrl + Return`.
 2. Selecciona la categoría **Generar archivo** y el formato contenedor **MP4**.
-3. Verifica que el perfil de codificación indique **H.264 / AAC**, el estándar universal para la web.
-4. Comprueba que la opción seleccionada sea **Proyecto completo** (y no solo la zona de previsualización).
-5. Asigna el nombre de salida formal: `Apellido_Nombre_Semana12.mp4` y presiona **Procesar a archivo**.
+3. Comprueba el perfil de codificación: selecciona **H.264 / AAC**, el estándar de compatibilidad universal estudiado en la matriz técnica.
+4. En los ajustes de calidad de video, selecciona una tasa de bits adecuada o mantén el factor de calidad predeterminado para asegurar nitidez sin inflar el peso del archivo.
+5. Comprueba que la opción de rango sea **Proyecto completo** (y no solo la zona de previsualización marcada por guías).
+6. Asigna el nombre de salida formal: `Apellido_Nombre_Semana12.mp4` en una carpeta local conocida y presiona **Procesar a archivo**.
 
-Espera a que la barra de progreso alcance el 100% antes de cerrar el programa.
+Espera a que la barra de progreso alcance el 100% antes de cerrar el programa o extraer memorias USB.
 
 ---
 
@@ -234,15 +354,17 @@ Memoriza estos atajos para multiplicar tu velocidad de edición en la sala de c�
 
 ---
 
-## Reto Técnico de Taller: Montaje de Microvideo <Icon name="lucide:check-circle" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+## Reto Técnico de Taller: Montaje de Microvideo <Icon name="lucide:circle-check" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
 
-Aplica los conocimientos de la sesión para entregar tu producto audiovisual al término de las 4 horas:
+Aplica los conocimientos de la sesión para entregar tu producto audiovisual al término del taller:
 
-### Requisitos del Entregable
+### Requisitos Técnicos del Entregable
 
-- **Duración total:** Entre 30 y 45 segundos exactos.
-- **Tomas mínimas:** 4 planos de video distintos en la pista `V1`, recortados con `Shift + R` sin cuadros muertos.
-- **Banda sonora:** 1 pista de música en `A2` con atenuaciones suaves (_Fade In_ de 1 segundo al inicio y _Fade Out_ de 2 segundos al cierre).
-- **Transición funcional:** Al menos 1 disolvencia o barrido con suavidad ajustada entre dos tomas clave.
-- **Título animado:** Rótulo con tu nombre y apellido en `V2`, animado con fotogramas clave de entrada y salida, con sombra o desenfoque de fondo.
-- **Exportación:** Archivo final en formato `MP4` a 1080p, sin barras negras ni desincronización de audio.
+* **Estándar audiovisual:** Proyecto en resolución 1920x1080 (16:9) a 30 fps.
+* **Contenedor y códec de salida:** Archivo `.mp4` codificado en H.264 con audio AAC.
+* **Duración total:** Entre 30 y 45 segundos exactos.
+* **Tomas mínimas:** 4 planos de video distintos en la pista `V1`, recortados con `Shift + R` sin cuadros negros ni congelamientos.
+* **Banda sonora:** 1 pista de música en `A2` con atenuaciones suaves (*Fade In* de 1 segundo al inicio y *Fade Out* de 2 segundos al cierre) con volumen ajustado bajo diálogo o efectos.
+* **Transición funcional:** Al menos 1 disolvencia o barrido con suavidad (*softness*) ajustada entre dos tomas clave.
+* **Título animado:** Rótulo con tu nombre y apellido en `V2`, animado con fotogramas clave de entrada y salida, con sombra o desenfoque de fondo para garantizar lectura nítida.
+* **Verificación de archivo:** Abre el archivo final exportado en el reproductor de medios e inspecciona con `Ctrl + I` (o información del medio) que cumpla con 1080p, 30 fps y códec H.264.

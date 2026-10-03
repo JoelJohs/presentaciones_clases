@@ -1,0 +1,339 @@
+---
+title: "Edición de Video: Efectos Visuales, Chroma Key y Procesamiento GPU"
+moduleTitle: "3 - Multimedia Práctica: Imagen y Video"
+topicTitle: "Tema 2: Edición de Video"
+subtopicTitle: "Corrección de Color, Pantalla Verde y Aceleración por Hardware en Kdenlive"
+semana: 13
+fecha: "03-10-2026"
+published: true
+description: "Optimiza la calidad de imagen mediante colorimetría básica (contraste, brillo, saturación y nitidez). Domina la incrustación por croma avanzado (pantalla verde) y analiza la aceleración por GPU con la biblioteca Movit frente al flujo de trabajo en CPU."
+duration: 240
+objectives:
+  - "Corregir tomas subexpuestas o descoloridas mediante la calibración de contraste, brillo, saturación y nitidez en Kdenlive"
+  - "Evaluar mejoras visuales en tiempo real mediante técnicas de comparación A/B con el conmutador de efectos"
+  - "Diferenciar entre el recorte por croma básico y el recorte por croma avanzado para aislar fondos verdes y azules"
+  - "Calibrar umbrales cromáticos (deltas RGB) para suprimir bordes residuales y contaminación de color (green spill)"
+  - "Componer planos de incrustación: sustitución de pantallas (mockups), integración escénica y overlays de interfaz (botones de suscripción)"
+  - "Configurar la aceleración por hardware mediante la biblioteca Movit y comprender el dilema técnico entre previsualización por GPU y estabilidad de renderizado por CPU"
+---
+
+import { Icon } from "astro-icon/components";
+
+# Edición de Video: Efectos Visuales, Chroma Key y Procesamiento GPU
+
+En esta sesión técnica profundizamos en el tratamiento avanzado de imagen dentro de Kdenlive. Aprenderás a transformar tomas crudas capturadas con cámaras de recursos limitados mediante técnicas esenciales de corrección de color y nitidez. Dominarás el flujo de incrustación por croma (*Chroma Key*) para suprimir fondos verdes, reemplazar pantallas de dispositivos y superponer animaciones de interfaz gráfica. Finalmente, analizaremos la arquitectura de renderizado por GPU mediante la biblioteca Movit, entendiendo sus ventajas de previsualización frente a los requisitos de estabilidad en entornos de producción profesional.
+
+---
+
+## 1. Diagnóstico de Imagen: Rescate de Tomas en Crudo <Icon name="lucide:sparkles" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+En grabaciones de campo realizadas con teléfonos móviles, cámaras web o sensores compactos, las condiciones de luz suelen ser desfavorables:
+
+* **Subexposición y falta de rango dinámico:** Imágenes apagadas donde las zonas oscuras carecen de detalle y las altas luces se perciben grises y planas.
+* **Colores deslavados:** Pérdida de saturación cromática por balance de blancos defectuoso o sensores de bajo coste.
+* **Aspecto neblinoso o lechoso:** Contraste deficiente que sitúa los tonos negros en niveles de gris medio, restando profundidad a la toma.
+
+> **Regla de taller:** Antes de desechar una toma considerada inservible o defectuosa, aplica una cadena secuencial de corrección primaria: **Contraste → Brillo → Saturación**. El 80% de los problemas de captura doméstica se corrigen ajustando estos tres parámetros básicos.
+
+---
+
+## 2. Los Cuatro Pilares del Color: Contraste, Brillo, Saturación y Nitidez <Icon name="lucide:sliders" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Kdenlive organiza su arsenal de postproducción en la pestaña **Efectos**. Para aplicarlos, arrástralos desde el panel hacia el clip en la línea de tiempo o haz clic derecho sobre el clip y selecciona **Insertar efecto**:
+
+* **Contraste (*Contrast*):**
+  * *Comportamiento técnico:* Expande o comprime la distancia entre los tonos más oscuros (sombras) y los más claros (luces).
+  * *Valor neutro:* `250`.
+  * *Ajuste recomendado:* Aumentar a un rango de **`300 a 320`** para densificar los negros y dotar a la escena de profundidad y pegada visual sin empastar las sombras.
+* **Brillo (*Brightness*):**
+  * *Comportamiento técnico:* Desplaza uniformemente la luminancia total del fotograma hacia arriba (más blanco) o hacia abajo (más oscuro).
+  * *Valor neutro:* `500` (el centro exacto de la escala).
+  * *Ajuste recomendado:* Ajustes sutiles entre **`505 y 520`** en tomas oscuras. Un incremento excesivo aclara los negros convirtiéndolos en gris ceniza y quema las altas luces.
+* **Saturación (*Saturation*):**
+  * *Comportamiento técnico:* Controla la pureza e intensidad de los canales de color.
+  * *Valor neutro:* `125`.
+  * *Ajuste recomendado:* Incrementar a un rango de **`140 a 155`** para reavivar tonos apagados (especialmente rojos, amarillos y follaje natural). Si se reduce a `0`, se descarta toda la información cromática, logrando un blanco y negro puro de alto impacto estilístico.
+* **Nitidez (*Sharpen*):**
+  * *Comportamiento técnico:* Incrementa el microcontraste en los bordes de alta frecuencia para simular mayor resolución óptica.
+  * *Precaución:* Aumentos agresivos generan grano artificial, ruido electrónico y halos blanquecinos indeseados alrededor de los bordes. Debe usarse con moderación extrema (o descartarse si la toma ya goza de buen foco).
+
+> **Diferenciación conceptual:** No confundas el efecto **Nitidez (*Sharpen*)** con la ausencia de desenfoque. La nitidez realza contrastes de borde en una toma enfocada; el efecto **Desenfoque (*Blur*)** promedia píxeles adyacentes para suavizar o censurar áreas del lienzo.
+
+---
+
+## 3. Flujo de Trabajo A/B: Evaluación de Mejoras en Tiempo Real <Icon name="lucide:eye" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Al encadenar múltiples efectos sobre una toma, la vista del editor se acostumbra rápidamente a la nueva colorimetría, corriendo el riesgo de sobreprocesar la imagen:
+
+1. Selecciona el clip intervenido en la línea de tiempo para visualizar la pila de efectos en el panel **Propiedades / Efectos**.
+2. Localiza el icono del **ojo** junto al nombre de cada efecto individual para desactivarlo temporalmente.
+3. Desactiva y reactiva la pila completa para ejecutar una prueba **Antes / Después (A/B)** en el monitor de proyecto.
+4. Despliega y repliega la flecha lateral de cada efecto para mantener ordenado el panel de propiedades y evitar desconfigurar valores accidentalmente.
+
+---
+
+## 4. Fundamentos del Chroma Key: De la Pantalla Verde al Canal Alfa <Icon name="lucide:layers" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+La incrustación por croma (*Chroma Key*) consiste en aislar un valor de color específico en una toma para volverlo completamente transparente (generando un canal alfa), de modo que los elementos ubicados en las pistas inferiores queden al descubierto:
+
+* **¿Por qué se usa el verde puro?**
+  * La piel humana, independientemente de su origen étnico, no contiene pigmentos con dominancia verde, lo que previene que partes del rostro o cuerpo del sujeto desaparezcan al recortar.
+  * Los sensores digitales de video utilizan en su mayoría la matriz de Bayer, la cual posee el doble de fotodiodos verdes que rojos o azules (patrón RGGB), lo que produce una señal verde con menos ruido y mayor definición de bordes.
+* **¿Cuándo utilizar pantalla azul?**
+  * Cuando el sujeto viste ropa verde, maneja accesorios verdes o si el producto grabado posee tonos esmeralda o vegetación.
+
+---
+
+## 5. Recorte por Croma: Básico vs. Avanzado <Icon name="lucide:wand-2" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Kdenlive incluye dos variantes principales para aislar colores de fondo. Conocer su diferencia técnica previene errores de montaje:
+
+* **Recorte por croma básico (*Chroma Key: Basic*):**
+  * Utiliza un algoritmo simplificado de umbral único.
+  * *Inconveniente técnico:* En versiones modernas de Kdenlive, el selector cuentagotas suele seleccionar rangos incorrectos de gris o blanco, produciendo recortes defectuosos y artefactos transparentes en zonas indeseadas del sujeto.
+* **Recorte por croma avanzado: Selección de color (*Chroma Key: Advanced Color Selection*):**
+  * Es el estándar recomendado de trabajo.
+  * Permite seleccionar el tono exacto mediante gotero interactivo y desglosa el aislamiento en controles independientes de tolerancia para los canales rojo, verde y azul.
+
+---
+
+## 6. Calibración de Umbrales y Supresión de Halos (*Green Spill*) <Icon name="lucide:blend" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Rara vez una pantalla verde de estudio o doméstica cuenta con iluminación 100% homogénea. Para obtener un recorte limpio sin bordes dentados ni siluetas verdes, sigue este procedimiento de ajuste:
+
+1. Coloca el fondo definitivo (imagen estática, video o textura) en la pista **`V1`**.
+2. Arrastra el clip grabado con fondo verde a la pista superpuesta **`V2`**.
+3. Aplica sobre `V2` el efecto **Recorte por croma avanzado**.
+4. Haz clic en la herramienta del **gotero** del panel de propiedades y pincha en el monitor de proyecto sobre una zona de verde intermedio, cercana a la silueta del sujeto.
+5. Si persisten contornos verdes residuales (*spill* o derrame de luz), incrementa gradualmente el deslizador del canal verde en los valores de tolerancia del efecto.
+6. Calibra sutilmente los márgenes de rojo y azul para compensar sombras de la tela sin carcomer los bordes del sujeto.
+
+> **Regla de taller:** Si aumentas la tolerancia en exceso, el sujeto comenzará a volverse translúcido o perderá áreas de cabello y dedos. Si el fondo original tenía arrugas oscuras, utiliza el efecto **Transformar** o una máscara de recorte rectangular para deshacerte de los extremos problemáticos antes de forzar el croma.
+
+---
+
+## 7. Composición Práctica con Croma: Reemplazo de Pantallas (*Mockups*) <Icon name="lucide:tv" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+El croma no solo sirve para colocar personas sobre paisajes exóticos; es la técnica predilecta para simular interfaces en dispositivos electrónicos:
+
+1. Importa una toma en `V2` donde aparezca un televisor, monitor o teléfono inteligente con su pantalla de color verde uniforme.
+2. Coloca en la pista inferior `V1` el video que deseas reproducir dentro de la pantalla (por ejemplo, una intro animada o un gameplay).
+3. Aplica **Recorte por croma avanzado** sobre la toma del televisor en `V2` y pincha la pantalla verde con el gotero.
+4. Al instante, la pantalla verde se vuelve una ventana transparente y el video de `V1` se reproduce exactamente enmarcado dentro del monitor.
+5. Utiliza el atajo **`Shift + R`** para cortar el inicio y fin de la secuencia y silencia pistas de audio secundarias para evitar cruces sonoros indeseados.
+
+---
+
+## 8. Overlays y Gráficos Dinámicos con Croma <Icon name="lucide:mouse-pointer-click" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Gran parte de los recursos audiovisuales gratuitos para internet (botones animados de suscripción, campanas de notificación, transiciones de humo o explosiones) se distribuyen como videos MP4 sobre fondo verde:
+
+* **Ventaja frente a códecs con canal alfa:** Un archivo MP4 H.264 con pantalla verde pesa 5 MB, mientras que un archivo Apple ProRes 4444 o WebM con transparencia nativa puede superar los 150 MB.
+* **Integración en línea de tiempo:**
+  1. Sitúa tu montaje principal en `V1`.
+  2. Arrastra el recurso gráfico en MP4 a la pista superior `V2` o `V3`.
+  3. Aplica el **Recorte por croma avanzado** seleccionando el verde de fondo.
+  4. Agrega el efecto **Transformar** al overlay para escalar el botón de suscripción al 40% y reubicarlo en la esquina inferior derecha.
+
+---
+
+## 9. Arquitectura de Renderizado: CPU vs. Aceleración por GPU (Movit) <Icon name="lucide:cpu" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Comprender cómo interactúa el hardware con el software de edición marca la diferencia entre un flujo ágil y un bloqueo del sistema:
+
+* **Procesamiento tradicional por CPU (Procesador central):**
+  * Kdenlive ejecuta por defecto el motor de composición sobre los núcleos de la CPU.
+  * *Ventajas:* Máxima estabilidad, precisión matemática idéntica fotograma a fotograma y compatibilidad absoluta con todos los códecs de renderizado.
+  * *Desventajas:* Si la CPU es modesta y se encadenan efectos pesados (croma + color), la vista previa pierde cuadros y da saltos.
+* **Procesamiento por GPU mediante biblioteca Movit:**
+  * Delega el cálculo de píxeles, transformaciones y filtros a los núcleos de la tarjeta gráfica (AMD Radeon, NVIDIA o Intel Arc) usando *shaders* en OpenGL.
+  * *Ventajas:* Previsualizaciones extraordinariamente fluidas a 60 fps en tiempo real sin necesidad de generar proxies previos.
+  * *Desventajas:* Es una función experimental en Kdenlive que puede generar artefactos o inestabilidad al exportar.
+
+---
+
+## 10. Habilitación de la Biblioteca Movit en Kdenlive <Icon name="lucide:terminal" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Para acceder a los efectos acelerados por hardware en sistemas GNU/Linux, el sistema requiere la presencia de los paquetes de la biblioteca Movit:
+
+1. **Instalación de paquetes (ejemplo en distribuciones basadas en Arch / Artix):**
+   ```bash
+   yay -S movit
+   ```
+
+2. **Activación dentro de Kdenlive:**
+   * Dirígete a **Preferencias > Configurar Kdenlive > Reproducción**.
+   * Marca la casilla **Usar procesamiento mediante la GPU (biblioteca Movit)**.
+   * Haz clic en **Aplicar** y reinicia Kdenlive para que el motor gráfico reestructure el pipeline de renderizado.
+
+3. Tras reiniciar, aparecerá en la parte inferior de la interfaz una advertencia de seguridad en color rojo:
+> *"Procesamiento experimental por GPU habilitado: no usar en producción"*
+
+---
+
+## 11. Catálogo Técnico de Efectos Acelerados por GPU <Icon name="lucide:zap" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Una vez habilitada la biblioteca Movit, al escribir `GPU` en el buscador de la pestaña de efectos se desbloquea una familia dedicada de filtros procesados en la tarjeta gráfica:
+
+* **Saturación GPU:** Ajuste cromático de alta velocidad con impacto nulo en el procesador principal.
+* **Viñeta GPU (*Vignette*):** Oscurecimiento suave y gradual de las esquinas del encuadre para concentrar la atención del espectador en el centro de la escena.
+* **Ajuste de Color / Tinte GPU:** Manipulación directa de los canales RGB para aplicar virajes fotográficos o dominancias cromáticas estilizadas.
+* **Paneo y Zoom GPU:** Réplica por hardware del efecto de posición y escala con fotogramas clave.
+* **Desenfoque GPU animado (*Blur*):** Difuminado cinemático con interpolación de puntos clave (*keyframes*) que no congela la previsualización.
+* **Despejar y Dar vuelta GPU (*Mirror / Flip*):** Inversión horizontal o vertical del fotograma para corregir tiros de cámara o crear composiciones en espejo.
+* **Balance de Blancos GPU:** Calibración de temperatura de color para enfriar o calentar la escena.
+
+---
+
+## 12. La Advertencia Experimental: Previsualización vs. Render Final <Icon name="lucide:alert-triangle" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Existe una paradoja técnica crítica al trabajar con la aceleración gráfica en Kdenlive:
+
+* **Fluidez en el lienzo de trabajo:** Puedes apilar tres efectos GPU simultáneos (Color + Viñeta + Paneo) y la línea de tiempo se reproducirá sin un solo tirón, incluso sin haber creado clips proxy.
+* **El peligro al renderizar:** Al exportar el video final a disco, el motor de renderizado puede presentar desincronización de fotogramas, tartamudeo en el movimiento (caídas perceptibles a 15 fps) o cierres inesperados del programa.
+* **Incompatibilidad mixta:** Si combinas en un mismo clip efectos de CPU (como *Transformar*) con efectos de GPU, se produce un cuello de botella en el bus de datos PCIe al transferir fotogramas continuamente entre la RAM y la VRAM, arruinando la exportación.
+
+> **Criterio profesional de producción:** En proyectos reales de aula y entregas laborales, **mantén el procesamiento por GPU desactivado**. El estándar universal y confiable es trabajar con **Clips Proxy en baja resolución** para editar con fluidez y dejar que la **CPU** procese el renderizado final con precisión milimétrica.
+
+---
+
+## 13. Matriz Técnica de Herramientas de Postproducción <Icon name="lucide:table" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Compara las herramientas de tratamiento de imagen analizadas en esta sesión:
+
+<table>
+  <thead>
+    <tr>
+      <th>Herramienta / Efecto</th>
+      <th>Objetivo Principal</th>
+      <th>Procesamiento</th>
+      <th>Parámetro Clave</th>
+      <th>Impacto Visual en la Toma</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Contraste</td>
+      <td>Separar sombras y luces</td>
+      <td>CPU / GPU</td>
+      <td>300 - 320</td>
+      <td>Aporta profundidad visual y elimina el aspecto lechoso o plano.</td>
+    </tr>
+    <tr>
+      <td>Brillo</td>
+      <td>Compensar subexposición</td>
+      <td>CPU / GPU</td>
+      <td>505 - 520</td>
+      <td>Rescata detalle en tomas oscuras sin quemar las altas luces.</td>
+    </tr>
+    <tr>
+      <td>Saturación</td>
+      <td>Intensificar canales cromáticos</td>
+      <td>CPU / GPU</td>
+      <td>140 - 155</td>
+      <td>Reaviva colores apagados o genera blanco y negro puro al bajar a 0.</td>
+    </tr>
+    <tr>
+      <td>Nitidez (Sharpen)</td>
+      <td>Realzar microcontrastes en bordes</td>
+      <td>CPU</td>
+      <td>Moderado sutil</td>
+      <td>Simula mayor definición óptica; en exceso genera ruido y halos.</td>
+    </tr>
+    <tr>
+      <td>Chroma Key Avanzado</td>
+      <td>Aislar verde/azul y crear canal alfa</td>
+      <td>CPU</td>
+      <td>Gotero + Tolerancias RGB</td>
+      <td>Vuelve transparente el fondo para mockups, personas y overlays.</td>
+    </tr>
+    <tr>
+      <td>Movit GPU Pipeline</td>
+      <td>Previsualización fluida en tiempo real</td>
+      <td>GPU (Shaders OpenGL)</td>
+      <td>Activar en Preferencias</td>
+      <td>Reproducción a 60 fps en línea de tiempo; riesgoso en render final.</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## Ficha Técnica: Parámetros Clave y Calibración <Icon name="lucide:sliders-horizontal" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Guía de referencia rápida para configurar valores de efectos en Kdenlive:
+
+<table>
+  <thead>
+    <tr>
+      <th>Control de Efecto</th>
+      <th>Valor Neutro / Por Defecto</th>
+      <th>Rango de Calibración Sugerido</th>
+      <th>Comportamiento si se Excede</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Contraste (Contrast)</td>
+      <td>250</td>
+      <td>300 a 320</td>
+      <td>Negros empastados sin detalle y pérdida de información en sombras.</td>
+    </tr>
+    <tr>
+      <td>Brillo (Brightness)</td>
+      <td>500 (centro)</td>
+      <td>505 a 520</td>
+      <td>Blancos quemados (clipping) y sombras convertidas en gris desteñido.</td>
+    </tr>
+    <tr>
+      <td>Saturación (Saturation)</td>
+      <td>125</td>
+      <td>140 a 155</td>
+      <td>Colores fluorescentes, artefactos cromáticos y piel naranja poco natural.</td>
+    </tr>
+    <tr>
+      <td>Nitidez (Sharpen)</td>
+      <td>0</td>
+      <td>10 a 25 máx.</td>
+      <td>Ruido electrónico agresivo y líneas dobles blanquecinas en contornos.</td>
+    </tr>
+    <tr>
+      <td>Tolerancia Verde (Chroma)</td>
+      <td>Mínimo</td>
+      <td>Ajuste milimétrico con gotero</td>
+      <td>Perforación de cabello, ropa y silueta translúcida del sujeto.</td>
+    </tr>
+    <tr>
+      <td>Atenuación de Audio</td>
+      <td>0 dB</td>
+      <td>-18 dB a -24 dB (Fondo)</td>
+      <td>Música inaudible o ensordecedora que asfixia la voz principal.</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## Reto Técnico de Taller: Composición y Color Grading <Icon name="lucide:circle-check" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Integra las técnicas de corrección de color y composición por croma para producir tu segunda pieza audiovisual:
+
+### Requisitos Técnicos del Entregable
+
+* **Configuración del proyecto:** Resolución horizontal 1920x1080 (16:9) a 30 fps en modo CPU estándar (estabilidad garantizada).
+* **Segmento 1: Rescate de Imagen (Antes vs. Después):**
+  * Toma en `V1` de al menos 10 segundos con luz pobre o colores apagados.
+  * Divide el clip a la mitad con **`Shift + R`**.
+  * Deja el primer segmento en su estado crudo original con un título superior en `V2` que diga **"Sin efectos"**.
+  * Aplica al segundo segmento la cadena de corrección primaria (**Contraste** ajustado a ~310, **Brillo** compensado y **Saturación** a ~145) con un título que indique **"Con corrección de color"**.
+* **Segmento 2: Composición Chroma Key (Mockup o Personaje):**
+  * Coloca un fondo de escenario o animación en la pista **`V1`**.
+  * Coloca en **`V2`** una toma con pantalla verde (actor, personaje animado o mockup de televisor/dispositivo móvil).
+  * Aplica el efecto **Recorte por croma avanzado** ajustando el gotero y la tolerancia del canal verde hasta erradicar los contornos verdes sin perforar la silueta del sujeto.
+* **Segmento 3: Overlay de Interfaz Gráfica:**
+  * Inserta sobre la pista superior **`V3`** un botón animado de suscripción o red social sobre fondo verde.
+  * Recorta el fondo verde con croma y añade el efecto **Transformar** para escalarlo y reubicarlo en una esquina sin invadir el centro de atención visual.
+* **Banda sonora y transiciones:**
+  * Música de fondo en `A2` con atenuaciones (*fade in/out*) suaves y volumen regulado en decibelios negativos (`-18 dB` a `-24 dB`).
+* **Renderizado final:**
+  * Exporta el proyecto completo en contenedor **MP4** con códec **H.264 / AAC** bajo el nombre formal: `Apellido_Nombre_Semana13.mp4`.
