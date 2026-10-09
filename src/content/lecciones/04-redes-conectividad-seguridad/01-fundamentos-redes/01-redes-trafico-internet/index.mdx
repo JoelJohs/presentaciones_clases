@@ -1,0 +1,845 @@
+---
+title: "Fundamentos de Redes y Tráfico en Internet"
+moduleTitle: "4 - Redes, Conectividad y Seguridad Informática"
+topicTitle: "Tema 1: Conectividad y Redes"
+subtopicTitle: "Cliente-Servidor, Direccionamiento IP, DNS, Enrutadores y Diagnóstico"
+semana: 14
+fecha: "10-10-2026"
+published: true
+description: "Analiza el modelo cliente-servidor, direccionamiento IP público y privado, resolución de nombres (DNS), enrutadores y comandos de diagnóstico de red (ping, traceroute)."
+duration: 240
+objectives:
+  - "Diferenciar los roles de cliente y servidor en la comunicación por red"
+  - "Distinguir entre direcciones IP públicas y privadas mediante el mecanismo NAT"
+  - "Explicar el proceso de resolución jerárquica de nombres en el sistema DNS"
+  - "Diferenciar las funciones de reenvío en el plano de datos y enrutamiento en el plano de control"
+  - "Relacionar las capas del modelo de red y el factor humano (Capa 8) con la metodología de diagnóstico"
+  - "Medir latencia (RTT) y pérdida de paquetes mediante el protocolo ICMP con la herramienta ping"
+  - "Rastrear la secuencia de saltos y enrutadores intermedios mediante traceroute"
+  - "Elaborar diagramas y análisis de casos reales de red en libreta aplicando los modelos teóricos"
+---
+
+import { Icon } from "astro-icon/components";
+
+# Fundamentos de Redes y Tráfico en Internet
+
+Analiza el modelo cliente-servidor, direccionamiento IP público y privado, resolución de nombres (DNS), enrutadores y comandos de diagnóstico de red (ping, traceroute).
+
+## 1. Roles en la Red: Petición y Respuesta <Icon name="lucide:arrow-left-right" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Cada intercambio de datos en Internet ocurre entre dos participantes con funciones distintas:
+
+- **El cliente:** Inicia la conexión y solicita recursos específicos, como un archivo HTML, una imagen o un video.
+- **El servidor:** Mantiene un proceso en espera de solicitudes entrantes, procesa cada petición y devuelve los datos correspondientes.
+
+> **Definición técnica (Kurose & Ross, Computer Networking, §2.1.1):**
+> "En una arquitectura cliente-servidor, un host siempre activo (el servidor) atiende las solicitudes de múltiples hosts clientes. Los clientes no se comunican entre sí."
+
+Tu navegador o aplicación móvil no intercambia datos directo con otros teléfonos para obtener contenido web. Toda solicitud viaja a un servidor que procesa y entrega la información.
+
+---
+
+## 2. Analogía de Servicio: Cliente, Red y Servidor <Icon name="lucide:utensils" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+La comunicación en red sigue un esquema similar al servicio en un restaurante:
+
+<table>
+  <thead>
+    <tr>
+      <th>Elemento</th>
+      <th>Equivalente en Red</th>
+      <th>Función Técnica</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Comensal</td>
+      <td><strong>Cliente</strong> (navegador, aplicación móvil)</td>
+      <td>Selecciona el recurso y envía la petición.</td>
+    </tr>
+    <tr>
+      <td>Mesero</td>
+      <td><strong>Red física y lógica</strong> (cables, Wi-Fi, routers)</td>
+      <td>Transporta los paquetes de datos entre ambos extremos.</td>
+    </tr>
+    <tr>
+      <td>Cocina</td>
+      <td><strong>Servidor</strong> (equipo en centro de datos)</td>
+      <td>Procesa la orden, consulta la base de datos y entrega el recurso.</td>
+    </tr>
+    <tr>
+      <td>Comanda o pedido</td>
+      <td><strong>Solicitud HTTP</strong> (Request)</td>
+      <td>Especifica el método, la ruta y los parámetros solicitados.</td>
+    </tr>
+    <tr>
+      <td>Platillo entregado</td>
+      <td><strong>Respuesta HTTP</strong> (Response)</td>
+      <td>Devuelve el código de estado y el cuerpo con los datos.</td>
+    </tr>
+  </tbody>
+</table>
+
+> El cliente no procesa los datos centrales en su memoria local. Envía la solicitud al servidor y dibuja en pantalla el contenido recibido.
+
+---
+
+## 3. Comparación Técnica entre Cliente y Servidor <Icon name="lucide:server" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+<table>
+  <thead>
+    <tr>
+      <th>Criterio</th>
+      <th>Cliente</th>
+      <th>Servidor</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Iniciativa</strong></td>
+      <td>Envía la primera solicitud para abrir la conexión.</td>
+      <td>Permanece a la escucha en un puerto de red.</td>
+    </tr>
+    <tr>
+      <td><strong>Disponibilidad</strong></td>
+      <td>Intermitente. El usuario enciende o apaga el equipo a criterio.</td>
+      <td>Continua (24 horas, 7 días a la semana).</td>
+    </tr>
+    <tr>
+      <td><strong>Concurrencia</strong></td>
+      <td>Gestiona las tareas de un usuario a la vez.</td>
+      <td>Atiende miles de conexiones concurrentes en paralelo.</td>
+    </tr>
+    <tr>
+      <td><strong>Ubicación física</strong></td>
+      <td>Dispositivos de usuario (computadoras, teléfonos, consolas).</td>
+      <td>Centros de datos con sistemas de energía redundante.</td>
+    </tr>
+    <tr>
+      <td><strong>Dirección IP</strong></td>
+      <td>Variable (asignada por el router o proveedor móvil).</td>
+      <td>Fija o vinculada a nombres de dominio estables.</td>
+    </tr>
+    <tr>
+      <td><strong>Ejemplos</strong></td>
+      <td>Google Chrome, Mozilla Firefox, Spotify, clientes SSH.</td>
+      <td>Servidores web Nginx y Apache, bases de datos PostgreSQL.</td>
+    </tr>
+  </tbody>
+</table>
+
+Un centro de datos aloja miles de servidores en bastidores (*racks*) conectados a enlaces de fibra óptica de alta capacidad para responder a millones de peticiones por segundo.
+
+---
+
+## 4. Localización del Servidor: Dirección IP y Puertos <Icon name="lucide:network" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Para enviar una solicitud al destino correcto, el cliente utiliza dos parámetros del protocolo de red:
+
+* **Dirección IP:** Número identificador del equipo en la red (ejemplo: `142.250.80.46`). Sin esta dirección, los enrutadores no pueden canalizar los paquetes.
+* **Número de puerto:** Identificador del proceso o servicio específico dentro del sistema operativo del servidor.
+  * **Puerto 80:** Protocolo HTTP (tráfico web sin cifrar).
+  * **Puerto 443:** Protocolo HTTPS (tráfico web cifrado con TLS).
+  * **Puerto 22:** Protocolo SSH (administración remota segura).
+  * **Puerto 53:** Servicio DNS (traducción de nombres a direcciones IP).
+
+> **Concepto de socket (Kurose & Ross, §2.1.2):**
+> Un socket actúa como el punto final de comunicación entre dos procesos. La aplicación escribe datos en el socket local y el sistema operativo los entrega al socket del equipo receptor a través de la red.
+
+---
+
+## 5. Casos de Uso Cotidianos <Icon name="lucide:globe" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+<table>
+  <thead>
+    <tr>
+      <th>Acción</th>
+      <th>Cliente</th>
+      <th>Servidor</th>
+      <th>Petición Enviada</th>
+      <th>Respuesta Devuelta</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Navegar en la web</td>
+      <td>Navegador</td>
+      <td>Servidor Web</td>
+      <td><code>GET /index.html</code></td>
+      <td>Documento HTML y recursos visuales</td>
+    </tr>
+    <tr>
+      <td>Ver video en streaming</td>
+      <td>Reproductor</td>
+      <td>Servidor de Medios</td>
+      <td><code>GET /stream/chunk_01.ts</code></td>
+      <td>Segmentos de video y audio en búfer</td>
+    </tr>
+    <tr>
+      <td>Enviar mensaje de chat</td>
+      <td>App de chat</td>
+      <td>Servidor de Mensajería</td>
+      <td><code>POST /api/mensaje</code></td>
+      <td>Confirmación de recepción en el servidor</td>
+    </tr>
+    <tr>
+      <td>Buscar información</td>
+      <td>Barra de búsqueda</td>
+      <td>Motor de indexación</td>
+      <td><code>GET /search?q=redes</code></td>
+      <td>Resultados ordenados en formato JSON o HTML</td>
+    </tr>
+  </tbody>
+</table>
+
+> Cuando subes una foto a una red social actúas como cliente. Tu equipo envía una petición de subida (`POST` o `PUT`) al servidor, y este valida, procesa y almacena el archivo en sus discos.
+
+---
+
+## 6. Actividad Práctica: Inspección de Red en el Navegador <Icon name="lucide:terminal" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Comprueba el flujo cliente-servidor capturando peticiones HTTP reales desde tu propio equipo:
+
+1. **Abre las herramientas de desarrollo:** En tu navegador, presiona `F12` o la combinación `Ctrl + Shift + I`.
+2. **Selecciona la pestaña Red (Network):** Verifica que el botón de grabación esté activo (círculo rojo o barra encendida).
+3. **Carga una página web:** En la barra de navegación escribe `example.com` y presiona `Enter`.
+4. **Inspecciona la primera petición:**
+   - Haz clic sobre el primer elemento de la lista (el recurso `example.com`).
+   - Abre la pestaña **Encabezados (Headers)**.
+5. **Verifica los siguientes campos:**
+   - **Request URL:** Dirección completa del recurso solicitado.
+   - **Request Method:** Método HTTP (`GET`).
+   - **Status Code:** Código de respuesta devuelto por el servidor (`200 OK`).
+   - **Remote Address:** Dirección IP del servidor y puerto utilizado (ejemplo: `93.184.215.14:443`).
+6. **Comprueba el resultado:** Identifica qué equipo funcionó como cliente y cuál como servidor durante la carga.
+
+---
+
+## 7. Identificadores en Internet: IP Pública y Privada <Icon name="lucide:globe-2" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Cada equipo conectado a una red informática requiere un identificador numérico para transmitir y recibir paquetes: la **dirección IP** (*Internet Protocol*).
+
+El protocolo IPv4 divide la comunicación en dos ámbitos de red:
+
+- **Ámbito privado (LAN):** Identifica a cada dispositivo dentro de la red de área local en tu casa, escuela o laboratorio. Los equipos externos en Internet no acceden a estas direcciones sin un enrutador intermediario.
+- **Ámbito público (WAN):** Identifica a la red local completa frente al resto de Internet. Los servidores externos dirigen sus respuestas a esta dirección.
+
+---
+
+## 8. Analogía del Edificio: Dirección Externa y Departamento <Icon name="lucide:building-2" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Un edificio residencial ilustra la relación entre redes locales y globales:
+
+<table>
+  <thead>
+    <tr>
+      <th>Concepto de Red</th>
+      <th>Analogía del Edificio</th>
+      <th>Función Técnica</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>IP Pública</strong></td>
+      <td>Dirección postal exterior (ejemplo: Av. Central #120)</td>
+      <td>Identificador global asignado por el proveedor de servicios (ISP). Es la dirección visible para los servidores en Internet.</td>
+    </tr>
+    <tr>
+      <td><strong>IP Privada</strong></td>
+      <td>Número de departamento interno (ejemplo: Depto. 4B)</td>
+      <td>Identificador dentro de la red local asignado por el router. Válido solo en la red interna.</td>
+    </tr>
+    <tr>
+      <td><strong>Router / Módem</strong></td>
+      <td>Recepción y conserjería</td>
+      <td>Puerta de enlace predeterminada (*Gateway*). Conecta la red interna con la externa y distribuye los paquetes entrantes al equipo destino.</td>
+    </tr>
+  </tbody>
+</table>
+
+> Los dispositivos conectados al mismo módem (computadoras, teléfonos, pantallas) comparten una única IP pública hacia el exterior, pero tienen direcciones IP privadas distintas en la red local.
+
+---
+
+## 9. Traducción de Direcciones de Red (NAT) <Icon name="lucide:split" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Cuando un dispositivo con IP privada solicita datos a un servidor externo, el enrutador ejecuta el proceso **NAT (*Network Address Translation*)**:
+
+1. **Salida del paquete:** Tu computadora (`192.168.1.15:52431`) envía una solicitud web. El router reemplaza la IP privada de origen por su IP pública (`201.140.85.12:61001`).
+2. **Registro en tabla NAT:** El router anota en memoria que la respuesta al puerto `61001` corresponde a la IP interna `192.168.1.15`.
+3. **Respuesta del servidor:** El servidor remoto responde enviando los datos a la IP pública del router.
+4. **Reenvío interno:** El router consulta la tabla NAT, traduce la dirección de destino y entrega los paquetes a tu computadora.
+
+<table>
+  <thead>
+    <tr>
+      <th>Clase de Red Privada</th>
+      <th>Rango de Direcciones IP (RFC 1918)</th>
+      <th>Uso Frecuente</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Clase A</strong></td>
+      <td><code>10.0.0.0</code> a <code>10.255.255.255</code></td>
+      <td>Grandes corporaciones y centros universitarios.</td>
+    </tr>
+    <tr>
+      <td><strong>Clase B</strong></td>
+      <td><code>172.16.0.0</code> a <code>172.31.255.255</code></td>
+      <td>Empresas medianas e instalaciones industriales.</td>
+    </tr>
+    <tr>
+      <td><strong>Clase C</strong></td>
+      <td><code>192.168.0.0</code> a <code>192.168.255.255</code></td>
+      <td>Hogares, aulas de cómputo y pequeñas oficinas.</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 10. Actividad Práctica: Descubre tus Direcciones IP <Icon name="lucide:laptop" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Comprueba la diferencia entre tu identidad local y tu identidad pública:
+
+1. **Obtén tu IP privada:**
+   - En Windows: Abre la consola (`cmd`), escribe `ipconfig` y presiona `Enter`.
+   - En Linux o macOS: Abre la terminal, escribe `ip a` o `ifconfig` y presiona `Enter`.
+   - Localiza la línea **Dirección IPv4**. Comprueba que pertenezca al rango de red privada (`192.168.x.x` o `10.x.x.x`).
+   - Identifica la **Puerta de enlace predeterminada** (*Default Gateway*): es la IP privada del router local (como `192.168.1.1` o `192.168.0.1`).
+2. **Obtén tu IP pública:**
+   - En la terminal ejecuta: `curl ifconfig.me`.
+   - Compara el resultado con tu IP privada. La dirección pública pertenece a un bloque asignado por tu proveedor de Internet.
+3. **Compara con otro dispositivo:**
+   - Conecta dos equipos a la misma red Wi-Fi o del aula y consulta la IP pública en ambos.
+   - Comprueba que ambos equipos comparten la misma dirección pública, pero tienen direcciones privadas distintas.
+
+---
+
+## 11. DNS: El Directorio de Nombres de Internet <Icon name="lucide:book-open" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Las personas recuerdan nombres como `youtube.com` o `wikipedia.org`. Los enrutadores de red procesan direcciones IP numéricas como `142.250.190.46`.
+
+El **Sistema de Nombres de Dominio (DNS)** es la base de datos distribuida que traduce nombres de host a direcciones IP numéricas.
+
+### ¿Por qué no existe una base de datos centralizada?
+
+Centralizar todos los nombres de Internet en un único servidor provocaría cuatro fallos críticos de diseño (Kurose & Ross, §2.4.1):
+
+1. **Punto único de fallo:** Si el servidor central colapsa, la navegación en Internet se detiene.
+2. **Volumen de tráfico:** Miles de millones de dispositivos enviando peticiones por segundo saturan cualquier nodo central.
+3. **Distancia física:** La latencia entre continentes degrada el tiempo de respuesta por retardo de propagación.
+4. **Mantenimiento inmanejable:** Actualizar millones de registros nuevos por minuto en un solo repositorio causa inconsistencias de datos.
+
+La arquitectura de Internet resuelve esto mediante una **base de datos jerárquica y distribuida**.
+
+---
+
+## 12. Jerarquía Distribuida de Servidores DNS <Icon name="lucide:network" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Ningún servidor DNS individual contiene el mapa completo de Internet. La resolución se divide en cuatro capas estructuradas en árbol:
+
+<table>
+  <thead>
+    <tr>
+      <th>Nivel Jerárquico</th>
+      <th>Función en la Red</th>
+      <th>Ejemplo de Operación</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Servidores Raíz (Root)</strong></td>
+      <td>Coordinan la cúspide del árbol DNS. Cientos de nodos replicados por el mundo mediante tecnología Anycast.</td>
+      <td>No conocen la IP final; indican qué servidor TLD gestiona la extensión <code>.com</code>.</td>
+    </tr>
+    <tr>
+      <td><strong>Servidores TLD (Top-Level Domain)</strong></td>
+      <td>Administran extensiones genéricas (<code>.com</code>, <code>.org</code>) y territoriales (<code>.mx</code>, <code>.es</code>).</td>
+      <td>Indican qué servidor autoritativo tiene los registros oficiales de <code>mercadolibre.com</code>.</td>
+    </tr>
+    <tr>
+      <td><strong>Servidores Autoritativos</strong></td>
+      <td>Pertenecen a organizaciones o proveedores de alojamiento. Alojan los registros públicos definitivos.</td>
+      <td>Contienen la dirección IP exacta vinculada a <code>www.mercadolibre.com</code>.</td>
+    </tr>
+    <tr>
+      <td><strong>Servidor DNS Local (Resolver)</strong></td>
+      <td>Servidor intermediario configurado en tu router o ISP. Recibe la petición de tu equipo y realiza el rastreo.</td>
+      <td>Consulta la jerarquía completa en tu lugar y devuelve el resultado a tu navegador.</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 13. Consultas Iterativas, Recursivas y Memoria Caché <Icon name="lucide:refresh-cw" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+El proceso de resolución combina dos tipos de peticiones entre los hosts:
+
+* **Consulta recursiva:** Tu computadora delega la carga completa en el DNS local: *"Encuentra la IP de este dominio y devuelve el resultado final"*.
+* **Consulta iterativa:** El DNS local consulta en orden al servidor Raíz, al servidor TLD y al servidor Autoritativo hasta obtener la respuesta definitiva.
+
+### El rol de la memoria caché y el TTL (Time-To-Live)
+
+Para evitar consultar la jerarquía global en cada clic, los servidores DNS locales guardan copias de las respuestas recientes en su memoria caché:
+
+* **TTL (Tiempo de vida):** Cada registro DNS viaja con un temporizador en segundos asignado por el servidor autoritativo.
+* Mientras el TTL no expire, el DNS local responde desde su memoria caché en menos de 5 milisegundos sin consultar servidores externos.
+* Cuando el temporizador llega a cero, el DNS local purga el registro y vuelve a consultar la jerarquía global en la siguiente petición.
+
+> **Distribución de carga geográfica:** Los servidores autoritativos de grandes plataformas asocian un mismo nombre de dominio a múltiples direcciones IP. Cada consulta devuelve la lista en orden rotatorio o la IP del centro de datos más cercano al usuario.
+
+---
+
+## 14. Registros de Recursos (Resource Records) <Icon name="lucide:database" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Los servidores DNS almacenan información estructurada en **Registros de Recursos (RR)**. Cada registro contiene cuatro campos principales: `(Nombre, Valor, Tipo, TTL)`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Tipo de Registro</th>
+      <th>Función Técnica</th>
+      <th>Ejemplo de Registro</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Tipo A</strong></td>
+      <td>Mapea un nombre de host a una dirección IPv4 de 32 bits.</td>
+      <td><code>servidor.com &rarr; 93.184.215.14</code></td>
+    </tr>
+    <tr>
+      <td><strong>Tipo AAAA</strong></td>
+      <td>Mapea un nombre de host a una dirección IPv6 de 128 bits.</td>
+      <td><code>servidor.com &rarr; 2606:2800:220:1:248:1893:25c8:1946</code></td>
+    </tr>
+    <tr>
+      <td><strong>Tipo MX</strong></td>
+      <td>Indica el servidor de correo electrónico responsable de recibir mensajes para ese dominio.</td>
+      <td><code>empresa.com &rarr; mail.empresa.com</code></td>
+    </tr>
+    <tr>
+      <td><strong>Tipo CNAME</strong></td>
+      <td>Asocia un nombre canónico oficial a un alias o subdominio.</td>
+      <td><code>portal.empresa.com &rarr; empresa.com</code></td>
+    </tr>
+    <tr>
+      <td><strong>Tipo NS</strong></td>
+      <td>Identifica los servidores DNS autoritativos delegados para esa zona o dominio.</td>
+      <td><code>empresa.com &rarr; ns1.proveedor.net</code></td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 15. Seguridad en DNS: Envenenamiento de Caché y Mitigación <Icon name="lucide:shield-alert" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+El protocolo DNS carece de autenticación nativa en su diseño base, lo que expone la red a vectores de ataque:
+
+* **Envenenamiento de caché (DNS Cache Poisoning):** Un atacante envía respuestas falsificadas a un servidor DNS local mientras este espera contestación de un servidor autoritativo. Si el resolver acepta los paquetes falsos, almacena una IP maliciosa en caché. Los usuarios locales que busquen `bancoreal.com` terminan en el servidor del atacante hasta que expire el TTL.
+* **Ataques de denegación de servicio (DDoS):** Intentos de saturar servidores Raíz mediante botnets masivas. La red resiste gracias a réplicas Anycast globales y al filtrado de tráfico absorbido por las cachés de los proveedores locales.
+* **Mitigación con DNSSEC:** Las extensiones de seguridad para DNS (*DNS Security Extensions*) firman las respuestas con pares de claves pública y privada para verificar el origen y bloquear datos alterados.
+
+---
+
+## 16. Actividad Práctica: Inspección de Registros DNS con nslookup <Icon name="lucide:terminal" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Usa la herramienta nativa `nslookup` en tu terminal para auditar la infraestructura DNS de un dominio:
+
+1. **Abre tu terminal:** En Windows usa PowerShell o `cmd`. En Linux o macOS usa Terminal.
+2. **Inspecciona direcciones IPv4 (Tipo A):**
+   ```bash
+   nslookup mercadolibre.com
+   ```
+   Observa si la respuesta lista múltiples direcciones IP. Esto comprueba que el dominio aplica balanceo de carga entre varios servidores.
+3. **Consulta los servidores de correo electrónico (Tipo MX):**
+   ```bash
+   nslookup -type=MX mercadolibre.com
+   ```
+   Identifica qué plataforma gestiona la recepción de correos de la organización.
+4. **Consulta los servidores autoritativos (Tipo NS):**
+   ```bash
+   nslookup -type=NS mercadolibre.com
+   ```
+   Identifica los nombres de los servidores responsables de publicar las respuestas oficiales de esa zona.
+5. **Inspecciona la caché DNS de tu sistema operativo (Windows):**
+   ```bash
+   ipconfig /displaydns
+   ```
+   Revisa las entradas almacenadas en tu memoria RAM local junto con su tiempo restante de expiración (TTL).
+
+---
+
+## 17. Enrutadores: Conmutación de Paquetes en la Red <Icon name="lucide:route" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Un enrutador (*router*) es un dispositivo de red que conecta múltiples enlaces de transmisión y reenvía paquetes entre redes distintas.
+
+Internet opera como una malla de redes interconectadas donde los enrutadores funcionan como nodos de enlace.
+
+Sus dos funciones operativas son:
+* **Inspección de cabeceras:** Leer la dirección IP de destino encapsulada en cada paquete entrante.
+* **Selección de ruta:** Determinar por cuál enlace físico emitir el paquete para aproximarlo a su destino.
+
+---
+
+## 18. Navegación Salto a Salto y Tablas de Reenvío <Icon name="lucide:milestone" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Cada enrutador conoce el siguiente nodo de paso (*next-hop*), sin almacenar la ruta completa de la red en los paquetes.
+
+> **Analogía de la ruta (Kurose & Ross, §1.3):**
+> Un conductor viaja entre ciudades lejanas sin mapa de carreteras. En cada cruce principal se detiene a preguntar cuál autopista tomar. El encargado del cruce indica el tramo inmediato y le indica consultar de nuevo en el siguiente cruce. La red opera igual: salto a salto (*hop by hop*).
+
+### Coincidencia de prefijo más largo (Longest Prefix Match)
+
+Cada enrutador mantiene en memoria una **Tabla de Reenvío** (*Forwarding Table*). Cuando llega un paquete:
+
+1. El enrutador extrae la dirección IP de destino de la cabecera.
+2. Compara la IP con los rangos de red registrados en su tabla.
+3. Si la IP coincide con más de una entrada, aplica la regla de **coincidencia de prefijo más largo**: selecciona la ruta con la máscara de red más específica (mayor cantidad de bits coincidentes).
+4. Envía el paquete por la interfaz física asociada a esa entrada.
+
+---
+
+## 19. Almacenamiento y Reenvío (Store-and-Forward) <Icon name="lucide:archive" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Un enrutador opera bajo el principio de **Almacenamiento y Reenvío** (*Store-and-Forward*):
+
+1. **Recepción completa:** El conmutador recibe todos los bits del paquete en su memoria intermedia (*búfer*) antes de transmitir el primer bit al enlace de salida.
+2. **Validación:** Comprueba la integridad de la cabecera del paquete mediante sumas de verificación (*checksum*). Si detecta errores de bits, descarta el paquete dañado.
+3. **Cola de espera:** Si el enlace de salida transmite otros datos, el paquete aguarda su turno en la cola de salida (*output buffer*).
+
+> **Retardo de transmisión:** Si un paquete contiene $L$ bits y el enlace transmite a una tasa de $R$ bits por segundo, el tiempo necesario para emitir el paquete completo es $L/R$ segundos por cada salto.
+
+---
+
+## 20. Plano de Datos frente a Plano de Control <Icon name="lucide:sliders-horizontal" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+El funcionamiento interno del enrutador se divide en dos planos con funciones e interfaces distintas (Kurose & Ross, §4.1):
+
+<table>
+  <thead>
+    <tr>
+      <th>Criterio</th>
+      <th>Reenvío (Plano de Datos)</th>
+      <th>Enrutamiento (Plano de Control)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Alcance</strong></td>
+      <td>Acción local dentro del propio enrutador.</td>
+      <td>Acción global coordinada a lo largo de toda la red.</td>
+    </tr>
+    <tr>
+      <td><strong>Función principal</strong></td>
+      <td>Transferir un paquete desde la interfaz de entrada hacia la interfaz de salida apropiada.</td>
+      <td>Calcular las rutas que siguen los paquetes desde el origen hasta el destino.</td>
+    </tr>
+    <tr>
+      <td><strong>Escala de tiempo</strong></td>
+      <td>Microsegundos o nanosegundos por paquete.</td>
+      <td>Segundos o minutos (cálculos periódicos o ante caídas).</td>
+    </tr>
+    <tr>
+      <td><strong>Implementación</strong></td>
+      <td>Circuitos de hardware dedicados (ASIC y memorias TCAM).</td>
+      <td>Software en la CPU del enrutador o controladores de red (SDN).</td>
+    </tr>
+    <tr>
+      <td><strong>Mecanismo clave</strong></td>
+      <td>Consulta de la tabla de reenvío local.</td>
+      <td>Algoritmos y protocolos de encaminamiento (OSPF, BGP).</td>
+    </tr>
+  </tbody>
+</table>
+
+> El plano de control diseña el mapa de carreteras de la red; el plano de datos transfiere cada vehículo individual por la salida indicada.
+
+---
+
+## 21. El Modelo de 7 Capas y la "Capa 8" <Icon name="lucide:layers" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Las redes dividen su arquitectura en capas modulares. Cada estrato resuelve un problema puntual sin exigir que los otros niveles se rediseñen.
+
+El **Modelo OSI** (*Open Systems Interconnection*) define siete capas de referencia, desde el medio físico hasta las aplicaciones:
+
+<table>
+  <thead>
+    <tr>
+      <th>Capa</th>
+      <th>Nombre</th>
+      <th>Unidad y Función</th>
+      <th>Protocolo o Dispositivo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>7</strong></td>
+      <td>Aplicación</td>
+      <td>Servicios de red y datos interpretables por software.</td>
+      <td>HTTP, DNS, SSH, SMTP</td>
+    </tr>
+    <tr>
+      <td><strong>6</strong></td>
+      <td>Presentación</td>
+      <td>Codificación de datos, cifrado y compresión.</td>
+      <td>TLS/SSL, JSON, JPEG</td>
+    </tr>
+    <tr>
+      <td><strong>5</strong></td>
+      <td>Sesión</td>
+      <td>Control y sincronización de conexiones continuas.</td>
+      <td>RPC, sockets de sesión</td>
+    </tr>
+    <tr>
+      <td><strong>4</strong></td>
+      <td>Transporte</td>
+      <td>Segmentos. Comunicación extremo a extremo y números de puerto.</td>
+      <td>TCP, UDP</td>
+    </tr>
+    <tr>
+      <td><strong>3</strong></td>
+      <td>Red</td>
+      <td>Paquetes. Direccionamiento lógico y enrutamiento global.</td>
+      <td>IPv4, IPv6, ICMP, Enrutadores</td>
+    </tr>
+    <tr>
+      <td><strong>2</strong></td>
+      <td>Enlace de datos</td>
+      <td>Tramas. Transferencia de saltos locales entre tarjetas de red.</td>
+      <td>Ethernet, Wi-Fi, Conmutadores, MAC</td>
+    </tr>
+    <tr>
+      <td><strong>1</strong></td>
+      <td>Física</td>
+      <td>Bits. Pulsos de voltaje, luz o radiofrecuencia.</td>
+      <td>Cables UTP, fibra óptica, ondas RF</td>
+    </tr>
+  </tbody>
+</table>
+
+### El factor humano: La "Capa 8"
+
+En los entornos de soporte técnico e ingeniería se utiliza la expresión informal **Capa 8** para identificar al usuario que opera el sistema:
+
+* Identifica situaciones donde la causa del fallo reside en descuidos del operador: cables desconectados por error, contraseñas erróneas o parámetros mal escritos.
+* Metodología de diagnóstico: Al investigar una caída de conexión, los técnicos descartan fallas desde la Capa 1 hacia arriba. Si la señal física, la IP y el DNS responden, la investigación apunta a la Capa 8.
+
+---
+
+## 22. Diagnóstico de Conectividad con ping e ICMP <Icon name="lucide:activity" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+La herramienta `ping` verifica la disponibilidad de un host remoto y mide el retardo de ida y vuelta de los paquetes.
+
+Opera mediante el protocolo **ICMP** (*Internet Control Message Protocol*):
+1. El emisor envía un mensaje **ICMP Echo Request** (tipo 8) a la dirección IP de destino.
+2. Si el host remoto está activo y no bloquea el tráfico de control, devuelve un mensaje **ICMP Echo Reply** (tipo 0).
+
+```bash
+ping google.com
+```
+
+### Parámetros de salida de ping
+
+* **Tiempo de ida y vuelta (RTT - Round-Trip Time):** Tiempo en milisegundos (`time=18ms`) que tarda el paquete en viajar al destino y regresar. Es la suma del retardo de transmisión, propagación física por cables, procesamiento en routers y colas de espera.
+* **Pérdida de paquetes (Packet Loss):** Porcentaje de paquetes descartados en la ruta por congestión en enrutadores o enlaces inestables.
+* **TTL (Time-To-Live):** Contador de saltos restantes. Cada enrutador intermedio resta 1 a este valor antes de reenviar el paquete.
+
+> Si la consola muestra `Request timed out` o `Destination host unreachable`, el host está apagado, la ruta carece de enlace hacia esa red o un cortafuegos (*firewall*) descarta el tráfico ICMP por política de seguridad.
+
+---
+
+## 23. Trazado de Rutas con traceroute y tracert <Icon name="lucide:map-pin" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+El comando `ping` solo comprueba la respuesta del destino final. En contraste, `traceroute` (en Linux/macOS) y `tracert` (en Windows) reconstruyen la secuencia completa de enrutadores intermedios.
+
+```bash
+# En Windows
+tracert google.com
+
+# En Linux o macOS
+traceroute google.com
+```
+
+### Mecanismo de rastreo mediante TTL (Kurose & Ross, §1.4.3)
+
+El comando utiliza una técnica basada en el campo TTL del protocolo IP y mensajes ICMP:
+
+1. Envía paquetes con **`TTL = 1`**. El primer enrutador de la ruta decrementa el TTL a 0, descarta el paquete y devuelve un mensaje **ICMP Time Exceeded** al emisor. El comando anota la IP y el tiempo de respuesta del primer salto.
+2. Envía paquetes con **`TTL = 2`**. El segundo enrutador descarta el paquete y devuelve otro mensaje de tiempo excedido.
+3. El proceso se repite incrementando el TTL de uno en uno hasta alcanzar el host de destino.
+
+> Las líneas con asteriscos (`* * *`) indican enrutadores configurados para descartar sondas ICMP o UDP sin responder, protegiendo su topología interna contra escaneo de red.
+
+---
+
+## 24. Hoja de Trucos: Comandos Esenciales de Red <Icon name="lucide:terminal" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+<table>
+  <thead>
+    <tr>
+      <th>Comando</th>
+      <th>Protocolo Base</th>
+      <th>Función Principal</th>
+      <th>Resultado Clave</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>ipconfig</code> / <code>ip a</code></td>
+      <td>Configuración OS / ARP</td>
+      <td>Inspeccionar interfaces de red locales.</td>
+      <td>Dirección IPv4 privada, máscara de subred, puerta de enlace y MAC.</td>
+    </tr>
+    <tr>
+      <td><code>ping &lt;host&gt;</code></td>
+      <td>ICMP (Echo Request/Reply)</td>
+      <td>Comprobar alcance y latencia de red.</td>
+      <td>Milisegundos de ida y vuelta (RTT) y porcentaje de pérdida de paquetes.</td>
+    </tr>
+    <tr>
+      <td><code>tracert</code> / <code>traceroute</code></td>
+      <td>IP (TTL) / ICMP</td>
+      <td>Mapear los saltos entre origen y destino.</td>
+      <td>Lista ordenada de enrutadores intermedios con latencia por salto.</td>
+    </tr>
+    <tr>
+      <td><code>nslookup &lt;dominio&gt;</code></td>
+      <td>DNS (Puerto 53 UDP/TCP)</td>
+      <td>Consultar registros de nombres de dominio.</td>
+      <td>Direcciones IP asociadas (Tipo A), servidores MX y servidores NS.</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 25. Actividad Práctica: Auditoría de Conexión en el Aula <Icon name="lucide:wrench" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Ejecuta una auditoría técnica paso a paso para diagnosticar la red de tu equipo:
+
+1. **Identifica tu interfaz local:**
+   Abre la terminal y ejecuta `ipconfig` (Windows) o `ip a` (Linux/macOS). Anota tu dirección IPv4 privada y la dirección de la **Puerta de enlace predeterminada** (*Default Gateway*).
+2. **Evalúa tu enlace local (primer salto):**
+   Ejecuta un ping hacia tu puerta de enlace:
+   ```bash
+   ping 192.168.1.1
+   ```
+   *(Sustituye por la IP real de tu gateway).* Comprueba que el tiempo de respuesta sea inferior a 5 ms. Esto confirma que tu cable ethernet o antena Wi-Fi opera sin congestión local.
+3. **Compara latencia local frente a transoceánica (RTT):**
+   - Ejecuta un ping a un servidor regional cercano:
+     ```bash
+     ping google.com
+     ```
+   - Ejecuta un ping a un servidor ubicado en otro continente:
+     ```bash
+     ping u-tokyo.ac.jp
+     ```
+   - Registra el RTT mínimo y máximo de ambos destinos. Observa el incremento de milisegundos provocado por la distancia física y el tránsito por cables submarinos de fibra óptica.
+4. **Mapea los enrutadores de la ruta:**
+   Ejecuta el trazado de ruta hacia un dominio público:
+   ```bash
+   tracert google.com
+   ```
+   *(En Linux usa `traceroute google.com`).* Identifica en qué número de salto sales de la red local del aula y cuántos enrutadores intermedios intervienen hasta alcanzar el destino.
+
+---
+
+## 26. Tarea 1: Analogía del Modelo Cliente-Servidor en Libreta <Icon name="lucide:book-open" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Realiza esta actividad en tu libreta para afianzar los roles de comunicación en red.
+
+### Instrucciones
+1. **Dibuja una analogía propia:** Modela el intercambio cliente-servidor usando un contexto cotidiano distinto a un restaurante (ejemplo: biblioteca, farmacia, taller mecánico o tienda de abarrotes).
+2. **Identifica los 5 elementos técnicos en tu dibujo:**
+   - Cliente (quien pide)
+   - Servidor (quien atiende)
+   - Petición (recurso solicitado)
+   - Respuesta (recurso entregado)
+   - Red o medio de transporte (camino o mensajero)
+3. **Completa la siguiente tabla con 3 aplicaciones de tu teléfono:**
+
+<table>
+  <thead>
+    <tr>
+      <th>Aplicación</th>
+      <th>Cliente</th>
+      <th>Servidor</th>
+      <th>Petición enviada</th>
+      <th>Respuesta devuelta</th>
+      <th>Efecto si el servidor cae</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Spotify</td>
+      <td>App en celular</td>
+      <td>Servidor de streaming</td>
+      <td>Buscar canción "Track X"</td>
+      <td>Audio en fragmentos</td>
+      <td>Muestra error de conexión y no reproduce música</td>
+    </tr>
+    <tr>
+      <td>(Tu app 1)</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>(Tu app 2)</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+4. **Pregunta de análisis técnico (3 a 4 renglones):**
+   *Al enviar un mensaje a un contacto por WhatsApp, ¿la comunicación viaja directo de teléfono a teléfono o pasa por un servidor? Explica tu respuesta con base en la arquitectura cliente-servidor.*
+
+### Criterios de Evaluación
+- Diagrama con los 5 componentes identificados: 40%
+- Tabla comparativa completa con 3 casos coherentes: 40%
+- Justificación técnica de la pregunta de análisis: 20%
+
+---
+
+## 27. Tarea 2: Esquema de Red del Hogar en Libreta <Icon name="lucide:home" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Dibuja en una página de tu libreta cómo se conectan los dispositivos en tu casa o red cercana.
+
+### Instrucciones
+1. **Dibuja 3 elementos básicos:**
+   - La entrada de Internet (el cable del proveedor).
+   - El módem o router de casa.
+   - 3 dispositivos que uses (por ejemplo: teléfono, computadora y televisión).
+2. **Anota las direcciones IP:**
+   - Consulta y escribe al lado de cada dispositivo su IP privada (ejemplo: `192.168.1.15`).
+   - Escribe la IP de tu módem (`192.168.1.1`).
+   - Escribe tu IP pública consultando `curl ifconfig.me` o buscando "mi ip" en el navegador.
+
+### Ejemplo en libreta
+```text
+[Cable de la calle] ---> [Módem / IP Pública: 201.140.85.12]
+                                      | (IP Puerta de enlace: 192.168.1.1)
+                           +----------+----------+
+                           |                     |
+                      [Teléfono]            [Computadora]
+                     192.168.1.25           192.168.1.30
+```
+
+3. **Pregunta breve (2 a 3 renglones):**
+   *Tanto tu teléfono como tu computadora navegan usando la misma IP pública frente a Internet. ¿Quién reparte los paquetes que regresan para que no se confundan de pantalla?*
+
+### Criterios de Evaluación
+- Dibujo claro con los 3 equipos y el módem: 40%
+- Direcciones IP anotadas en cada elemento: 40%
+- Respuesta a la pregunta final: 20%

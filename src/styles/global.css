@@ -410,7 +410,6 @@ h1, h2, h3, h4, h5, h6 {
 .prose table {
   display: table;
   width: 100%;
-  min-width: max-content;
   border-collapse: collapse;
   border-spacing: 0;
   margin-top: 1.5rem;
@@ -429,14 +428,14 @@ h1, h2, h3, h4, h5, h6 {
   border-top: 2px solid var(--color-brand-primary);
   border-bottom: 1px solid var(--color-brand-border);
   text-transform: uppercase;
-  white-space: nowrap;
+  white-space: normal;
 }
 .prose td {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--color-brand-border);
   color: var(--color-brand-text);
   vertical-align: middle;
-  min-width: 7rem;
+  min-width: 5rem;
 }
 .prose tr:hover td {
   background-color: var(--color-brand-hover-bg);
@@ -766,7 +765,7 @@ h1, h2, h3, h4, h5, h6 {
 .prose-table-wrapper table {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
-  width: max-content;
+  width: 100%;
   min-width: 100%;
 }
 /* Pista visual de scroll lateral para móviles */
