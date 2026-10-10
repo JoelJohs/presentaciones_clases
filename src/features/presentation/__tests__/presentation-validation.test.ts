@@ -10,6 +10,7 @@ import {
   getSavedSlideIndex,
   saveSlideIndex,
   presentationStore,
+  isMobileViewport,
 } from '../index';
 
 describe('Fase 4D / 4E — Pruebas Exhaustivas de Validación del Motor de Presentación', () => {
@@ -165,6 +166,65 @@ describe('Fase 4D / 4E — Pruebas Exhaustivas de Validación del Motor de Prese
       expect(getSavedSlideIndex('slug-1', 5)).toBe(0);
       expect(() => setStoredViewMode('presentation-scroll')).not.toThrow();
       expect(() => saveSlideIndex('slug-1', 2)).not.toThrow();
+    });
+  });
+
+  describe('6. Comportamiento en Dispositivos Móviles (Viewport < 768px)', () => {
+    afterEach(() => {
+      delete (globalThis as unknown as { window?: unknown }).window;
+    });
+
+    it('6.1 isMobileViewport detecta correctamente móvil vs escritorio', () => {
+      expect(isMobileViewport()).toBe(false); // SSR / no window
+
+      (globalThis as unknown as { window: unknown }).window = { innerWidth: 375 };
+      expect(isMobileViewport()).toBe(true);
+
+      (globalThis as unknown as { window: unknown }).window = { innerWidth: 767 };
+      expect(isMobileViewport()).toBe(true);
+
+      (globalThis as unknown as { window: unknown }).window = { innerWidth: 768 };
+      expect(isMobileViewport()).toBe(false);
+
+      (globalThis as unknown as { window: unknown }).window = { innerWidth: 1024 };
+      expect(isMobileViewport()).toBe(false);
+    });
+
+    it('6.2 presentationStore.init carga siempre como scroll (reading) en móviles aunque exista preferencia previa', () => {
+      mockStorage['view-mode'] = 'presentation-slides';
+
+      (globalThis as unknown as { window: unknown }).window = {
+        innerWidth: 390,
+        location: { search: '' },
+      };
+
+      presentationStore.init('leccion-movil', null);
+      expect(presentationStore.getMode()).toBe('reading');
+    });
+
+    it('6.3 presentationStore.init ignora parámetros de diapositivas en URL en dispositivos móviles', () => {
+      mockStorage['view-mode'] = 'reading';
+
+      (globalThis as unknown as { window: unknown }).window = {
+        innerWidth: 414,
+        location: { search: '?mode=slides&proyectar=true' },
+      };
+
+      presentationStore.init('leccion-movil-url', null);
+      expect(presentationStore.getMode()).toBe('reading');
+    });
+
+    it('6.4 presentationStore.setMode bloquea la activación de presentation-slides en pantallas móviles', () => {
+      (globalThis as unknown as { window: unknown }).window = {
+        innerWidth: 375,
+        location: { search: '' },
+      };
+
+      presentationStore.init('leccion-movil', null);
+      expect(presentationStore.getMode()).toBe('reading');
+
+      presentationStore.setMode('presentation-slides');
+      expect(presentationStore.getMode()).toBe('reading');
     });
   });
 });

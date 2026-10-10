@@ -6,6 +6,11 @@ import { isCurrentlyFullscreen, requestFullscreenElement, exitFullscreenDocument
 import { getSavedSlideIndex, saveSlideIndex } from './persistence';
 import { SLIDE_CHANGED_EVENT, VIEW_MODE_CHANGED_EVENT } from './constants';
 
+export function isMobileViewport(): boolean {
+  if (typeof window === 'undefined') return false;
+  return window.innerWidth < 768;
+}
+
 export function calculateSlideNavigation(
   current: number,
   total: number,
@@ -37,13 +42,15 @@ class PresentationController {
   private containerEl: HTMLElement | null = null;
   private subscribers: Set<SlideSubscriber> = new Set();
   private isListeningKeyboard = false;
+  private isListeningResize = false;
 
   public init(slug: string, container: HTMLElement | null) {
     this.currentSlug = slug;
     this.containerEl = container;
-    this.mode = getStoredViewMode();
+    const isMobile = isMobileViewport();
+    this.mode = isMobile ? 'reading' : getStoredViewMode();
 
-    if (typeof window !== 'undefined') {
+    if (!isMobile && typeof window !== 'undefined') {
       try {
         const params = new URLSearchParams(window.location.search);
         const modeParam = params.get('mode');
@@ -63,6 +70,7 @@ class PresentationController {
 
     this.applyModeToDom();
     this.notifySubscribers();
+    this.setupResizeListener();
   }
 
   public getMode(): ViewMode {
@@ -70,11 +78,14 @@ class PresentationController {
   }
 
   public setMode(newMode: ViewMode) {
+    if (isMobileViewport() && newMode === 'presentation-slides') {
+      return;
+    }
     this.mode = setStoredViewMode(newMode);
     this.applyModeToDom();
     this.notifySubscribers();
 
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
       window.dispatchEvent(
         new CustomEvent(VIEW_MODE_CHANGED_EVENT, { detail: { mode: this.mode } }),
       );
@@ -144,7 +155,7 @@ class PresentationController {
       } catch {}
     });
 
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
       window.dispatchEvent(
         new CustomEvent(SLIDE_CHANGED_EVENT, { detail: state }),
       );
@@ -252,6 +263,41 @@ class PresentationController {
         break;
     }
   };
+
+  private setupResizeListener() {
+    if (this.isListeningResize || typeof window === 'undefined') return;
+    this.isListeningResize = true;
+
+    const mediaQuery = typeof window.matchMedia === 'function' ? window.matchMedia('(min-width: 768px)') : null;
+    const handleViewportChange = (isDesktop: boolean) => {
+      if (!isDesktop) {
+        if (this.mode === 'presentation-slides') {
+          this.mode = 'reading';
+          this.applyModeToDom();
+          this.notifySubscribers();
+        }
+      } else {
+        const saved = getStoredViewMode();
+        if (saved !== this.mode) {
+          this.mode = saved;
+          this.applyModeToDom();
+          this.notifySubscribers();
+        }
+      }
+    };
+
+    if (mediaQuery) {
+      if (typeof mediaQuery.addEventListener === 'function') {
+        mediaQuery.addEventListener('change', (e) => handleViewportChange(e.matches));
+      } else if (typeof (mediaQuery as unknown as { addListener?: (fn: (e: { matches: boolean }) => void) => void }).addListener === 'function') {
+        (mediaQuery as unknown as { addListener: (fn: (e: { matches: boolean }) => void) => void }).addListener((e) => handleViewportChange(e.matches));
+      }
+    } else if (typeof window.addEventListener === 'function') {
+      window.addEventListener('resize', () => {
+        handleViewportChange(window.innerWidth >= 768);
+      });
+    }
+  }
 }
 
 export const presentationStore = new PresentationController();

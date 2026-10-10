@@ -49,4 +49,5 @@ export {
 export {
   calculateSlideNavigation,
   presentationStore,
+  isMobileViewport,
 } from './controller';
