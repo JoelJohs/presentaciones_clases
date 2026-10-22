@@ -1,0 +1,811 @@
+---
+title: "Privacidad, Autenticación y Evaluación 2"
+moduleTitle: "4 - Redes, Conectividad y Seguridad Informática"
+topicTitle: "Tema 3: Privacidad, Autenticación y Evaluación"
+subtopicTitle: "Gestores de Claves, 2FA, Huella Digital y Cierre del Módulo 4"
+semana: 16
+fecha: "24-10-2026"
+published: true
+description: "Configura contraseñas seguras, gestores de claves y autenticación de dos factores (2FA). Audita la huella digital personal y resuelve la evaluación del módulo en el aula."
+duration: 240
+objectives:
+  - "Diferenciar los procesos de identificación, autenticación y autorización en sistemas informáticos"
+  - "Clasificar los tres factores canónicos de autenticación humana según el estándar NIST SP 800-63B"
+  - "Comprender la matemática de la entropía de contraseñas y el costo de ataques por fuerza bruta en hardware moderno"
+  - "Diseñar e implementar frases de paso (Passphrases) con alta entropía y facilidad de memorización"
+  - "Instalar y configurar un gestor de contraseñas local (KeePassXC) con base cifrada mediante AES-256"
+  - "Implementar autenticación de dos factores (2FA) basada en tiempo mediante el algoritmo TOTP (RFC 6238)"
+  - "Comparar la seguridad del 2FA por SMS contra aplicaciones autenticadoras y llaves físicas de seguridad (FIDO2)"
+  - "Auditar y depurar la huella digital pasiva: metadatos EXIF en fotografías, cookies de terceros y telemetría"
+  - "Verificar filtraciones de credenciales personales mediante bases de datos de brechas públicas usando k-anonymity"
+  - "Fortalecer la privacidad del navegador mediante DNS sobre HTTPS (DoH) y bloqueadores de rastreo de red"
+  - "Resolver con autonomía técnica los 4 retos prácticos de la Evaluación Modular 2 dentro del laboratorio"
+---
+
+import { Icon } from "astro-icon/components";
+
+# Privacidad, Autenticación y Evaluación 2
+
+Configura contraseñas seguras, gestores de claves y autenticación de dos factores (2FA). Audita la huella digital personal y resuelve la evaluación del módulo en el aula.
+
+## 1. Identificación, Autenticación y Autorización <Icon name="lucide:key-round" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+En control de acceso, los sistemas informáticos distinguen tres etapas independientes antes de permitirte tocar un recurso:
+
+- **Identificación (¿Quién dices ser?):** Proporcionas un identificador público o semipúblico, como tu nombre de usuario, matrícula estudiantil o dirección de correo electrónico (`joel_hernandez`).
+- **Autenticación (¿Puedes demostrarlo?):** Presentas una prueba técnica que solo el usuario legítimo posee para validar esa identidad, como una contraseña, una huella dactilar o un código de seguridad efímero.
+- **Autorización (¿Qué tienes permiso de hacer?):** Una vez comprobada tu identidad, el sistema consulta su lista de control de accesos (ACL) para determinar qué acciones puedes ejecutar: ¿puedes solo leer archivos o también puedes modificarlos, borrarlos y crear usuarios nuevos?
+
+> **Regla de separación:**
+> Un usuario puede autenticarse de forma impecable con su clave, pero si el sistema carece de autorización adecuada, un alumno podría entrar a modificar calificaciones en la base de datos central.
+
+---
+
+## 2. Analogía: El Filtro de Inmigración en el Aeropuerto <Icon name="lucide:plane-takeoff" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Observa cómo se aplican las tres etapas en un viaje internacional:
+
+<table>
+  <thead>
+    <tr>
+      <th>Etapa</th>
+      <th>Equivalente en el Aeropuerto</th>
+      <th>Equivalente en Sistema Informático</th>
+      <th>Pregunta que Resuelve</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Identificación</strong></td>
+      <td>Entregas tu pasaporte en la ventanilla con tu nombre y nacionalidad.</td>
+      <td>Escribes tu correo o nombre de usuario en el cuadro de inicio de sesión.</td>
+      <td>¿Quién eres?</td>
+    </tr>
+    <tr>
+      <td><strong>Autenticación</strong></td>
+      <td>El oficial migratorio mira tu rostro, compara la fotografía y escanea el chip biométrico del documento.</td>
+      <td>El servidor valida tu contraseña contra la función hash y solicita tu código 2FA.</td>
+      <td>¿Eres realmente tú?</td>
+    </tr>
+    <tr>
+      <td><strong>Autorización</strong></td>
+      <td>El oficial revisa si tu pasaporte tiene visa de turista (solo pasear) o visa de trabajo (permiso para laborar legalmente).</td>
+      <td>El servidor asigna un rol: usuario estándar (solo ver su perfil) o administrador (control total del servidor).</td>
+      <td>¿Qué tienes derecho a tocar?</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 3. Los Tres Factores Canónicos de Autenticación <Icon name="lucide:layers" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+El Instituto Nacional de Estándares y Tecnología (NIST SP 800-63B) clasifica las pruebas de autenticación en tres categorías fundamentales:
+
+<table>
+  <thead>
+    <tr>
+      <th>Categoría</th>
+      <th>Definición Técnica</th>
+      <th>Ejemplos Cotidianos</th>
+      <th>Vulnerabilidad Típica</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>1. Algo que sabes</strong><br />(Conocimiento)</td>
+      <td>Información confidencial que el usuario almacena en su memoria mental.</td>
+      <td>Contraseña alfanumérica, frase de paso (Passphrase), número PIN de 4 dígitos.</td>
+      <td>Ataques de fuerza bruta, phishing, filtración en brechas de datos, espionaje visual.</td>
+    </tr>
+    <tr>
+      <td><strong>2. Algo que tienes</strong><br />(Posesión)</td>
+      <td>Un objeto material físico o dispositivo digital exclusivo bajo control del usuario.</td>
+      <td>Teléfono inteligente con app generadora de códigos (TOTP), llave física USB (YubiKey), tarjeta inteligente con chip.</td>
+      <td>Robo físico del aparato, clonación de tarjeta SIM (SIM swapping), daño o pérdida del dispositivo.</td>
+    </tr>
+    <tr>
+      <td><strong>3. Algo que eres</strong><br />(Inherencia)</td>
+      <td>Características biológicas y fisiológicas únicas e intransferibles del cuerpo humano.</td>
+      <td>Lector de huella dactilar, reconocimiento facial 3D (FaceID), escaneo de iris, reconocimiento de voz.</td>
+      <td>No se puede revocar ni cambiar si es clonada; sensores de baja calidad vulnerables a moldes o fotos de alta resolución.</td>
+    </tr>
+  </tbody>
+</table>
+
+> Autenticación Multifactor real (MFA) exige combinar elementos de **categorías diferentes**. Pedir dos contraseñas distintas sigue siendo un solo factor (conocimiento + conocimiento).
+
+---
+
+## 4. La Debilidad de las Contraseñas Humanas <Icon name="lucide:skull" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+El cerebro humano no está diseñado para memorizar 80 cadenas aleatorias de 20 caracteres sin sentido. Por pereza natural, los usuarios cometen cuatro errores críticos que los atacantes aprovechan sistemáticamente:
+
+1. **Reutilización masiva (Password Reuse):** Usar la misma clave para el correo de la escuela, Facebook, Spotify y una tienda de tenis en línea desconocida.
+2. **Patrones predecibles (Substitución básica):** Cambiar letras por números evidentes (`P@ssw0rd2026`, `Admin123*`, `Joelito.2008`).
+3. **Longitudes insuficientes:** Claves de 6 a 8 caracteres que las computadoras modernas vulneran en milisegundos.
+4. **Frecuencia predecible de actualización:** Cuando el sistema obliga a cambiar la clave cada mes, el usuario solo incrementa el número final (`Clave1` pasa a `Clave2`).
+
+```text
+[ ATAQUES AUTOMATIZADOS CONTRA CONTRASEÑAS ]
+  ├── 1. Ataque de Diccionario: Prueba millones de palabras comunes de un archivo de texto (rockyou.txt).
+  ├── 2. Fuerza Bruta Pura: Prueba matemáticamente todas las combinaciones posibles de caracteres una por una.
+  └── 3. Credential Stuffing: Toma millones de correos y contraseñas filtrados de un sitio hackeado (ej. LinkedIn)
+         y los prueba de forma automatizada en Netflix, Amazon, bancos y Gmail.
+```
+
+---
+
+## 5. Entropía Criptográfica: La Matemática de la Fortaleza <Icon name="lucide:binary" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+La fortaleza real de una contraseña no se mide por la cantidad de símbolos raros que tenga, sino por su **entropía**: la medida de incertidumbre o aleatoriedad expresada en bits ($H$).
+
+La fórmula de entropía para una contraseña de longitud $L$ sobre un conjunto de caracteres posibles $R$ es:
+
+$$H = L \times \log_2(R)$$
+
+- Solo números (`0-9`): el conjunto $R = 10$. Cada dígito aporta $\approx 3.32$ bits.
+- Letras minúsculas (`a-z`): el conjunto $R = 26$. Cada letra aporta $\approx 4.70$ bits.
+- Minúsculas + Mayúsculas (`a-z`, `A-Z`): el conjunto $R = 52$. Cada carácter aporta $\approx 5.70$ bits.
+- Alfanumérico con símbolos (`a-z`, `A-Z`, `0-9`, `!@#$%...`): el conjunto $R = 94$. Cada carácter aporta $\approx 6.55$ bits.
+
+> **Regla matemática fundamental:**
+> **La longitud ($L$) multiplica la entropía; el conjunto de símbolos ($R$) solo la afecta mediante un logaritmo.** Agregar 6 letras comunes a tu clave la hace exponencialmente más resistente que cambiar una simple letra por un símbolo especial.
+
+---
+
+## 6. Frases de Paso (Passphrases) frente a Claves Complejas Cortas <Icon name="lucide:sparkles" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Compara los dos enfoques habituales de creación de claves:
+
+```text
+ENFOQUE TRADICIONAL (Corto y complejo):
+  Clave: "Tr0$k!9#"
+  Longitud: 8 caracteres.
+  ¿Es fácil de recordar para ti?: NO. La olvidarás en dos semanas.
+  ¿Es difícil de romper para una GPU moderna?: NO. Se quiebra en menos de 5 minutos por fuerza bruta.
+
+ENFOQUE MODERNO (Frase de paso / Passphrase):
+  Clave: "zapato-nube-guitarra-tomate-reloj"
+  Longitud: 34 caracteres (5 palabras en español separadas por guion).
+  ¿Es fácil de recordar para ti?: SÍ. Creas una imagen mental en tu cabeza.
+  ¿Es difícil de romper para una computadora?: SÍ. Requiere más de 400 millones de años con supercomputadoras.
+```
+
+- Cada palabra elegida de un diccionario amplio de 7,776 palabras (método Diceware) aporta **12.9 bits de entropía pura**.
+- Una frase de 5 palabras aleatorias alcanza más de **64 bits de entropía**, haciéndola invulnerable a cualquier ataque de fuerza bruta fuera de línea en la actualidad.
+
+---
+
+## 7. Tabla Comparativa de Tiempos de Ruptura Computacional <Icon name="lucide:table" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Observa el tiempo que le toma a un clúster moderno de 8 tarjetas gráficas Nvidia RTX 4090 ejecutando Hashcat romper una clave según su longitud y composición:
+
+<table>
+  <thead>
+    <tr>
+      <th>Longitud</th>
+      <th>Solo Números (0-9)</th>
+      <th>Solo Minúsculas (a-z)</th>
+      <th>Mayúsculas, Minúsculas y Números</th>
+      <th>Alfanumérico Completo + Símbolos</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>6 caracteres</strong></td>
+      <td>Instantáneo (0.001 s)</td>
+      <td>Instantáneo (0.01 s)</td>
+      <td>Instantáneo (0.2 s)</td>
+      <td>Instantáneo (2 segundos)</td>
+    </tr>
+    <tr>
+      <td><strong>8 caracteres</strong></td>
+      <td>Instantáneo (0.01 s)</td>
+      <td>Instantáneo (2 segundos)</td>
+      <td>22 minutos</td>
+      <td>8 horas</td>
+    </tr>
+    <tr>
+      <td><strong>10 caracteres</strong></td>
+      <td>Instantáneo (1 segundo)</td>
+      <td>23 minutos</td>
+      <td>4 meses</td>
+      <td>5 años</td>
+    </tr>
+    <tr>
+      <td><strong>12 caracteres</strong></td>
+      <td>2 minutos</td>
+      <td>11 días</td>
+      <td>1,400 años</td>
+      <td>34,000 años</td>
+    </tr>
+    <tr>
+      <td><strong>16 caracteres</strong></td>
+      <td>2 años</td>
+      <td>5.4 millones de años</td>
+      <td>Centenares de millones de años</td>
+      <td>Billones de años</td>
+    </tr>
+    <tr>
+      <td><strong>20+ caracteres (Frase)</strong></td>
+      <td>Siglos</td>
+      <td>Incalculable</td>
+      <td>Incalculable</td>
+      <td>Matemáticamente indestructible</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 8. Gestores de Contraseñas: La Bóveda Cifrada (Vault) <Icon name="lucide:database" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Un gestor de contraseñas es un software especializado que almacena todas tus credenciales dentro de un archivo base de datos fuertemente cifrado mediante algoritmos de grado militar (**AES-256-GCM** o **ChaCha20**).
+
+```text
+                   [ CONTRASEÑA MAESTRA ÚNICA ]
+                   ("mi-frase-secreta-de-paso-2026")
+                                │
+                                ▼ (Derivación de clave mediante Argon2id)
+            ╔═══════════════════════════════════════════════════╗
+            ║           BÓVEDA CIFRADA (VAULT)                  ║
+            ║                                                   ║
+            ║  • Gmail:      wK9#m$P2!zL09vBx7Q1@ (20 car.)     ║
+            ║  • Banco:      9vK#Lp!87xM@10qZ#aE3 (20 car.)     ║
+            ║  • Steam:      tY7@nB4$11vM#8xLp09w (20 car.)     ║
+            ║  • Wi-Fi Casa: perro-camino-luna-bosque (Frase)   ║
+            ╚═══════════════════════════════════════════════════╝
+```
+
+- **La regla del 1:** Solo necesitas memorizar **una sola contraseña maestra** (una frase de paso sólida). El gestor se encarga de generar, recordar y rellenar automáticamente contraseñas únicas de 20 caracteres para cada servicio que utilices.
+- **Criptografía de Conocimiento Cero (Zero-Knowledge):** Ni siquiera los dueños de los servidores del gestor pueden ver tus contraseñas. La base de datos se descifra localmente en la memoria RAM de tu computadora utilizando tu clave maestra; a la red solo viajan datos cifrados.
+
+---
+
+## 9. Arquitecturas de Gestores: Local frente a Nube <Icon name="lucide:split" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Existen dos filosofías principales para gestionar tus credenciales:
+
+<table>
+  <thead>
+    <tr>
+      <th>Criterio</th>
+      <th>Gestor Local (KeePassXC)</th>
+      <th>Gestor en la Nube Cifrada (Bitwarden)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Almacenamiento</strong></td>
+      <td>Archivo local `.kdbx` guardado en tu disco duro o memoria USB.</td>
+      <td>Base cifrada sincronizada en servidores seguros con respaldo en la nube.</td>
+    </tr>
+    <tr>
+      <td><strong>Conectividad</strong></td>
+      <td>Funciona 100% desconectado de Internet (Air-gapped).</td>
+      <td>Requiere conexión para sincronizar cambios entre celular y PC.</td>
+    </tr>
+    <tr>
+      <td><strong>Comodidad</strong></td>
+      <td>Debes copiar manualmente el archivo `.kdbx` si cambias de equipo.</td>
+      <td>Inicias sesión con tu clave maestra en cualquier aparato y tus datos se descargan al instante.</td>
+    </tr>
+    <tr>
+      <td><strong>Código fuente</strong></td>
+      <td>100% Código abierto (GPL v3), auditado por la comunidad.</td>
+      <td>100% Código abierto, cliente y servidor públicos y auditados.</td>
+    </tr>
+    <tr>
+      <td><strong>Costo</strong></td>
+      <td>Totalmente gratuito sin versiones de pago.</td>
+      <td>Plan gratuito completo para uso personal ilimitado.</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 10. Actividad Práctica: Creación de Bóveda Cifrada con KeePassXC <Icon name="lucide:wrench" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Aprende a crear una base de datos segura en tu máquina de laboratorio utilizando **KeePassXC**:
+
+1. Abre **KeePassXC** desde el menú de aplicaciones de tu computadora.
+2. Haz clic en el botón grande **"Crear nueva base de datos"**.
+3. Asigna un nombre a la base (ejemplo: `Boveda_Escolar_Joel`) y presiona *Continuar*.
+4. **Configuración de Cifrado:** Deja los valores recomendados por defecto:
+   - Algoritmo de cifrado: `AES-256`.
+   - Función de derivación de clave: `Argon2id` (algoritmo diseñado para resistir ataques con tarjetas gráficas).
+5. **Establece la Contraseña Maestra:** Crea una frase de paso en español de al menos 4 palabras separadas por guiones (ejemplo: `taza-rio-puente-sol`). Observa cómo la barra de entropía se pinta de verde intenso.
+6. Guarda el archivo con extensión `.kdbx` en tu carpeta de usuario de la clase.
+7. Haz clic en el icono de la llave con un `+` (*Nueva Entrada*):
+   - Título: `Correo Institucional`.
+   - Usuario: tu cuenta escolar.
+   - Presiona el icono de los dados (*Generador de contraseñas*): selecciona longitud de **20 caracteres**, incluye mayúsculas, minúsculas, números y símbolos.
+   - Haz clic en *Aceptar* y luego presiona `Ctrl + S` para guardar la bóveda.
+
+---
+
+## 11. Autenticación de Dos Factores (2FA): El Segundo Candado <Icon name="lucide:smartphone" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Aun si utilizas una contraseña larga, tu clave puede quedar expuesta si la empresa donde tienes tu cuenta sufre una filtración masiva de datos (Data Breach) o si un virus registra tus teclas.
+
+Para neutralizar este riesgo existe la **Autenticación de Dos Factores (2FA / MFA)**: un mecanismo que exige presentar una segunda prueba independiente antes de otorgar acceso.
+
+```text
+              [ INICIO DE SESIÓN CON 2FA ACTIVADO ]
+                                │
+        ┌───────────────────────┴───────────────────────┐
+        ▼                                               ▼
+[ Factor 1: Conocimiento ]                     [ Factor 2: Posesión ]
+Tu correo y tu contraseña                      Código efímero de 6 dígitos
+(Si un atacante la roba en la Dark Web)        (Generado en tu teléfono físico personal)
+        │                                               │
+        └───────────────────────┬───────────────────────┘
+                                ▼
+         ¿El atacante tiene tu teléfono en la mano?
+           ├── NO ──► Acceso RECHAZADO por el servidor.
+           └── SÍ ──► Acceso PERMITIDO.
+```
+
+> Activar 2FA detiene más del 99% de los ataques automatizados de secuestro de cuentas, aun si el atacante conoce tu contraseña correcta.
+
+---
+
+## 12. Comparación de Métodos de 2FA <Icon name="lucide:shield-alert" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+No todos los métodos de segundo factor ofrecen el mismo nivel de protección técnica:
+
+<table>
+  <thead>
+    <tr>
+      <th>Método</th>
+      <th>Nivel de Seguridad</th>
+      <th>¿Cómo Opera?</th>
+      <th>Vulnerabilidad Principal</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>SMS (Mensaje de texto)</strong></td>
+      <td>Bajo (Mejor que nada)</td>
+      <td>El servidor te envía un código de 6 dígitos por red celular telefónica.</td>
+      <td>Clonación de tarjeta SIM (SIM Swapping), espionaje de señal SS7, lectura desde la pantalla de bloqueo sin desbloquear el móvil.</td>
+    </tr>
+    <tr>
+      <td><strong>Códigos TOTP (Apps)</strong></td>
+      <td>Alto (Estándar recomendado)</td>
+      <td>Una app en tu móvil (Google Authenticator, Aegis, 2FAS, KeePassXC) calcula códigos cada 30 segundos usando matemáticas locales, sin Internet.</td>
+      <td>Sitios de phishing en tiempo real (Adversary-in-the-Middle) que solicitan el código y lo reenvían al sitio oficial en segundos.</td>
+    </tr>
+    <tr>
+      <td><strong>Notificación Push</strong></td>
+      <td>Medio a Alto</td>
+      <td>La app del banco o de Google despliega una alerta: <em>"¿Eres tú intentando entrar? Toca el número 42"</em>.</td>
+      <td>Agotamiento por fatiga (MFA Fatigue): el atacante envía 50 notificaciones a las 3 a.m. hasta que la víctima presiona "Sí" para callar el teléfono.</td>
+    </tr>
+    <tr>
+      <td><strong>Llave Física FIDO2 / WebAuthn</strong></td>
+      <td>Máximo (Inmune a phishing)</td>
+      <td>Dispositivo USB/NFC (YubiKey) que negocia un desafío criptográfico con el navegador vinculado al dominio exacto del sitio web.</td>
+      <td>Pérdida material de la llave física; costo de adquisición del hardware.</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 13. La Mecánica del Algoritmo TOTP (RFC 6238) <Icon name="lucide:clock" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+¿Cómo sabe la aplicación de tu celular cuál es el código correcto si tu teléfono está en modo avión y no tiene conexión a Internet?
+
+El algoritmo **TOTP** (*Time-Based One-Time Password*, definido en el RFC 6238) se basa en matemáticas y sincronización de reloj:
+
+```text
+[ SERVIDOR WEB (Google, GitHub) ]                    [ TU TELÉFONO CELULAR (App TOTP) ]
+                │                                                    │
+                ├────── Llave Secreta Compartida (Semilla / Seed) ───┤
+                │      (Transmitida una sola vez al escanear el QR)  │
+                ▼                                                    ▼
+   [ Reloj del Servidor: Hora Unix ]                   [ Reloj del Celular: Hora Unix ]
+   Ejemplo: 1,760,712,000 segundos                     Ejemplo: 1,760,712,000 segundos
+                │                                                    │
+                ▼                                                    ▼
+   Ventana de 30 segundos (T = Unix / 30)             Ventana de 30 segundos (T = Unix / 30)
+   Valor de paso: T = 58690400                         Valor de paso: T = 58690400
+                │                                                    │
+                ▼                                                    ▼
+   [ Función Criptográfica HMAC-SHA1 ]                 [ Función Criptográfica HMAC-SHA1 ]
+   Entradas: (Semilla Secreta + Paso T)                Entradas: (Semilla Secreta + Paso T)
+                │                                                    │
+                ▼                                                    ▼
+         Código: 842 190                                      Código: 842 190
+```
+
+1. Ambos extremos conocen la **misma llave secreta** (almacenada en el QR de configuración inicial).
+2. Ambos extremos consultan el **tiempo actual del reloj** dividido en ventanas de 30 segundos.
+3. Al aplicar la misma función hash criptográfica sobre los mismos datos, **ambos obtienen exactamente el mismo número de 6 dígitos de forma independiente**.
+
+---
+
+## 14. Códigos de Recuperación (Backup Codes) <Icon name="lucide:life-buoy" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+¿Qué ocurre si pierdes tu celular, cae al agua o se rompe la pantalla y no puedes abrir tu aplicación de 2FA?
+
+Al activar la verificación en dos pasos en cualquier plataforma seria (Google, GitHub, Discord, Instagram), el sistema genera una lista de **8 a 10 Códigos de Respaldo de un solo uso**:
+
+```text
+CÓDIGOS DE RECUPERACIÓN DE EMERGENCIA (Google / GitHub)
+Cada código puede utilizarse una sola vez para ingresar sin tu teléfono móvil:
+  [1] 8492-1049   ( ) Usado
+  [2] 3910-8501   ( ) Usado
+  [3] 7201-9482   ( ) Usado
+  [4] 1048-2719   ( ) Usado
+  [5] 9923-4412   ( ) Usado
+```
+
+### Protocolo de resguardo de emergencia
+- **PROHIBIDO:** Guardarlos en una captura de pantalla en la galería de fotos del mismo celular (si pierdes el celular, pierdes los códigos).
+- **CORRECTO:** Imprimirlos en papel y guardarlos en una carpeta física en tu casa, o almacenarlos dentro de tu bóveda cifrada de KeePassXC en una memoria USB de respaldo.
+
+---
+
+## 15. Actividad Práctica: Configuración de TOTP en KeePassXC <Icon name="lucide:timer" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+KeePassXC cuenta con un motor nativo para generar códigos TOTP directamente en la computadora:
+
+1. Abre tu base de datos de KeePassXC creada en la actividad anterior.
+2. Haz clic derecho sobre tu entrada `Correo Institucional` y selecciona la opción **TOTP > Configurar TOTP...**
+3. En el campo de *Clave Secreta*, ingresaremos una semilla de prueba educativa en formato Base32:
+   ```text
+   JBSWY3DPEHPK3PXP
+   ```
+4. Deja seleccionados los parámetros estándar de la industria:
+   - Formato de paso de tiempo: `30 segundos`.
+   - Longitud de dígitos: `6 dígitos`.
+   - Algoritmo: `HMAC-SHA1`.
+5. Presiona *Aceptar*.
+6. Observa cómo aparece una columna nueva con un reloj circular azul que va decreciendo segundo a segundo y un número de 6 dígitos que cambia automáticamente cada medio minuto.
+7. Presiona `Ctrl + T` sobre la entrada: KeePassXC copia el código actual de 6 dígitos a tu portapapeles listo para pegarse en cualquier inicio de sesión.
+
+---
+
+## 16. La Huella Digital: Rastro Activo y Pasivo <Icon name="lucide:fingerprint" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Cada acción que ejecutas conectado a una red deja un rastro de datos identificables conocido como **huella digital**:
+
+```text
+[ HUELLA DIGITAL ACTIVA ]
+(Datos que entregas de forma consciente y deliberada)
+  ├── Fotos y videos subidos a Instagram, TikTok o Facebook
+  ├── Comentarios y opiniones en foros públicos y YouTube
+  ├── Formularios escolares con nombre, teléfono y dirección
+  └── Solicitudes de amistad y redes de contactos registradas
+
+[ HUELLA DIGITAL PASIVA ]
+(Datos que los servidores recopilan sin avisarte mientras navegas)
+  ├── Dirección IP pública asignada por tu proveedor (geolocalización)
+  ├── Encabezado User-Agent (Sistema operativo, versión exacta de navegador)
+  ├── Resolución física de pantalla, fuentes instaladas y procesador gráfico (Canvas Fingerprinting)
+  └── Cookies de rastreo publicitario entre sitios web (Meta Pixel, Google Analytics)
+```
+
+> Tu huella digital es persistente. Datos que publicaste hace 6 años siguen archivados en servidores de terceros, motores de búsqueda e indexadores de caché web.
+
+---
+
+## 17. Metadatos Ocultos: Riesgos en Fotografías (Datos EXIF) <Icon name="lucide:camera-off" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Cuando tomas una fotografía con tu teléfono inteligente, el archivo no solo contiene los colores de los píxeles. El sensor incrusta un bloque de metadatos estandarizado llamado **EXIF** (*Exchangeable Image File Format*):
+
+```text
+[ METADATOS EXIF REALES EXTRAÍDOS DE UNA FOTOGRAFÍA ]
+  • Dispositivo:      Apple iPhone 14 Pro (iOS 17.4)
+  • Fecha y Hora:     17 de Octubre de 2026, 14:32:05 hrs
+  • Coordenadas GPS:  19°25'42.1"N, 99°07'39.4"W (Latitud / Longitud exacta)
+  • Altitud:          2,240 metros sobre el nivel del mar
+  • Flash:            No disparado
+  • Apertura y Lente: f/1.78, 24mm
+```
+
+### El Peligro de Privacidad
+Si tomas una foto de tu mascota o de tu bicicleta dentro de tu sala o patio y la compartes directamente en un foro, grupo de compraventa o chat sin limpiar, **cualquiera puede extraer las coordenadas GPS e introducir en Google Maps la ubicación exacta de la puerta de tu casa**.
+
+---
+
+## 18. Actividad Práctica: Inspección y Limpieza de Metadatos EXIF <Icon name="lucide:image-minus" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Aprende a auditar y retirar los metadatos de una imagen antes de publicarla en la red:
+
+### En Windows (Propiedades del Explorador de Archivos):
+1. Descarga o transfiere cualquier fotografía tomada con un teléfono móvil a tu carpeta de trabajo.
+2. Haz clic derecho sobre el archivo de imagen y selecciona **Propiedades**.
+3. Dirígete a la pestaña **Detalles**. Observa la lista completa: cámara, fecha, configuración técnica y la sección **GPS**.
+4. Haz clic en el enlace inferior azul: *"Quitar propiedades e información personal"*.
+5. Selecciona la opción: *"Crear una copia quitando todas las propiedades posibles"* y presiona *Aceptar*.
+6. Abre las propiedades de la copia generada: comprueba que las coordenadas geográficas, fecha y modelo del teléfono desaparecieron por completo.
+
+### En Linux (vía Terminal con exiftool o imagemagick):
+```bash
+# Inspeccionar metadatos de la imagen
+exiftool foto_ejemplo.jpg
+
+# Eliminar todos los metadatos EXIF preservando únicamente los píxeles
+exiftool -all= foto_ejemplo.jpg
+```
+
+---
+
+## 19. Auditoría de Brechas de Datos con Have I Been Pwned <Icon name="lucide:search" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Grandes corporaciones sufren intrusiones constantes en sus bases de datos. Los registros robados se comercializan y terminan publicados en Internet.
+
+El sitio web [Have I Been Pwned](https://haveibeenpwned.com/) (creado por Troy Hunt, director regional de Microsoft) indexa más de 14 mil millones de cuentas comprometidas en brechas históricas:
+
+### ¿Cómo funciona la consulta segura de contraseñas (K-Anonymity)?
+Nunca debes escribir tu contraseña en una página web desconocida para comprobar si es segura. Have I Been Pwned utiliza el modelo matemático de **K-Anonimato**:
+
+1. Tu navegador calcula localmente el hash SHA-1 de tu contraseña (ejemplo: `5BAA61E4C9B93F3F0682250B6CF8331B7EE68D8E`).
+2. El navegador envía al servidor de HIBP **únicamente los primeros 5 caracteres del hash** (`5BAA6`).
+3. El servidor busca en su base de datos y le devuelve al navegador una lista de todos los hashes conocidos que comienzan con esos mismos 5 caracteres (miles de registros).
+4. El navegador, de manera local en tu propia memoria RAM, busca si el resto de su hash completo (`1E4C9B...`) coincide con alguno de la lista devuelta.
+5. **Tu contraseña y tu hash completo jamás abandonaron tu computadora.**
+
+---
+
+## 20. Actividad Práctica: Auditoría de Cuentas Comprometidas <Icon name="lucide:user-check" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Realiza una auditoría ética de exposición de datos en el aula:
+
+1. Ingresa en el navegador a [haveibeenpwned.com](https://haveibeenpwned.com/).
+2. Escribe una dirección de correo electrónico antigua o secundaria (o tu correo personal con fines educativos).
+3. Presiona el botón **"pwned?"**:
+   - Si la pantalla se pinta de **rojo**: lee el listado inferior. Identifica en qué plataformas se filtraron los datos (ejemplo: Canva, Adobe, Wattpad, MyFitnessPal) y qué categorías de información quedaron expuestas (contraseñas, teléfonos, direcciones IP).
+   - Si la pantalla se pinta de **verde**: tu cuenta no aparece registrada en ninguna brecha pública masiva indexada hasta la fecha.
+4. Ingresa a la sección superior **"Passwords"** de Have I Been Pwned:
+   - Escribe una contraseña genérica común (ejemplo: `password123` o `solyluna`).
+   - Observa cuántas veces exactas ha aparecido esa combinación en filtraciones de ciberdelincuencia mundiales.
+
+---
+
+## 21. Fortalecimiento del Navegador y la Red Local <Icon name="lucide:shield" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Aplica estas cuatro configuraciones clave para blindar tu equipo personal contra rastreo y fugas:
+
+```text
+[ DEFENSAS DE PRIVACIDAD EN EL NAVEGADOR ]
+  ├── 1. DNS sobre HTTPS (DoH):
+  │      Cifra las peticiones de nombres web mediante TLS hacia servidores seguros (Cloudflare 1.1.1.1 o Quad9).
+  │      Tu proveedor de Internet (ISP) ya no puede registrar la lista de páginas web que visitas.
+  │
+  ├── 2. Bloqueador de contenido técnico (uBlock Origin):
+  │      Filtra y destruye scripts de rastreo, anuncios invasivos y mineros de criptomonedas antes de que se ejecuten.
+  │
+  ├── 3. Aislamiento de cookies de terceros (Total Cookie Protection):
+  │      Mantiene las cookies de cada sitio en una caja de arena separada; Facebook no puede rastrear lo que ves en Mercado Libre.
+  │
+  └── 4. Comprender la diferencia entre Modo Incógnito y VPN:
+         • Modo Incógnito: Solo borra el historial y cookies LOCALES de tu máquina al cerrar la ventana.
+         • VPN (Red Privada Virtual): Cifra todo el túnel de red entre tu equipo y el servidor VPN en Internet.
+```
+
+---
+
+## 22. Hoja de Trucos: Lista Maestra de Higiene Digital <Icon name="lucide:clipboard-check" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Aplica esta lista de verificación en todos tus dispositivos y cuentas críticas:
+
+<table>
+  <thead>
+    <tr>
+      <th>Área</th>
+      <th>Acción de Seguridad Obligatoria</th>
+      <th>Impacto Técnico Directo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Contraseñas</strong></td>
+      <td>Eliminar claves repetidas; usar frases de paso de 4 palabras en cuentas maestras.</td>
+      <td>Neutraliza ataques de Credential Stuffing en brechas cruzadas.</td>
+    </tr>
+    <tr>
+      <td><strong>Almacén</strong></td>
+      <td>Instalar un gestor de contraseñas (KeePassXC / Bitwarden) con clave maestra sólida.</td>
+      <td>Permite tener claves de 20 caracteres distintas para cada servicio sin memorizarlas.</td>
+    </tr>
+    <tr>
+      <td><strong>2FA</strong></td>
+      <td>Activar verificación por app TOTP (Aegis, 2FAS, Google Authenticator) en correo principal.</td>
+      <td>Protege la cuenta aun si la contraseña es filtrada o robada por keylogger.</td>
+    </tr>
+    <tr>
+      <td><strong>Respaldo 2FA</strong></td>
+      <td>Descargar e imprimir en papel físico los Códigos de Recuperación de emergencia.</td>
+      <td>Garantiza acceso si pierdes, rompes o te roban el celular principal.</td>
+    </tr>
+    <tr>
+      <td><strong>Mensajería</strong></td>
+      <td>Activar el PIN de Verificación en Dos Pasos en WhatsApp y Telegram.</td>
+      <td>Impide el secuestro de la cuenta mediante clonación de SIM o llamadas a buzón.</td>
+    </tr>
+    <tr>
+      <td><strong>Buzón de Voz</strong></td>
+      <td>Cambiar la clave por defecto del buzón celular (`1234`) o pedir su cancelación a la compañía.</td>
+      <td>Cierra el vector nocturno de robo de cuentas por llamada telefónica.</td>
+    </tr>
+    <tr>
+      <td><strong>Fotografías</strong></td>
+      <td>Desactivar el etiquetado de ubicación GPS en la app de cámara del móvil para fotos cotidianas.</td>
+      <td>Evita publicar metadatos con las coordenadas exactas de tu domicilio en Internet.</td>
+    </tr>
+    <tr>
+      <td><strong>Sistema</strong></td>
+      <td>Mantener el sistema operativo y navegador con actualizaciones de seguridad automáticas activas.</td>
+      <td>Cierra vulnerabilidades conocidas (CVEs) explotadas por gusanos y exploits web.</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 23. Evaluación Práctica Modular 2: Instrucciones en el Aula <Icon name="lucide:graduation-cap" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Hoy concluye el **Módulo 4: Redes, Conectividad y Seguridad Informática**. Resolverás la evaluación presencial en la computadora asignada del aula.
+
+La prueba consta de **4 Retos Técnicos Integrados** que evalúan las habilidades desarrolladas en las semanas 14, 15 y 16:
+
+- **Modalidad:** Individual y práctica en máquina de laboratorio.
+- **Tiempo disponible:** 90 minutos.
+- **Entregable:** Demostración en vivo en pantalla ante el docente y entrega de un archivo de reporte técnico estructurado llamado `evaluacion_modulo4_[tu_nombre].txt`.
+
+> Recuerda: En este curso la asistencia no tiene ponderación porcentual. Tu calificación modular depende al 100% de la ejecución técnica correcta de estos 4 retos.
+
+---
+
+## 24. Reto 1 y Reto 2 de la Evaluación Modular 2 <Icon name="lucide:code-2" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Ejecuta las instrucciones técnicas en la terminal de tu máquina:
+
+### Reto 1: Diagnóstico Integral de Conectividad de Red (25%)
+1. Abre la terminal (`cmd` o `bash`).
+2. Obtén la dirección IPv4 privada de tu equipo, tu máscara de subred y tu puerta de enlace predeterminada.
+3. Ejecuta una prueba de conectividad con 4 paquetes hacia el servidor DNS público de Cloudflare (`1.1.1.1`): registra el tiempo de ida y vuelta (RTT promedio) y el porcentaje de pérdida de paquetes.
+4. Realiza una consulta DNS con la herramienta `nslookup` para obtener las direcciones IPv4 (registros A) del dominio `unam.mx`.
+5. Redirige o anota los resultados técnicos dentro de tu archivo de reporte:
+   ```text
+   === RETO 1: DIAGNÓSTICO DE RED ===
+   IP Local: 192.168.1.XX
+   Puerta de Enlace: 192.168.1.XXX
+   RTT Promedio a 1.1.1.1: XX ms (0% pérdidas)
+   IP de unam.mx: 132.248.XX.XX
+   ```
+
+### Reto 2: Integridad Criptográfica de Archivos (25%)
+1. Crea en tu escritorio un archivo llamado `evidencia.txt` con el texto exacto: `Examen Modulo 4 CPI Seguridad`.
+2. Calcula su huella digital criptográfica mediante el algoritmo SHA-256 utilizando la herramienta de consola (`certutil -hashfile evidencia.txt SHA256` en Windows o `sha256sum evidencia.txt` en Linux).
+3. Añade al final del archivo un espacio y la palabra `Aprobado`.
+4. Vuelve a calcular el hash SHA-256 y demuestra en el reporte el principio de avalancha: copia ambos hashes y explica brevemente por qué difieren.
+
+---
+
+## 25. Reto 3 y Reto 4 de la Evaluación Modular 2 <Icon name="lucide:terminal" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Continúa con las pruebas de seguridad y autenticación:
+
+### Reto 3: Bóveda Cifrada y Políticas de Entropía (25%)
+1. Abre KeePassXC y crea una base de datos protegida con contraseña maestra estructurada como Frase de Paso (mínimo 4 palabras con guiones).
+2. Crea una entrada llamada `Evaluacion_Final`:
+   - Genera una contraseña aleatoria de **24 caracteres** con mayúsculas, minúsculas, números y caracteres especiales.
+   - Configura una semilla TOTP de prueba (`JBSWY3DPEHPK3PXP`) y comprueba que el generador de códigos de 6 dígitos funcione con el reloj en decremento.
+3. Muestra la ventana de KeePassXC con la entrada activa al profesor para su validación visual en pantalla.
+
+### Reto 4: Triaje de Amenazas y Cabeceras de Correo (25%)
+1. Abre el archivo de caso práctico proporcionado por el profesor (`caso_phishing.txt`) que contiene las cabeceras reales de un correo fraudulento simulado.
+2. Identifica y extrae en tu reporte:
+   - La dirección IP pública real del servidor emisor.
+   - El estado de la verificación SPF (`PASS` o `FAIL`).
+   - El dominio trampa al que apunta el enlace de acción.
+   - Las 2 palancas de manipulación psicológica empleadas en el cuerpo del mensaje.
+
+---
+
+## 26. Criterios de Evaluación Modular 2 (Rúbrica 100% Desempeño) <Icon name="lucide:award" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+La calificación del examen práctico se calcula estrictamente bajo los siguientes parámetros demostrables:
+
+<table>
+  <thead>
+    <tr>
+      <th>Componente Evaluado</th>
+      <th>Criterio Técnico de Acreditación</th>
+      <th>Ponderación</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Reto 1: Red y Diagnóstico</strong></td>
+      <td>Comandos de IP, DNS e ICMP ejecutados correctamente con datos precisos en el reporte.</td>
+      <td>25%</td>
+    </tr>
+    <tr>
+      <td><strong>Reto 2: Criptografía y Hash</strong></td>
+      <td>Generación precisa de sumas SHA-256 y demostración documentada del cambio en la huella digital.</td>
+      <td>25%</td>
+    </tr>
+    <tr>
+      <td><strong>Reto 3: Bóveda y TOTP</strong></td>
+      <td>Bóveda creada en KeePassXC con frase de paso, clave de 24 caracteres y algoritmo TOTP funcional.</td>
+      <td>25%</td>
+    </tr>
+    <tr>
+      <td><strong>Reto 4: Análisis de Amenaza</strong></td>
+      <td>Identificación correcta de IP de origen, resultado SPF, dominio falso y resortes de ingeniería social.</td>
+      <td>25%</td>
+    </tr>
+    <tr>
+      <td><strong>Criterio de Asistencia</strong></td>
+      <td>La asistencia NO tiene ponderación numérica (0% de validez).</td>
+      <td>0%</td>
+    </tr>
+    <tr>
+      <td><strong>Total de la Evaluación</strong></td>
+      <td>Desempeño técnico demostrable en máquina y reporte entregado.</td>
+      <td><strong>100%</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 27. Tarea de Cierre: Auditoría Personal y Plan de Blindaje en Libreta <Icon name="lucide:book-open" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Para esta actividad **no requieres computadora en casa**. Diseña en tu libreta tu plan integral de higiene y defensa digital:
+
+### Parte A: Inventario de Cuentas Críticas y Vector de Riesgo
+Copia y completa en tu libreta la siguiente tabla analizando 4 servicios que utilices habitualmente:
+
+<table>
+  <thead>
+    <tr>
+      <th>Servicio Digital</th>
+      <th>¿Tiene contraseña única o repetida?</th>
+      <th>¿Tiene 2FA activado? (SMS / App / Ninguno)</th>
+      <th>Consecuencia si un atacante toma la cuenta</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Correo Principal</strong></td>
+      <td>(Única / Repetida)</td>
+      <td>(SMS / App TOTP / No tiene)</td>
+      <td>Acceso a recuperación de todas las demás cuentas</td>
+    </tr>
+    <tr>
+      <td><strong>WhatsApp</strong></td>
+      <td>(Tiene PIN / No tiene PIN)</td>
+      <td>(PIN de 2 pasos activo / Desactivado)</td>
+      <td>Suplantación de identidad y extorsión a familiares</td>
+    </tr>
+    <tr>
+      <td><strong>Red Social Favorita</strong></td>
+      <td>(Única / Repetida)</td>
+      <td>(Tipo de 2FA configurado)</td>
+      <td>Filtración de mensajes privados y fotos íntimas</td>
+    </tr>
+    <tr>
+      <td><strong>Banca Móvil / Monedero</strong></td>
+      <td>(Clave exclusiva / Clave común)</td>
+      <td>(Token digital / Biometría)</td>
+      <td>Robo de saldo o créditos solicitados a tu nombre</td>
+    </tr>
+  </tbody>
+</table>
+
+### Parte B: Decálogo Familiar de Seguridad Digital
+Escribe a mano en una página de tu libreta un decálogo (10 reglas obligatorias y concretas) para proteger los teléfonos y computadoras de tu familia en casa. Cada regla debe incluir una justificación técnica aprendida en el módulo (ejemplo: *"Regla 4: Nunca abrir enlaces de paquetería recibidos por SMS porque los bancos y servicios postales no solicitan datos personales por mensaje de texto"*).
+
+### Criterios de Evaluación en Libreta
+- Tabla de auditoría personal completa con análisis de consecuencias técnicas: 40%
+- Decálogo de 10 reglas familiares fundamentadas técnicamente: 50%
+- Presentación limpia, rotulación clara y redacción sin faltas ortográficas: 10%

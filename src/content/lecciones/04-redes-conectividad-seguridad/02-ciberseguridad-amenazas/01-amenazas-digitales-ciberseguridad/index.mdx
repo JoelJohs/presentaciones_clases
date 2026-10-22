@@ -1,0 +1,828 @@
+---
+title: "Amenazas Digitales y Ciberseguridad"
+moduleTitle: "4 - Redes, Conectividad y Seguridad Informática"
+topicTitle: "Tema 2: Ciberseguridad y Amenazas Digitales"
+subtopicTitle: "Vectores de Ataque, Malware, Ingeniería Social, Phishing y Fraudes"
+semana: 15
+fecha: "17-10-2026"
+published: true
+description: "Identifica vectores de ataque: código malicioso, ataques de ingeniería social, suplantación de identidad (phishing) y fraudes en plataformas digitales."
+duration: 240
+objectives:
+  - "Definir los tres pilares de la seguridad informática mediante la tríada CIA (Confidencialidad, Integridad y Disponibilidad)"
+  - "Diferenciar qué es un vector de ataque y medir la superficie de exposición en dispositivos personales y corporativos"
+  - "Clasificar las familias de código malicioso (virus, gusano, troyano, ransomware, spyware, adware, keylogger y botnet)"
+  - "Analizar el ciclo de infección de un ransomware y el mecanismo de doble extorsión con cifrado asimétrico"
+  - "Comprobar la integridad de archivos mediante funciones hash criptográficas (SHA-256) en la terminal"
+  - "Identificar los resortes psicológicos de la ingeniería social: urgencia, autoridad, miedo, escasez y validación social"
+  - "Desmontar la anatomía de un ataque de phishing analizando remitentes falseados, dominios trampa y llamadas a la acción"
+  - "Auditar registros de autenticación de correo electrónico (SPF, DKIM y DMARC) en cabeceras de mensajes reales"
+  - "Detectar técnicas de typosquatting y ataques homógrafos con caracteres Unicode en navegadores web"
+  - "Reconocer esquemas de fraude en plataformas digitales: estafas en Marketplace, suplantación en WhatsApp y falsos sorteos"
+  - "Aplicar un protocolo de triaje y contención ante incidentes de seguridad para aislar equipos comprometidos"
+  - "Diseñar diagramas de análisis de amenazas y guías de protección familiar en libreta sin requerir computadora en casa"
+---
+
+import { Icon } from "astro-icon/components";
+
+# Amenazas Digitales y Ciberseguridad
+
+Identifica vectores de ataque: código malicioso, ataques de ingeniería social, suplantación de identidad (phishing) y fraudes en plataformas digitales.
+
+## 1. Los Tres Pilares: La Tríada CIA <Icon name="lucide:shield-check" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Toda estrategia de seguridad informática protege tres propiedades fundamentales de la información:
+
+- **Confidencialidad:** Solo las personas o procesos con autorización expresa pueden leer los datos. Si un atacante intercepta tu contraseña o tus mensajes privados, se rompe la confidencialidad.
+- **Integridad:** Los datos se mantienen exactos, completos y sin alteraciones no autorizadas desde su origen hasta su destino. Si alguien modifica una calificación en la base de datos escolar, se rompe la integridad.
+- **Disponibilidad:** Los sistemas, redes y archivos permanecen accesibles para los usuarios legítimos cada vez que los necesitan. Si un ataque satura el servidor de un hospital y los médicos no pueden consultar historiales clínicos, se rompe la disponibilidad.
+
+> **Regla de oro de la ciberseguridad:**
+> Un sistema no es seguro solo por tener contraseñas largas. Si cualquiera puede borrar tus archivos o desconectar tu conexión, el sistema carece de integridad y disponibilidad.
+
+---
+
+## 2. Analogía: La Bóveda de un Banco <Icon name="lucide:vault" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Comprende la tríada CIA observando cómo opera una institución bancaria en el mundo físico:
+
+<table>
+  <thead>
+    <tr>
+      <th>Pilar CIA</th>
+      <th>Equivalente en el Banco</th>
+      <th>Función en Seguridad Digital</th>
+      <th>Ataque que lo Destruye</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Confidencialidad</strong></td>
+      <td>Caja de seguridad cerrada con llave individual. Nadie en la fila puede ver tus documentos personales.</td>
+      <td>Cifrado de datos en tránsito (HTTPS) y en reposo (discos protegidos con BitLocker o LUKS).</td>
+      <td>Espionaje de tráfico (Sniffing), robo de credenciales, filtración de bases de datos.</td>
+    </tr>
+    <tr>
+      <td><strong>Integridad</strong></td>
+      <td>Libro contable foliado con sello notarial. Si alguien borra un número con corrector, el registro queda invalidado.</td>
+      <td>Firmas digitales y sumas hash (SHA-256) que comprueban que el archivo no fue manipulado.</td>
+      <td>Inyección de código, alteración de archivos de sistema, ataque de hombre en el medio (MitM).</td>
+    </tr>
+    <tr>
+      <td><strong>Disponibilidad</strong></td>
+      <td>Horario de atención continuo con sucursal física, guardias y planta eléctrica de respaldo ante apagones.</td>
+      <td>Servidores redundantes, balanceadores de carga y copias de seguridad (Backups) actualizadas.</td>
+      <td>Ataques de denegación de servicio distribuido (DDoS), ransomware que cifra el disco, cortes de fibra.</td>
+    </tr>
+  </tbody>
+</table>
+
+> Si pierdes uno solo de los tres pilares, el sistema completo queda expuesto.
+
+---
+
+## 3. ¿Qué es un Vector de Ataque y la Superficie de Exposición? <Icon name="lucide:target" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Para defender un sistema, necesitas identificar por dónde pueden atacarlo:
+
+- **Vector de ataque:** La ruta, canal o método específico que un atacante utiliza para infiltrarse en un dispositivo o red (por ejemplo: un archivo adjunto en un correo, un enlace malicioso en WhatsApp, una memoria USB infectada o un puerto de red abierto sin contraseña).
+- **Superficie de exposición (Attack Surface):** La suma total de todos los puntos de entrada accesibles donde un atacante puede intentar extraer datos o ejecutar código no autorizado.
+
+```text
+[ SUPERFICIE DE EXPOSICIÓN TOTAL DE TU EQUIPO ]
+  ├── Puertos de red abiertos a Internet (RDP 3389, SMB 445)
+  ├── Software sin parches de seguridad (Navegador obsoleto)
+  ├── Canales de comunicación con el usuario (Correo, SMS, WhatsApp)
+  ├── Dispositivos físicos conectados (Memorias USB, puertos Thunderbolt)
+  └── Permisos excesivos asignados a cuentas de usuario
+```
+
+> A menor cantidad de programas instalados, puertos abiertos y servicios activos, menor será tu superficie de ataque y más difícil resultará vulnerar tu sistema.
+
+---
+
+## 4. Código Malicioso (Malware): Clasificación General <Icon name="lucide:bug" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+El término **malware** (*malicious software*) abarca cualquier programa diseñado deliberadamente para causar daño, robar información o tomar control no autorizado de un equipo. No todos los programas maliciosos actúan del mismo modo. Se dividen según dos criterios técnicos:
+
+1. **Mecanismo de propagación:** Cómo viaja de un equipo a otro (si necesita un archivo portador, si se replica automáticamente por red o si engaña al usuario para que lo instale).
+2. **Carga útil (Payload):** La acción destructiva que ejecuta una vez que logra ejecutarse dentro del sistema operativo (cifrar archivos, registrar teclas, abrir puertas traseras o mostrar publicidad masiva).
+
+<table>
+  <thead>
+    <tr>
+      <th>Categoría</th>
+      <th>¿Requiere huésped?</th>
+      <th>¿Se propaga solo por red?</th>
+      <th>Objetivo Principal</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Virus</strong></td>
+      <td>Sí (se adosa a un ejecutable legítimo)</td>
+      <td>No (requiere que el usuario comparta el archivo)</td>
+      <td>Corromper archivos y replicarse localmente</td>
+    </tr>
+    <tr>
+      <td><strong>Gusano (Worm)</strong></td>
+      <td>No (es un programa independiente)</td>
+      <td>Sí (escanea puertos y explota vulnerabilidades)</td>
+      <td>Saturar anchos de banda y propagarse masivamente</td>
+    </tr>
+    <tr>
+      <td><strong>Troyano</strong></td>
+      <td>No (se disfraza de software útil)</td>
+      <td>No (depende del engaño al usuario)</td>
+      <td>Abrir puertas traseras (Backdoors) y descargar malware</td>
+    </tr>
+    <tr>
+      <td><strong>Ransomware</strong></td>
+      <td>Indiferente (suele entrar por troyano o red)</td>
+      <td>Frecuente en variantes modernas (vía SMB)</td>
+      <td>Secuestrar y cifrar archivos para exigir rescate</td>
+    </tr>
+    <tr>
+      <td><strong>Spyware</strong></td>
+      <td>Frecuentemente empaquetado con utilidades</td>
+      <td>No</td>
+      <td>Monitorear hábitos, historial y credenciales</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 5. Virus y Gusanos: La Diferencia Fundamental <Icon name="lucide:git-pull-request" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Existe una confusión común entre ambos términos. Observa cómo opera cada uno en la práctica:
+
+### El Virus Informático
+- Requiere un archivo portador (un documento con macros `.docm`, un ejecutable `.exe` o un script `.bat`).
+- Permanece inactivo hasta que el usuario ejecuta deliberadamente el archivo huésped.
+- Al ejecutarse, inyecta su propio código en otros programas del disco duro para infectarlos uno a uno.
+
+### El Gusano de Red (Network Worm)
+- No necesita infectar otros archivos ni requiere que el usuario haga clic.
+- Aprovecha fallos de seguridad en servicios de red que escuchan en puertos abiertos (por ejemplo, el fallo del protocolo SMBv1 explotado por *EternalBlue*).
+- Una vez dentro de un equipo, escanea automáticamente todas las direcciones IP de la red local (LAN) y de Internet para enviar copias de sí mismo a cualquier máquina vulnerable.
+
+> **Caso histórico documentado:**
+> En 1988, el gusano Morris infectó cerca del 10% de todas las computadoras conectadas a ARPANET en menos de 24 horas debido a que se replicaba de forma autónoma sin intervención humana.
+
+---
+
+## 6. Troyanos y Puertas Traseras (Backdoors) <Icon name="lucide:package" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+El troyano toma su nombre del caballo de Troya de la mitología griega. No intenta romper tus defensas por la fuerza; te convence de abrirle la puerta tú mismo:
+
+```text
+[ Archivo descargado de sitio pirata ]
+        │
+        ├── "Instalador_Photoshop_2026_Crack.exe"
+        │     │
+        │     ├── (Programa funcional aparente: Photoshop abre normal)
+        │     │
+        │     └── (Carga maliciosa oculta en segundo plano)
+        │           ├── Desactiva el Firewall local
+        │           ├── Establece conexión saliente hacia un servidor C2
+        │           └── Descarga un registrador de teclas (Keylogger)
+```
+
+- **Mimetismo:** Se oculta dentro de activadores de software pirata, parches de videojuegos, documentos PDF con dobles extensiones falsas (`tarea.pdf.exe`) o códecs de video supuestamente necesarios.
+- **Servidor C2 (Command and Control):** Una vez ejecutado, el troyano contacta a una dirección IP o dominio controlado por el atacante en Internet para recibir instrucciones y descargar componentes adicionales.
+- **RAT (Remote Access Trojan):** Variante especializada que otorga control visual total de la pantalla, el micrófono, la cámara web y la consola de comandos del equipo víctima.
+
+---
+
+## 7. Ransomware: El Secuestro Criptográfico de Datos <Icon name="lucide:lock" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+El ransomware es la amenaza económica más destructiva para empresas e instituciones públicas en la actualidad. Su funcionamiento se basa en matemáticas criptográficas:
+
+1. **Infiltración:** Entra mediante un correo de phishing con documento malicioso, o explotando credenciales débiles de escritorio remoto (RDP).
+2. **Reconocimiento y escalamiento:** Busca silenciosamente en el disco duro y en las carpetas compartidas de la red archivos de valor: hojas de cálculo (`.xlsx`), bases de datos (`.sql`), imágenes (`.jpg`) y respaldos locales.
+3. **Cifrado Asimétrico:** Genera una clave simétrica local (AES-256) para cifrar los archivos en segundos a máxima velocidad. Luego, cifra esa clave AES con la clave pública RSA-4096 del atacante.
+4. **Nota de rescate:** Cambia el fondo de pantalla y deja archivos de texto (`LEEME_RECUPERAR_ARCHIVOS.txt`) en cada carpeta exigiendo un pago en criptomonedas (Bitcoin o Monero) para entregar la clave privada de descifrado.
+
+### La Doble Extorsión (Double Extortion)
+Los atacantes modernos no solo bloquean tus archivos: **primero los extraen a sus propios servidores**. Si te niegas a pagar porque tienes copias de respaldo, amenazan con publicar tus contratos, fotos privadas o registros de clientes en foros públicos de Internet.
+
+> Jamás pagues un rescate. Pagar financia el crimen organizado y no garantiza que los atacantes entreguen una clave funcional ni que borren los datos robados.
+
+---
+
+## 8. Spyware, Adware y Keyloggers <Icon name="lucide:eye" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Existen programas maliciosos diseñados para operar de forma totalmente silenciosa para que la víctima nunca sospeche de su presencia:
+
+### Spyware (Software espía)
+- Rastrea en segundo plano cada sitio web que visitas, tus búsquedas en Google y tus contactos de correo.
+- Extrae tokens de sesión del navegador para clonar tus cuentas de Discord, Steam o Gmail sin necesitar tu contraseña.
+- Comercializa los perfiles de datos con redes publicitarias oscuras o intermediarios de datos en la Dark Web.
+
+### Keyloggers (Registradores de pulsaciones)
+- Interceptan los eventos del teclado a nivel de controlador de sistema operativo (`API GetAsyncKeyState` o `SetWindowsHookEx`).
+- Guardan en un archivo de texto oculto cada carácter presionado, asociándolo a la ventana activa:
+
+```text
+[2026-10-17 10:14:02] [Ventana: Iniciar sesión en Banco Azteca - Google Chrome]
+Usuario: joel_hernandez88 [ENTER]
+Clave: M1C0ntr@s3n@S3gur@2026! [ENTER]
+```
+
+### Adware (Software publicitario invasivo)
+- Modifica el motor de búsqueda predeterminado del navegador e inserta ventanas emergentes (pop-ups) publicitarias continuas.
+- Inyecta banners falsos en páginas web legítimas para engañar al usuario y forzarlo a descargar más malware.
+
+---
+
+## 9. Botnets y Ataques de Denegación de Servicio (DDoS) <Icon name="lucide:network" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Un equipo doméstico infectado rara vez ataca en solitario. Los atacantes los organizan en ejércitos coordinados llamados **Botnets**:
+
+```text
+  [ ATACANTE / BOTMASTER ]
+             │
+             ▼
+   [ Servidor de Comando C2 ]
+    ├── Envía orden: "Inundar 203.0.113.50 con tráfico UDP puerto 80"
+    │
+    ├──► [ Bot 1: PC gamer en México ] ────────┐
+    ├──► [ Bot 2: Cámara Wi-Fi en Brasil ] ────┼──► [ SERVIDOR VÍCTIMA ]
+    ├──► [ Bot 3: Smart TV en España ] ────────┤    (Satura memoria y ancho de banda,
+    └──► [ Bot 4: Router doméstico en Japón ] ─┘     el servicio legítimo colapsa)
+```
+
+- **Zombie / Bot:** Cada dispositivo infectado con el malware de la botnet (ejemplo: familias como *Mirai* o *Emotet*). El usuario normal ni siquiera nota la infección, excepto por lentitud ocasional en su conexión.
+- **Ataque DoS (Denial of Service):** Un solo atacante intenta tirar un servidor.
+- **Ataque DDoS (Distributed Denial of Service):** Millones de dispositivos zombies envían millones de peticiones por segundo simultáneamente hacia un mismo objetivo. Ninguna conexión de fibra común puede procesar semejante volumen de paquetes basura, provocando la caída del servicio.
+
+---
+
+## 10. Hoja de Comparación Técnica de Malware <Icon name="lucide:table" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Consulta esta matriz para identificar rápidamente el comportamiento técnico de cada amenaza:
+
+<table>
+  <thead>
+    <tr>
+      <th>Familia</th>
+      <th>Vía Típica de Entrada</th>
+      <th>Impacto en CIA</th>
+      <th>Señal de Alerta en el Equipo</th>
+      <th>Ejemplo Histórico</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Ransomware</strong></td>
+      <td>Phishing, puertos RDP expuestos</td>
+      <td>Disponibilidad y Confidencialidad</td>
+      <td>Extensiones cambiadas (`.locked`), CPU al 100%</td>
+      <td>WannaCry, LockBit</td>
+    </tr>
+    <tr>
+      <td><strong>Troyano RAT</strong></td>
+      <td>Cracks, activadores, emuladores</td>
+      <td>Confidencialidad e Integridad</td>
+      <td>Conexiones de red extrañas hacia IPs foráneas</td>
+      <td>DarkComet, njRAT</td>
+    </tr>
+    <tr>
+      <td><strong>Gusano</strong></td>
+      <td>Vulnerabilidades en red local / SMB</td>
+      <td>Disponibilidad e Integridad</td>
+      <td>Lentitud extrema en la red, puertos escaneados</td>
+      <td>ILOVEYOU, Conficker</td>
+    </tr>
+    <tr>
+      <td><strong>Keylogger</strong></td>
+      <td>Adjuntos `.scr`, extensiones trampa</td>
+      <td>Confidencialidad</td>
+      <td>Cuentas vulneradas sin causa aparente</td>
+      <td>Agent Tesla, HawkEye</td>
+    </tr>
+    <tr>
+      <td><strong>Botnet Client</strong></td>
+      <td>Contraseñas por defecto en IoT / cámaras</td>
+      <td>Disponibilidad</td>
+      <td>Alto consumo de datos de subida sin uso activo</td>
+      <td>Mirai, Reaper</td>
+    </tr>
+    <tr>
+      <td><strong>Rootkit</strong></td>
+      <td>Instaladores de controladores trampa</td>
+      <td>Integridad (toma control del kernel)</td>
+      <td>Procesos maliciosos invisibles en el Administrador de Tareas</td>
+      <td>Stuxnet, Rustock</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 11. Actividad Práctica: Verificación de Integridad con Hashing SHA-256 <Icon name="lucide:terminal" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Una función hash criptográfica convierte cualquier cantidad de datos en una huella digital alfanumérica única y de longitud fija (64 caracteres hexadecimales en SHA-256). Si un archivo cambia un solo bit, su hash cambia por completo.
+
+Abre la terminal en tu computadora de clase y comprueba la integridad de un archivo:
+
+### Paso 1: Crea un archivo de prueba
+En Windows (PowerShell) o Linux/macOS (Bash):
+```bash
+echo "Transferencia de $100 pesos a cuenta de Joel" > recibo.txt
+```
+
+### Paso 2: Calcula su huella digital original
+- **En Windows (PowerShell / CMD):**
+  ```powershell
+  certutil -hashfile recibo.txt SHA256
+  ```
+- **En Linux / macOS:**
+  ```bash
+  sha256sum recibo.txt
+  ```
+Anota los primeros 8 y últimos 8 caracteres del hash resultante en tu libreta.
+
+### Paso 3: Simula la alteración maliciosa
+Modifica un solo número dentro del archivo (cambia `$100` por `$900`):
+```bash
+echo "Transferencia de $900 pesos a cuenta de Joel" > recibo.txt
+```
+
+### Paso 4: Vuelve a calcular el hash
+Ejecuta de nuevo el comando de hash. Observa cómo la cadena de 64 caracteres cambió por completo:
+
+> **Principio de Avalancha criptográfico:**
+> No importa qué tan pequeño sea el cambio en el documento; el hash resultante es completamente diferente. Así es como los antivirus y desarrolladores confirman que un instalador no fue modificado por un troyano.
+
+---
+
+## 12. Ingeniería Social: El Ataque al Factor Humano <Icon name="lucide:user-x" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+El eslabón más frágil de cualquier infraestructura tecnológica no es el firewall ni el algoritmo de cifrado: es la persona que está sentada frente al teclado (la denominada **Capa 8**).
+
+> **Definición de Kevin Mitnick (famoso experto en seguridad e ingeniería social):**
+> "Puedes gastar millones de dólares en tecnología de punta, firewalls y sistemas biométricos. Pero si un empleado le entrega la clave por teléfono a un extraño convincente, la tecnología no sirve de nada."
+
+La **Ingeniería Social** es el conjunto de técnicas de manipulación psicológica destinadas a conseguir que personas autorizadas revelen voluntariamente información confidencial, transfieran dinero o ejecuten archivos maliciosos creyendo que hacen lo correcto.
+
+```text
+[ ATAQUE TÉCNICO DIRECTO ]
+Atacante ───(Fuerza Bruta / Exploit)───► [ Firewall / Cifrado AES-256 ] ──► (Bloqueado)
+
+[ ATAQUE DE INGENIERÍA SOCIAL ]
+Atacante ───(Engaño psicológico)───► [ Usuario Autorizado ] ───(Abre la puerta con su clave)──► [ Sistema Vulnerado ]
+```
+
+---
+
+## 13. Las Cinco Palancas Psicológicas de la Manipulación <Icon name="lucide:brain" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Los estafadores informáticos explotan reacciones emocionales automáticas para suspender el pensamiento crítico de la víctima. Analiza los cinco resortes más frecuentes:
+
+<table>
+  <thead>
+    <tr>
+      <th>Resorte Psicológico</th>
+      <th>Frase o Mecanismo Típico</th>
+      <th>Objetivo del Atacante</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Urgencia Extrema</strong></td>
+      <td><em>"Su cuenta será cancelada en los próximos 15 minutos si no valida sus datos ahora."</em></td>
+      <td>Obligar a la persona a actuar con prisa antes de que tenga tiempo de consultar o verificar.</td>
+    </tr>
+    <tr>
+      <td><strong>Principio de Autoridad</strong></td>
+      <td><em>"Le habla el Lic. Morales del departamento jurídico de la fiscalía / soporte corporativo."</em></td>
+      <td>Intimidar a la víctima para que obedezca instrucciones sin cuestionar la identidad de quien llama.</td>
+    </tr>
+    <tr>
+      <td><strong>Miedo y Castigo</strong></td>
+      <td><em>"Detectamos una orden de embargo contra su nómina. Haga clic aquí para impugnar."</em></td>
+      <td>Provocar pánico para que el instinto de defensa impulse la apertura inmediata del archivo malicioso.</td>
+    </tr>
+    <tr>
+      <td><strong>Escasez y Codicia</strong></td>
+      <td><em>"¡Felicidades! Fuiste seleccionado para recibir un iPhone 16 gratis. Solo quedan 2 piezas."</em></td>
+      <td>Despertar entusiasmo desmedido para que la persona ingrese datos de tarjeta o pague envíos inexistentes.</td>
+    </tr>
+    <tr>
+      <td><strong>Validación Social y Curiosidad</strong></td>
+      <td><em>"¿Eres tú el que aparece en este video vergonzoso? Mira lo que están publicando de ti."</em></td>
+      <td>Explotar el pudor, la vergüenza o el morbo para que la víctima toque el enlace sin pensar.</td>
+    </tr>
+  </tbody>
+</table>
+
+> Cuando un mensaje despierte en ti una emoción intensa (pánico, prisa o euforia de premio), detén tus dedos. Es casi seguro que estás frente a un intento de ingeniería social.
+
+---
+
+## 14. Phishing: Anatomía de la Suplantación de Identidad <Icon name="lucide:mail-warning" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+El **Phishing** consiste en enviar comunicaciones fraudulentas que aparentan proceder de una organización legítima y reconocida (un banco, Netflix, Mercado Libre, Google o el SAT) para engañar al usuario y hacer que entregue sus credenciales:
+
+```text
+DE: "Soporte BBVA México" <alerta-seguridad@notificaciones-bbva-mx-servicio.com>
+PARA: tu_correo@gmail.com
+ASUNTO: URGENTE: Retiro no reconocido de $12,450.00 MXN en tu cuenta
+
+Estimado cuentahabiente:
+Detectamos un cargo en proceso en su tarjeta de débito por $12,450.00 MXN en Liverpool México.
+Si usted no reconoce este movimiento, ingrese INMEDIATAMENTE al enlace seguro para cancelarlo:
+
+[ BOTÓN: CANCELAR CARGO Y PROTEGER MI CUENTA ]
+(El botón conduce a: http://portal-bbva-validacion-segura.xyz/login.php)
+
+Atentamente,
+Departamento de Prevención de Fraudes BBVA.
+```
+
+### Componentes de la trampa
+1. **Nombre visual falso:** Muestra el nombre real del banco, pero la dirección técnica detrás del arroba no pertenece al dominio oficial.
+2. **Cebo emocional:** Notifica un cargo alto inexistente para asustar a la víctima.
+3. **Llamada a la acción (Call to Action):** Un botón vistoso que redirige a una réplica visual casi idéntica de la página del banco, alojada en un servidor controlado por el criminal.
+
+---
+
+## 15. Variantes de Phishing: Spear Phishing, Smishing y Vishing <Icon name="lucide:phone-call" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Los ataques de suplantación adaptan su medio de transmisión y su nivel de personalización:
+
+### Spear Phishing (Pesca con arpón)
+A diferencia del phishing masivo que envía el mismo correo a 100,000 personas, el *Spear Phishing* investiga previamente a la víctima (mediante redes sociales y LinkedIn). Menciona tu nombre real, el nombre de tu jefe, la materia que cursas o el nombre de tus familiares directos para que el engaño parezca auténtico.
+
+### Whaling (Caza de ballenas)
+Spear phishing dirigido exclusivamente a altos directivos, directores de finanzas o rectores universitarios, con el fin de autorizar transferencias millonarias falsas (*Fraude del CEO*).
+
+### Smishing (Phishing por SMS)
+Mensajes de texto breves al celular: *"Paquete de Correos de México retenido por falta de pago de aduana de $38 pesos. Actualice su domicilio aquí: http://bit.ly/entrega-mx"*.
+
+### Vishing (Phishing por Voz)
+Llamadas telefónicas de supuestos agentes bancarios. Con el avance de la inteligencia artificial, los atacantes clonan la voz de familiares a partir de videos cortos de TikTok o notas de voz para exigir transferencias de emergencia.
+
+---
+
+## 16. Dominios Falsos: Typosquatting y Ataques Homógrafos <Icon name="lucide:globe" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Los atacantes registran nombres de dominio diseñados para engañar a la vista humana:
+
+### Typosquatting (Errores tipográficos)
+Aprovechan los errores comunes al escribir en el teclado:
+- Dominio legítimo: `netflix.com`
+- Dominio falso registrado por el atacante: `netfIix.com` (con I mayúscula en lugar de ele) o `netfflix.com`.
+
+### Ataque Homógrafo con Caracteres Unicode (IDN Homograph Attack)
+El alfabeto cirílico o griego posee letras que lucen idénticas a las del alfabeto latino en una pantalla, pero tienen un valor de código numérico diferente:
+
+<table>
+  <thead>
+    <tr>
+      <th>Carácter Visual</th>
+      <th>Alfabeto</th>
+      <th>Código Unicode</th>
+      <th>Interpretación Real del Navegador</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>a</strong></td>
+      <td>Latino (estándar)</td>
+      <td>`U+0061`</td>
+      <td>`apple.com` (sitio legítimo)</td>
+    </tr>
+    <tr>
+      <td><strong>а</strong></td>
+      <td>Cirílico (falso)</td>
+      <td>`U+0430`</td>
+      <td>`xn--pple-43d.com` (sitio trampa de atacante)</td>
+    </tr>
+  </tbody>
+</table>
+
+> **Comprobación rápida:**
+> Al copiar y pegar una URL sospechosa en la terminal o en un editor de texto plano, los caracteres homógrafos se traducen a su formato técnico real en Punycode (`xn--...`), revelando la trampa de inmediato.
+
+---
+
+## 17. Autenticación de Correo: SPF, DKIM y DMARC <Icon name="lucide:check-check" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+El protocolo tradicional de correo SMTP (creado en 1982) no incluía mecanismos para verificar quién enviaba un mensaje. Cualquiera podía configurar su cliente para enviar correos haciéndose pasar por `presidente@gobierno.gob.mx`. Para evitar esto, Internet adoptó tres tecnologías de protección basadas en DNS:
+
+<table>
+  <thead>
+    <tr>
+      <th>Protocolo</th>
+      <th>Nombre Completo</th>
+      <th>¿Cómo Funciona Técnicamente?</th>
+      <th>Analogía</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>SPF</strong></td>
+      <td><em>Sender Policy Framework</em></td>
+      <td>El dueño del dominio publica en un registro DNS TXT la lista exacta de direcciones IP autorizadas para enviar correos en su nombre. Si el correo viene de una IP ajena, se marca como sospechoso.</td>
+      <td>La lista oficial de choferes autorizados por una empresa de mensajería.</td>
+    </tr>
+    <tr>
+      <td><strong>DKIM</strong></td>
+      <td><em>DomainKeys Identified Mail</em></td>
+      <td>El servidor de origen firma criptográficamente cada correo con una clave privada. El servidor de destino consulta la clave pública en el DNS para verificar que el mensaje no fue modificado en el camino.</td>
+      <td>Un sello de lacre de cera intacto con el escudo de armas sobre el sobre de la carta.</td>
+    </tr>
+    <tr>
+      <td><strong>DMARC</strong></td>
+      <td><em>Domain-based Message Authentication, Reporting and Conformance</em></td>
+      <td>Instruye al servidor receptor qué hacer si un correo falla las pruebas SPF o DKIM: dejarlo pasar (`none`), enviarlo a spam (`quarantine`) o rechazarlo y destruirlo por completo (`reject`).</td>
+      <td>La política estricta de portería: si la credencial no coincide o el sello está roto, no entra al edificio.</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 18. Actividad Práctica: Análisis de Cabeceras de Correo en Vivo <Icon name="lucide:file-search" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Los correos electrónicos contienen metadatos técnicos ocultos que revelan la verdadera ruta que siguió el mensaje desde su origen:
+
+### Instrucciones para Gmail en el navegador:
+1. Abre tu cuenta de correo electrónico escolar o personal.
+2. Abre cualquier correo que tengas en tu bandeja (preferentemente de una empresa o boletín).
+3. Haz clic en los **tres puntos verticales** de la esquina superior derecha del mensaje (junto al botón de responder).
+4. Selecciona la opción **"Mostrar original"** (o *View original*).
+5. Se abrirá una pestaña técnica. Examina la tabla superior:
+   - **SPF:** Debe indicar `PASS` con la IP del servidor emisor.
+   - **DKIM:** Debe indicar `PASS` con el dominio legítimo.
+   - **DMARC:** Debe indicar `PASS`.
+6. En el recuadro de texto inferior, localiza la línea que comienza con:
+   ```text
+   Received: from ... by mail-sor-f41.google.com with SMTP id ...
+   ```
+7. Identifica la primera dirección IP que originó el correo y compárala con el remitente que aparece en el campo `From:`.
+
+> Si un correo bancario muestra en SPF un estado `FAIL` o `SOFTFAIL`, ese correo no provino de los servidores del banco, sino de un servidor pirata de phishing.
+
+---
+
+## 19. Fraudes en Redes Sociales y WhatsApp <Icon name="lucide:message-square-warning" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Los ataques dirigidos a particulares en México y América Latina se concentran fuertemente en aplicaciones de mensajería instantánea:
+
+### El Secuestro de Cuentas de WhatsApp
+El atacante instala WhatsApp en un teléfono nuevo e ingresa tu número celular:
+1. WhatsApp envía un código de verificación de 6 dígitos por SMS a tu teléfono.
+2. Casi al mismo tiempo, el atacante te llama o te contacta haciéndose pasar por soporte técnico, paquetería o una amistad que "equivocó" su número: *"Oye, te llegó un código por error a tu teléfono, ¿me lo pasas para recuperar mi paquete?"*.
+3. Si la llamada ocurre de madrugada y no contestas, WhatsApp ofrece la opción de enviar el código por llamada al buzón de voz.
+4. Muchos usuarios nunca cambiaron el PIN por defecto de su buzón de voz (`1234` o `0000`). El atacante llama al buzón desde otra línea, escucha el código dictado y se apropia de la cuenta.
+5. Inmediatamente activa la verificación en dos pasos con un PIN propio, dejándote fuera de tu cuenta por días mientras solicita dinero a todos tus contactos.
+
+```text
+[ ATACANTE ] ──(Pide código de 6 dígitos con pretexto urgente)──► [ VÍCTIMA CONFUNDIDA ]
+     │                                                                   │
+     └──(Ingresa el código en su propio teléfono)◄───────────────────────┘
+     │
+     ├── WhatsApp activo en el teléfono del atacante
+     ├── Bloquea a la víctima con un PIN nuevo de verificación
+     └── Escribe a la mamá, tíos y amigos: "Hola, tengo una emergencia médica, deposítame $2,000"
+```
+
+---
+
+## 20. Fraudes en Comercio Digital: Marketplace y Falsos Comprobantes <Icon name="lucide:shopping-bag" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Las plataformas de compraventa entre particulares son el escenario más común de estafas cotidianas:
+
+### 1. El Fraude del Depósito "Salvo Buen Cobro"
+- Pones a la venta una computadora o consola de videojuegos en Facebook Marketplace.
+- Un comprador se muestra entusiasmado de inmediato, no regatea el precio y dice que enviará a un chofer de Uber/DiDi a recoger el producto de urgencia.
+- Te envía la fotografía de una ficha de depósito bancario donde aparece el monto total acordado.
+- Abres la aplicación de tu banco y ves la cifra reflejada, pero con la leyenda: **"En tránsito"** o **"Salvo buen cobro"**.
+- El depósito se realizó mediante un **cheque sin fondos** o robado en ventanilla de fin de semana.
+- Entregas la consola al chofer. El lunes siguiente a mediodía, el banco procesa el cheque, descubre que no tiene fondos y retira el saldo de tu cuenta. Te quedas sin producto y sin dinero.
+
+### 2. Comprobantes de Transferencia SPEI Falsificados
+Existen aplicaciones y páginas web que generan capturas de pantalla idénticas a los recibos de BBVA, Banorte o Santander con cualquier nombre, fecha y monto:
+- **Regla inquebrantable:** Jamás entregues un artículo basándote en una captura de pantalla enviada por el comprador. Confirma únicamente cuando el saldo aparezca como **"Saldo disponible"** en tu propia aplicación bancaria.
+
+---
+
+## 21. Falsas Ofertas de Empleo y "Mulas Bancarias" <Icon name="lucide:briefcase" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Nadie regala dinero en Internet. Las redes de ciberdelincuencia reclutan activamente jóvenes a través de TikTok, Instagram y Telegram:
+
+### El Fraude de las "Tareas Sencillas"
+- Te contactan por WhatsApp con números de prefijos extranjeros (+62, +234, +44): *"Hola, somos una agencia de reclutamiento de YouTube. Te pagamos $50 pesos por cada video al que le des Like y te suscribas"*.
+- Las primeras 3 tareas te depositan realmente $150 pesos para ganar tu confianza absoluta.
+- En la fase 4, te agregan a un grupo de Telegram con supuestos miembros que muestran ganancias millonarias: *"Para desbloquear el nivel VIP y ganar $5,000 diarios, debes hacer un depósito de garantía de $1,000 pesos"*.
+- Una vez que la víctima deposita, el sistema inventa errores técnicos y pide depósitos cada vez mayores hasta que la persona se queda sin ahorros y es expulsada del grupo.
+
+### Mulas Bancarias (Money Mules)
+- *"Préstame tu cuenta bancaria para que me caiga un depósito y te doy una comisión del 10%"*.
+- El dinero recibido proviene de extorsiones telefónicas o cuentas hackeadas a otras personas.
+- Al prestar tu cuenta, tu nombre y RFC quedan fichados ante las autoridades ministeriales como autor o cómplice de lavado de dinero, mientras los criminales reales retiran el efectivo y desaparecen.
+
+---
+
+## 22. Herramientas de Análisis Seguro: VirusTotal y URLScan <Icon name="lucide:shield-alert" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Cuando recibas un enlace o archivo sospechoso, **jamás lo abras en tu máquina personal**. Existen herramientas públicas de análisis estático en la nube que lo inspeccionan de forma aislada:
+
+### VirusTotal (virustotal.com)
+- Plataforma operada por Google Chronicle que analiza archivos, dominios, IPs y hashes contra más de **70 motores de antivirus** diferentes (Kaspersky, Bitdefender, Microsoft Defender, ESET, Sophos) de manera simultánea.
+- Si subes un hash SHA-256 o un archivo ejecutable, te muestra el veredicto consolidado: cuántos motores lo clasifican como troyano, spyware o limpio.
+
+```text
+[ ARCHIVO SOSPECHOSO ]
+        │
+        ▼ (Calcula Hash SHA-256 localmente)
+[ Consulta VirusTotal ]
+        ├── Microsoft Defender: Trojan:Win32/Wacatac.B!ml
+        ├── Kaspersky:          HEUR:Trojan-Ransom.Win32.Generic
+        ├── ESET-NOD32:         A Variant of Win32/Kryptik
+        ├── Bitdefender:        Gen:Variant.Lazy.319488
+        └── ... (62 motores restantes)
+        ────────────────────────────────────────────────
+        VEREDICTO: 58 / 72 motores detectaron código malicioso.
+```
+
+### URLScan.io
+- Envía un bot automatizado que navega al enlace sospechoso desde un contenedor seguro en la nube.
+- Te muestra una captura de pantalla del sitio web, los scripts JavaScript que intenta cargar y las direcciones IP a las que redirige, sin que tu computadora toque el servidor atacante.
+
+---
+
+## 23. Actividad Práctica: Inspección de Enlaces y Hashes en Laboratorio <Icon name="lucide:laptop" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Realiza un triaje de seguridad con muestras educativas seguras utilizando el navegador de tu computadora:
+
+1. Ingresa a la página oficial de [VirusTotal](https://www.virustotal.com/).
+2. Haz clic en la pestaña **"Search"** (Búsqueda).
+3. Pega el siguiente hash SHA-256 perteneciente a una muestra histórica real del ransomware WannaCry:
+   ```text
+   ed01ebf83334a1f6d52584a4b382d334ee51b439893e0ff8d1cf3f8806de7159
+   ```
+4. Presiona `Enter` y analiza los resultados en pantalla:
+   - ¿Cuántos motores de antivirus lo catalogan como malicioso sobre el total?
+   - Revisa la pestaña **"Details"** (Detalles): observa el nombre original del archivo ejecutable y la fecha de su primera compilación.
+   - Revisa la pestaña **"Relations"** (Relaciones): observa qué dominios web y direcciones IP intenta contactar el malware una vez iniciado.
+5. Vuelve al inicio de VirusTotal, selecciona la pestaña **"URL"** y escribe el dominio de prueba:
+   ```text
+   http://testsafebrowsing.appspot.com/s/malware.html
+   ```
+   *(Página oficial de prueba de Google Safe Browsing que simula una infección sin descargar código dañino).* Observa cómo los escáneres clasifican el sitio como peligroso.
+
+---
+
+## 24. Protocolo de Reacción ante Infección o Fraude <Icon name="lucide:flame" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Si sospechas que ejecutaste un archivo malicioso o entregaste tu contraseña en un portal falso, actúa en los primeros 5 minutos:
+
+<table>
+  <thead>
+    <tr>
+      <th>Minuto</th>
+      <th>Acción Inmediata</th>
+      <th>Propósito Técnico</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Minuto 0 a 1</strong></td>
+      <td><strong>Desconecta el cable de red y apaga el Wi-Fi</strong> del equipo infectado de inmediato.</td>
+      <td>Detiene la propagación del malware hacia otros equipos de la red local (LAN) y corta la comunicación con el servidor C2 del atacante.</td>
+    </tr>
+    <tr>
+      <td><strong>Minuto 1 a 3</strong></td>
+      <td>Desde <strong>otro dispositivo no infectado</strong> (como tu teléfono con datos móviles), cambia las contraseñas críticas: correo principal, cuentas bancarias y redes sociales.</td>
+      <td>Si el equipo tiene un keylogger activo, cambiar la contraseña desde esa misma máquina solo le entregará la clave nueva al criminal.</td>
+    </tr>
+    <tr>
+      <td><strong>Minuto 3 a 5</strong></td>
+      <td>Cierra todas las <strong>sesiones activas</strong> en la configuración de seguridad de Google, Meta o Microsoft (*"Cerrar sesión en todos los demás dispositivos"*).</td>
+      <td>Invalida los tokens de sesión que el spyware pudiera haber extraído del navegador.</td>
+    </tr>
+    <tr>
+      <td><strong>Minuto 5 a 10</strong></td>
+      <td>Informa inmediatamente a tus contactos directos y familiares que tu cuenta fue comprometida.</td>
+      <td>Evita que tus conocidos caigan en transferencias fraudulentas creyendo que hablan contigo.</td>
+    </tr>
+    <tr>
+      <td><strong>Posterior</strong></td>
+      <td>Inicia el equipo en Modo Seguro sin funciones de red, ejecuta un análisis con herramienta EDR o formatea el disco desde una memoria USB booteable limpia.</td>
+      <td>Garantiza la erradicación total de troyanos residentes en memoria o sectores de arranque.</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 25. Hoja de Trucos: Señales de Alerta Roja (Red Flags) <Icon name="lucide:alert-triangle" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Usa esta lista para evaluar en segundos cualquier mensaje, llamada o archivo sospechoso:
+
+<table>
+  <thead>
+    <tr>
+      <th>Elemento Analizado</th>
+      <th>Comportamiento Seguro</th>
+      <th>Señal de Alerta Roja (¡Peligro!)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Dirección del Remitente</strong></td>
+      <td>Dominio institucional exacto (`soporte@netflix.com`)</td>
+      <td>Subdominios engañosos (`netflix@soporte-cuentas-mx.xyz`) o cuentas de correo gratuitas (@gmail.com) para asuntos bancarios.</td>
+    </tr>
+    <tr>
+      <td><strong>Saludo del Mensaje</strong></td>
+      <td>Personalizado con tu nombre completo y últimos dígitos de cuenta</td>
+      <td>Genérico: *"Estimado cliente"*, *"Apreciable usuario"*, o tu dirección de correo usada como si fuera tu nombre.</td>
+    </tr>
+    <tr>
+      <td><strong>Sensación Temporal</strong></td>
+      <td>Plazos regulares de atención bancaria y notificaciones informativas</td>
+      <td>Plazos límite de minutos: *"Tiene 10 minutos para responder o su saldo será retenido permanentemente"*.</td>
+    </tr>
+    <tr>
+      <td><strong>Archivos Adjuntos</strong></td>
+      <td>Documentos PDF estándar, comprobantes sin macros</td>
+      <td>Archivos comprimidos con contraseña (`factura.zip`), ejecutables (`.exe`), scripts (`.vbs`, `.bat`, `.ps1`) o dobles extensiones (`aviso.pdf.exe`).</td>
+    </tr>
+    <tr>
+      <td><strong>Enlaces (URLs)</strong></td>
+      <td>Dirección HTTPS visible que coincide exactamente con el dominio oficial</td>
+      <td>Acortadores de enlaces (`bit.ly`, `tinyurl.com`), dominios con letras cambiadas o enlaces IP directos (`http://185.220.101.5/login`).</td>
+    </tr>
+    <tr>
+      <td><strong>Petición de Dinero</strong></td>
+      <td>Canales formales mediante facturas y ventanillas oficiales</td>
+      <td>Pagos urgentes mediante tarjetas de regalo (Google Play, Amazon), depósitos en tiendas OXXO o envíos de criptomonedas.</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 26. Tarea 1: Radiografía de un Ataque de Phishing en Libreta <Icon name="lucide:book-open" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Realiza esta actividad a mano en tu libreta para aprender a desarticular intentos de suplantación sin usar computadora en casa.
+
+### Parte A: Dibujo y Anatomía del Correo Falso
+1. Dibuja en una página completa de tu libreta el diseño gráfico de una ventana de correo electrónico simulando un ataque de phishing dirigido a ti.
+2. Puedes inventar el caso basándote en una de estas marcas conocidas:
+   - **Banco:** BBVA, Santander, Banco Azteca o Nu.
+   - **Plataforma de streaming:** Netflix, Spotify o Disney+.
+   - **Tienda o videojuegos:** Mercado Libre, Amazon, PlayStation Network o Steam.
+3. El correo dibujado debe contener de forma obligatoria los siguientes elementos visuales:
+   - La cabecera completa: campo `De:` (remitente falso), campo `Para:` (tu correo) y campo `Asunto:`.
+   - El logotipo dibujado de la empresa y un texto de 4 a 6 renglones utilizando una de las palancas psicológicas aprendidas (urgencia o miedo).
+   - Un botón de acción llamativo dibujado al centro (ejemplo: *"Desbloquear tarjeta ahora"*).
+   - Un pie de página simulando legalidad corporativa.
+
+### Parte B: Señalamiento de Indicadores Técnicos
+Con un color de tinta diferente (rojo, verde o marcatextos), traza flechas desde los elementos de tu dibujo hacia el margen de la página y rotula los **4 indicadores de engaño**:
+- **Flecha 1 (Remitente):** Explica por qué la dirección técnica inventada revela que no es la empresa oficial.
+- **Flecha 2 (Palanca psicológica):** Nombra cuál de los 5 resortes psicológicos se usó en el texto (urgencia, miedo, etc.) y qué emoción intenta provocar.
+- **Flecha 3 (URL oculta del botón):** Escribe al margen qué dirección web falsa aparecería si colocaras el ratón sobre el botón sin hacer clic (ejemplo: `http://servidor-ruso-hack.ru/bbva-robo`).
+- **Flecha 4 (Consecuencia técnica):** Explica qué le ocurriría a la persona si cae en la trampa e ingresa sus datos en esa página.
+
+### Criterios de Evaluación en Libreta
+- Dibujo limpio y estructurado de la interfaz del correo fraudulento: 30%
+- Identificación y rotulado correcto de los 4 indicadores técnicos de engaño: 50%
+- Redacción técnica clara sin faltas de ortografía: 20%
+
+---
+
+## 27. Tarea 2: Guía Familiar de Prevención contra Secuestro de WhatsApp en Libreta <Icon name="lucide:shield" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Para esta actividad **no necesitas computadora**. El objetivo es redactar un manual de defensa civil digital que puedas aplicar hoy mismo con tu familia en casa.
+
+### Parte A: Diagrama de Flujo del Ataque
+Dibuja en tu libreta un diagrama secuencial de 4 pasos con cuadros y flechas que explique cómo opera el robo de cuentas de WhatsApp:
+1. **Paso 1:** El criminal descarga WhatsApp e ingresa el número de la víctima.
+2. **Paso 2:** El mensaje SMS con el código de 6 dígitos llega al celular de la víctima.
+3. **Paso 3:** La llamada o mensaje de engaño del atacante pidiendo el código con una excusa falsa.
+4. **Paso 4:** El secuestro de la sesión y la petición de depósitos a los contactos de la víctima.
+
+### Parte B: Los Tres Candados de Seguridad Obligatorios
+Escribe en tu libreta las instrucciones paso a paso para activar los tres escudos de protección en cualquier teléfono de tu hogar:
+
+1. **Candado 1: Verificación en dos pasos de WhatsApp:**
+   - Escribe la ruta exacta dentro de la aplicación para activar el PIN de 6 dígitos: *Ajustes > Cuenta > Verificación en dos pasos*.
+   - Explica por qué este PIN impide que un atacante robe la cuenta aun si consiguiera el código del SMS.
+2. **Candado 2: Cambio de clave del buzón de voz celular:**
+   - Explica por qué dejar el buzón de voz con la clave `1234` o `0000` de fábrica permite que hackeen cuentas de madrugada.
+   - Anota el número de marcación de tu compañía telefónica para cambiar el PIN del buzón o desactivarlo (*123 para Telcel, *86 para Movistar, *123 para AT&T).
+3. **Candado 3: Regla de oro ante emergencias familiares:**
+   - Redacta una regla familiar de 3 líneas que todos en tu casa deben seguir si un contacto o familiar les escribe pidiendo dinero urgente por WhatsApp.
+
+### Criterios de Evaluación en Libreta
+- Diagrama secuencial de 4 pasos claro y bien explicado: 40%
+- Guía detallada de los 3 candados de protección técnica con rutas reales: 40%
+- Regla de confirmación familiar redactada con lógica de seguridad: 20%
