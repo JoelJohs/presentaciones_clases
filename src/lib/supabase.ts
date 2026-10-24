@@ -1,6 +1,6 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import type { PortalUser, GroupId, TareaSemanal } from '../features/portal/types';
-import { getPortalDB, findStudentByIdentifier } from '../features/portal/db';
+import { getPortalDB, findStudentByIdentifier, KNOWN_STUDENT_EMAILS } from '../features/portal/db';
 
 // Variables de entorno públicas de Supabase para Astro
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || '';
@@ -127,10 +127,50 @@ export async function studentLogin(usernameOrEmail: string, pass: string): Promi
   }
 
   // 1. Identificar al alumno en catálogo (soporta email, username, matrícula o ID)
-  const student = findStudentByIdentifier(cleanIdentifier);
+  let student = findStudentByIdentifier(cleanIdentifier);
+
+  // Si no se encontró de forma local y Supabase está configurado, consultar en la tabla remota
+  if (!student && isSupabaseConfigured() && supabase) {
+    try {
+      const { data: remoteRows } = await supabase
+        .from('alumnos')
+        .select('id, username, nombre_completo, clase, grupo, matricula, debe_cambiar_password')
+        .eq('activo', true);
+
+      if (remoteRows) {
+        const match = remoteRows.find((r: any) =>
+          (r.username && r.username.toLowerCase() === cleanIdentifier) ||
+          (r.matricula && r.matricula.toLowerCase() === cleanIdentifier) ||
+          (cleanIdentifier.includes('@') && (
+            (KNOWN_STUDENT_EMAILS[r.id] && KNOWN_STUDENT_EMAILS[r.id].toLowerCase() === cleanIdentifier) ||
+            r.username.toLowerCase() === cleanIdentifier.split('@')[0]
+          ))
+        );
+        if (match) {
+          const matchedGrupo = ((match.clase || match.grupo || 'sabado') as GroupId);
+          student = {
+            id: match.id,
+            username: match.username,
+            nombre: match.nombre_completo,
+            rol: 'alumno',
+            grupo: matchedGrupo,
+            clase: matchedGrupo,
+            matricula: match.matricula,
+            email: KNOWN_STUDENT_EMAILS[match.id] || (cleanIdentifier.includes('@') ? cleanIdentifier : undefined),
+            debeCambiarPassword: Boolean(match.debe_cambiar_password),
+          };
+        }
+      }
+    } catch (e) {
+      console.warn('Error al consultar alumnos remotos:', e);
+    }
+  }
+
   const grupo: GroupId = ((student?.grupo || student?.clase || (cleanIdentifier.includes('dom') || student?.matricula?.startsWith('DOM') ? 'domingo' : 'sabado')) as GroupId);
   const defaultPass = grupo === 'domingo' ? 'domcpi' : 'sabcpi';
-  const isProvisionalPass = cleanPass.toLowerCase() === defaultPass.toLowerCase();
+  
+  // Acepta tanto 'sabcpi' como 'domcpi' como contraseñas provisionales válidas de primer ingreso
+  const isProvisionalPass = cleanPass.toLowerCase() === 'sabcpi' || cleanPass.toLowerCase() === 'domcpi';
 
   // Determinar correo para Supabase Auth nativo
   let emailToAuth = cleanIdentifier.includes('@') ? cleanIdentifier : (student?.email || '');

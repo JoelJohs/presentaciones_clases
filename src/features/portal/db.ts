@@ -94,32 +94,36 @@ export function findStudentByIdentifier(rawKey: string): PortalUser | undefined 
   if (!key) return undefined;
   const db = getPortalDB();
 
-  // 1. Coincidencia directa por correo en usuarios existentes
-  const byUserEmail = db.usuarios.find(u => u.email?.toLowerCase() === key);
+  // 1. Coincidencia directa por correo en usuarios existentes o catálogo semilla
+  const byUserEmail = db.usuarios.find(u => u.email?.trim().toLowerCase() === key) ||
+                      SEED_PORTAL_DB.usuarios.find(u => u.email?.trim().toLowerCase() === key);
   if (byUserEmail) return byUserEmail;
 
   // 2. Coincidencia por correo en el catálogo de correos migrados
   for (const [userId, email] of Object.entries(KNOWN_STUDENT_EMAILS)) {
-    if (email.toLowerCase() === key) {
-      const u = db.usuarios.find(x => x.id === userId);
-      if (u) return { ...u, email };
+    if (email.trim().toLowerCase() === key) {
+      const u = db.usuarios.find(x => x.id === userId) || SEED_PORTAL_DB.usuarios.find(x => x.id === userId);
+      if (u) return { ...u, email: email.trim().toLowerCase() };
     }
   }
 
   // 3. Coincidencia por nombre de usuario
-  const byUsername = db.usuarios.find(u => u.username?.toLowerCase() === key);
+  const byUsername = db.usuarios.find(u => u.username?.trim().toLowerCase() === key) ||
+                     SEED_PORTAL_DB.usuarios.find(u => u.username?.trim().toLowerCase() === key);
   if (byUsername) {
     return { ...byUsername, email: byUsername.email || KNOWN_STUDENT_EMAILS[byUsername.id] };
   }
 
   // 4. Coincidencia por matrícula
-  const byMatricula = db.usuarios.find(u => u.matricula?.toLowerCase() === key);
+  const byMatricula = db.usuarios.find(u => u.matricula?.trim().toLowerCase() === key) ||
+                      SEED_PORTAL_DB.usuarios.find(u => u.matricula?.trim().toLowerCase() === key);
   if (byMatricula) {
     return { ...byMatricula, email: byMatricula.email || KNOWN_STUDENT_EMAILS[byMatricula.id] };
   }
 
   // 5. Coincidencia por ID
-  const byId = db.usuarios.find(u => u.id.toLowerCase() === key);
+  const byId = db.usuarios.find(u => u.id.trim().toLowerCase() === key) ||
+               SEED_PORTAL_DB.usuarios.find(u => u.id.trim().toLowerCase() === key);
   if (byId) {
     return { ...byId, email: byId.email || KNOWN_STUDENT_EMAILS[byId.id] };
   }
@@ -149,6 +153,19 @@ export function getPortalDB(): PortalDB {
     if (raw) {
       const parsed = JSON.parse(raw);
       if (parsed?.usuarios && parsed?.grupos) {
+        // Sincronizar automáticamente usuarios del catálogo semilla que falten en la caché local
+        let changed = false;
+        for (const seedUser of SEED_PORTAL_DB.usuarios) {
+          if (!parsed.usuarios.some((u: any) => u.id === seedUser.id)) {
+            parsed.usuarios.push({ ...seedUser });
+            changed = true;
+          }
+        }
+        if (changed) {
+          try {
+            storage.setItem(LS_DB_KEY, JSON.stringify(parsed));
+          } catch {}
+        }
         return parsed;
       }
     }
