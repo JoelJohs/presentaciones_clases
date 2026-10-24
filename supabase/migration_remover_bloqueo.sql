@@ -12,7 +12,20 @@ alter table public.alumnos drop column if exists bloqueado_hasta;
 -- 2. Restablecer contraseñas de todos los alumnos a "sabcpi" y obligar a cambiarla
 update public.alumnos
 set password_hash = extensions.crypt('sabcpi', extensions.gen_salt('bf', 10)),
-    debe_cambiar_password = true;
+    debe_cambiar_password = true
+where clase <> 'domingo' and grupo <> 'domingo';
+
+-- 2.1 Asegurar alumno de prueba domingo con contraseña "domcpi" y correo de ejemplo
+insert into public.alumnos (username, email, nombre_completo, password_hash, debe_cambiar_password, clase, grupo, matricula)
+values ('alumno.domingo', 'prueba.domingo@example.com', 'Alumno Prueba Domingo', extensions.crypt('domcpi', extensions.gen_salt('bf', 10)), true, 'domingo', 'domingo', 'DOM-01')
+on conflict (username) do update set
+  email = excluded.email,
+  nombre_completo = excluded.nombre_completo,
+  password_hash = excluded.password_hash,
+  debe_cambiar_password = excluded.debe_cambiar_password,
+  clase = excluded.clase,
+  grupo = excluded.grupo,
+  matricula = excluded.matricula;
 
 -- 3. Actualizar función login_alumno para autenticar limpiamente sin bloqueo
 create or replace function public.login_alumno(p_username text, p_password text)

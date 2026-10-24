@@ -460,6 +460,18 @@ on conflict (username) do update set
   grupo = excluded.grupo,
   matricula = excluded.matricula;
 
+-- Inserción inicial: Alumno de prueba Grupo Domingo (contraseña provisional: "domcpi")
+insert into public.alumnos (username, email, nombre_completo, password_hash, debe_cambiar_password, clase, grupo, matricula) values
+  ('alumno.domingo', 'prueba.domingo@example.com', 'Alumno Prueba Domingo', extensions.crypt('domcpi', extensions.gen_salt('bf', 10)), true, 'domingo', 'domingo', 'DOM-01')
+on conflict (username) do update set
+  email = excluded.email,
+  nombre_completo = excluded.nombre_completo,
+  password_hash = excluded.password_hash,
+  debe_cambiar_password = excluded.debe_cambiar_password,
+  clase = excluded.clase,
+  grupo = excluded.grupo,
+  matricula = excluded.matricula;
+
 -- ==============================================================================
 -- 6. GESTIÓN DE TAREAS SEMANALES (TEÓRICAS Y DE INVESTIGACIÓN)
 -- ==============================================================================

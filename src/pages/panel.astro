@@ -327,9 +327,12 @@ const leccionesData = lecciones
             </div>
           </div>
 
-          <div class="flex items-center gap-2">
-            <span class="text-xs text-brand-muted">Contraseña inicial:</span>
-            <code class="px-2.5 py-0.5 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 font-mono font-bold text-xs border border-amber-500/20">sabcpi</code>
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="text-xs text-brand-muted">Contraseñas iniciales:</span>
+            <span class="text-[11px] text-brand-muted">Sábado:</span>
+            <code class="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 font-mono font-bold text-xs border border-amber-500/20">sabcpi</code>
+            <span class="text-[11px] text-brand-muted ml-1">Domingo:</span>
+            <code class="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono font-bold text-xs border border-emerald-500/20">domcpi</code>
           </div>
         </div>
 
@@ -602,6 +605,7 @@ const leccionesData = lecciones
             type="button"
             data-copy-user="${escapeHtml(st.username || st.id)}"
             data-copy-email="${escapeHtml(st.email || '')}"
+            data-copy-grupo="${escapeHtml(st.grupo || 'sabado')}"
             class="btn-copy-user px-2 py-1 rounded-md text-[11px] font-semibold border border-brand-border bg-white dark:bg-brand-sidebar-bg hover:border-brand-primary text-brand-text transition-all cursor-pointer"
             title="Copiar credenciales de acceso"
           >
@@ -615,7 +619,8 @@ const leccionesData = lecciones
       btn.addEventListener('click', () => {
         const userStr = btn.dataset.copyUser || '';
         const emailStr = btn.dataset.copyEmail ? `\nCorreo: ${btn.dataset.copyEmail}` : '';
-        const textToCopy = `Usuario: ${userStr}${emailStr}\nContraseña provisional: sabcpi`;
+        const defaultPass = btn.dataset.copyGrupo === 'domingo' ? 'domcpi' : 'sabcpi';
+        const textToCopy = `Usuario: ${userStr}${emailStr}\nContraseña provisional: ${defaultPass}`;
         navigator.clipboard.writeText(textToCopy).then(() => {
           const prevText = btn.textContent;
           btn.textContent = '¡Copiado!';
