@@ -13,6 +13,7 @@ import {
   exportDB,
   importDB,
   importStudentsFromCsv,
+  findStudentByIdentifier,
   SEED_PORTAL_DB,
 } from './db';
 
@@ -184,6 +185,31 @@ SAB-01,erandi.alvarado,Erandi Alvarado Morales,erandi.actualizado@cpi.edu,erandi
       const res = importStudentsFromCsv(csvSobrescribir, { overwriteExisting: true });
       expect(res.updated.length).toBe(1);
       expect(getPortalDB().usuarios.find(u => u.username === 'erandi.alvarado')?.email).toBe('erandi.actualizado@cpi.edu');
+    });
+
+    it('resuelve alumnos por correo migrado, usuario o matrícula mediante findStudentByIdentifier', () => {
+      // Por correo de alumno domingo
+      const domingo = findStudentByIdentifier('prueba.domingo@example.com');
+      expect(domingo).toBeDefined();
+      expect(domingo?.matricula).toBe('DOM-01');
+      expect(domingo?.grupo).toBe('domingo');
+
+      // Por correo migrado de Erika Maciel
+      const erika = findStudentByIdentifier('wuendymaciel12@gmail.com');
+      expect(erika).toBeDefined();
+      expect(erika?.matricula).toBe('SAB-12');
+      expect(erika?.email).toBe('wuendymaciel12@gmail.com');
+
+      // Por matrícula
+      const sab01 = findStudentByIdentifier('SAB-01');
+      expect(sab01).toBeDefined();
+      expect(sab01?.username).toBe('erandi.alvarado');
+      expect(sab01?.email).toBe('alvaradoerandi40@gmail.com');
+
+      // Login directo por email
+      const resLogin = loginWithKey('wuendymaciel12@gmail.com');
+      expect(resLogin.success).toBe(true);
+      expect(resLogin.user?.matricula).toBe('SAB-12');
     });
   });
 });

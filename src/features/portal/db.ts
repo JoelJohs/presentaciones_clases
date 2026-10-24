@@ -76,6 +76,57 @@ export const ACCESS_KEYS: Record<string, { rol: 'profesor' | 'alumno'; grupo?: G
   domingo: { rol: 'alumno', grupo: 'domingo', label: 'Grupo Domingo' },
 };
 
+export const KNOWN_STUDENT_EMAILS: Record<string, string> = {
+  u_sab_01: 'alvaradoerandi40@gmail.com',
+  u_sab_02: 'cecivaldez823@gmail.com',
+  u_sab_03: 'alexandermadrigal207@gmail.com',
+  u_sab_04: 'mhelenjudith@gmail.com',
+  u_sab_05: 'negretemariana448@gmail.com',
+  u_sab_07: 'alejandrin1109@gmail.com',
+  u_sab_08: 'eduardosotozavala81@gmail.com',
+  u_sab_09: 'jazminaguilera2007@gmail.com',
+  u_sab_12: 'wuendymaciel12@gmail.com',
+  u_dom_01: 'prueba.domingo@example.com',
+};
+
+export function findStudentByIdentifier(rawKey: string): PortalUser | undefined {
+  const key = rawKey.trim().toLowerCase();
+  if (!key) return undefined;
+  const db = getPortalDB();
+
+  // 1. Coincidencia directa por correo en usuarios existentes
+  const byUserEmail = db.usuarios.find(u => u.email?.toLowerCase() === key);
+  if (byUserEmail) return byUserEmail;
+
+  // 2. Coincidencia por correo en el catálogo de correos migrados
+  for (const [userId, email] of Object.entries(KNOWN_STUDENT_EMAILS)) {
+    if (email.toLowerCase() === key) {
+      const u = db.usuarios.find(x => x.id === userId);
+      if (u) return { ...u, email };
+    }
+  }
+
+  // 3. Coincidencia por nombre de usuario
+  const byUsername = db.usuarios.find(u => u.username?.toLowerCase() === key);
+  if (byUsername) {
+    return { ...byUsername, email: byUsername.email || KNOWN_STUDENT_EMAILS[byUsername.id] };
+  }
+
+  // 4. Coincidencia por matrícula
+  const byMatricula = db.usuarios.find(u => u.matricula?.toLowerCase() === key);
+  if (byMatricula) {
+    return { ...byMatricula, email: byMatricula.email || KNOWN_STUDENT_EMAILS[byMatricula.id] };
+  }
+
+  // 5. Coincidencia por ID
+  const byId = db.usuarios.find(u => u.id.toLowerCase() === key);
+  if (byId) {
+    return { ...byId, email: byId.email || KNOWN_STUDENT_EMAILS[byId.id] };
+  }
+
+  return undefined;
+}
+
 const LS_DB_KEY = 'cpi_portal_db_v2';
 const LS_SESSION_KEY = 'cpi_portal_session_v1';
 
@@ -201,32 +252,11 @@ export function loginWithKey(rawKey: string): { success: boolean; user?: PortalU
     }
   }
 
-  // Por correo electrónico institucional o personal
-  const byEmail = db.usuarios.find(u => u.email?.toLowerCase() === key);
-  if (byEmail) {
-    setSessionUser(byEmail.id);
-    return { success: true, user: byEmail };
-  }
-
-  // Por nombre de usuario (ej. erandi.alvarado, camila.lopez)
-  const byUsername = db.usuarios.find(u => u.username?.toLowerCase() === key);
-  if (byUsername) {
-    setSessionUser(byUsername.id);
-    return { success: true, user: byUsername };
-  }
-
-  // Matrícula individual (ej. SAB-01)
-  const byMatricula = db.usuarios.find(u => u.matricula?.toLowerCase() === key);
-  if (byMatricula) {
-    setSessionUser(byMatricula.id);
-    return { success: true, user: byMatricula };
-  }
-
-  // Por ID de usuario
-  const byId = db.usuarios.find(u => u.id.toLowerCase() === key);
-  if (byId) {
-    setSessionUser(byId.id);
-    return { success: true, user: byId };
+  // Búsqueda en catálogo de alumnos (correo, usuario, matrícula o id)
+  const student = findStudentByIdentifier(key);
+  if (student) {
+    setSessionUser(student.id);
+    return { success: true, user: student };
   }
 
   return { success: false, error: 'Clave no válida. Consulta con tu docente.' };

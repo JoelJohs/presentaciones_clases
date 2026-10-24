@@ -346,10 +346,13 @@ import { Icon } from 'astro-icon/components';
         setSessionUser(studentRes.user.id);
 
         const db = getPortalDB();
-        if (!db.usuarios.some(u => u.id === studentRes.user!.id)) {
+        const existingIdx = db.usuarios.findIndex(u => u.id === studentRes.user!.id || (studentRes.user!.email && u.email?.toLowerCase() === studentRes.user!.email.toLowerCase()));
+        if (existingIdx >= 0) {
+          db.usuarios[existingIdx] = { ...db.usuarios[existingIdx], ...studentRes.user };
+        } else {
           db.usuarios.push(studentRes.user);
-          savePortalDB(db);
         }
+        savePortalDB(db);
 
         if (studentRes.user.debeCambiarPassword) {
           activeStudentToChangePass = studentRes.user;
