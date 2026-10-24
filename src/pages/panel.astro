@@ -417,7 +417,7 @@ const leccionesData = lecciones
 
 <script>
   import { getPortalDB, getCurrentUser, updateWeek, exportDB, importDB, savePortalDB, SEED_PORTAL_DB, syncRemoteGroups, importStudentsFromCsv } from '../features/portal/db';
-  import { isSupabaseConfigured, fetchStudentsFromSupabase, batchSyncStudentEmails } from '../lib/supabase';
+  import { isSupabaseConfigured, fetchStudentsFromSupabase, batchSyncStudentEmails, provisionStudentsInSupabaseAuth } from '../lib/supabase';
   import { escapeHtml } from '../utils/security';
 
   let isSyncingStudents = false;
@@ -682,9 +682,10 @@ const leccionesData = lecciones
 
     summaryBox?.classList.remove('hidden');
 
-    // Sincronizar hacia Supabase si está disponible
+    // Sincronizar hacia Supabase Auth y base de datos si está disponible
     if (isSupabaseConfigured() && result.updated.length > 0) {
       try {
+        await provisionStudentsInSupabaseAuth(result.updated);
         await batchSyncStudentEmails(result.updated);
       } catch (err) {
         console.warn('Error al sincronizar correos en Supabase:', err);

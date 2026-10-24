@@ -1,5 +1,6 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import type { PortalUser, GroupId, TareaSemanal } from '../features/portal/types';
+import { getPortalDB, loginWithKey } from '../features/portal/db';
 
 // Variables de entorno públicas de Supabase para Astro
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || '';
@@ -114,58 +115,119 @@ export async function teacherLogout(): Promise<void> {
 // ==============================================================================
 
 /**
- * Iniciar sesión de alumno mediante RPC 'login_alumno'.
- * Compara el hash bcrypt dentro de Postgres y maneja intentos fallidos.
+ * Iniciar sesión de alumno mediante Supabase Auth nativo (auth.users con email)
+ * o mediante fallback RPC/local para login híbrido con username o matrícula.
  */
 export async function studentLogin(usernameOrEmail: string, pass: string): Promise<SupabaseAuthResult> {
   const cleanIdentifier = usernameOrEmail.trim().toLowerCase();
   const cleanPass = pass.trim();
 
   if (isSupabaseConfigured() && supabase) {
+    // 1. Determinar el correo para Supabase Auth nativo
+    let emailToAuth = cleanIdentifier.includes('@') ? cleanIdentifier : '';
+
+    if (!emailToAuth) {
+      const db = getPortalDB();
+      const match = db.usuarios.find(u =>
+        (u.username && u.username.toLowerCase() === cleanIdentifier) ||
+        (u.matricula && u.matricula.toLowerCase() === cleanIdentifier)
+      );
+      if (match?.email) {
+        emailToAuth = match.email.toLowerCase();
+      }
+    }
+
+    // 2. Si hay un correo detectado, autenticar directamente con Supabase Auth (auth.users)
+    if (emailToAuth) {
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: emailToAuth,
+          password: cleanPass,
+        });
+
+        if (!error && data?.user) {
+          const db = getPortalDB();
+          const profile = db.usuarios.find(u =>
+            (u.email && u.email.toLowerCase() === emailToAuth) ||
+            u.id === data.user.id ||
+            (data.user.user_metadata?.matricula && u.matricula === data.user.user_metadata.matricula)
+          );
+
+          const grupo = ((data.user.user_metadata?.grupo || profile?.grupo || profile?.clase || 'sabado') as GroupId);
+          const matricula = data.user.user_metadata?.matricula || profile?.matricula || '';
+          const nombre = data.user.user_metadata?.nombre || profile?.nombre || emailToAuth;
+          const username = data.user.user_metadata?.username || profile?.username || emailToAuth.split('@')[0];
+
+          return {
+            success: true,
+            user: {
+              id: profile?.id || data.user.id,
+              username: username,
+              email: emailToAuth,
+              nombre: nombre,
+              rol: 'alumno',
+              grupo: grupo,
+              clase: grupo,
+              matricula: matricula,
+              debeCambiarPassword: Boolean(data.user.user_metadata?.debe_cambiar_password ?? profile?.debeCambiarPassword ?? true),
+            },
+          };
+        } else if (error && cleanIdentifier.includes('@')) {
+          // Si el usuario escribió un correo explícito y falló
+          const msg = error.message.toLowerCase();
+          return {
+            success: false,
+            error: msg.includes('invalid') || msg.includes('credentials') ? 'Correo o contraseña incorrectos' : error.message,
+          };
+        }
+      } catch (authErr: any) {
+        console.warn('Error en Supabase Auth, intentando fallback:', authErr);
+      }
+    }
+
+    // 3. Fallback a RPC login_alumno si existe (para logins por usuario/matrícula o cuentas legacy)
     try {
       const { data, error } = await supabase.rpc('login_alumno', {
         p_username: cleanIdentifier,
         p_password: cleanPass,
       });
 
-      if (error) {
-        return { success: false, error: error.message };
+      if (!error && data && data.ok) {
+        return {
+          success: true,
+          user: {
+            id: data.alumno_id,
+            username: data.username,
+            email: data.email || undefined,
+            nombre: data.nombre_completo,
+            rol: 'alumno',
+            grupo: ((data.clase || data.grupo) as GroupId) || 'sabado',
+            clase: ((data.clase || data.grupo) as GroupId) || 'sabado',
+            matricula: data.matricula,
+            debeCambiarPassword: Boolean(data.debe_cambiar_password),
+          },
+        };
       }
-
-      if (!data || !data.ok) {
-        return { success: false, error: data?.error || 'Usuario o contraseña incorrectos' };
-      }
-
-      return {
-        success: true,
-        user: {
-          id: data.alumno_id,
-          username: data.username,
-          email: data.email || undefined,
-          nombre: data.nombre_completo,
-          rol: 'alumno',
-          grupo: ((data.clase || data.grupo) as GroupId) || 'sabado',
-          clase: ((data.clase || data.grupo) as GroupId) || 'sabado',
-          matricula: data.matricula,
-          debeCambiarPassword: Boolean(data.debe_cambiar_password),
-        },
-      };
-    } catch (err: any) {
-      return {
-        success: false,
-        error: err?.message || 'Error de conexión con la base de datos',
-      };
+    } catch (rpcErr) {
+      console.warn('Fallo RPC login_alumno:', rpcErr);
     }
+  }
+
+  // 4. Fallback local offline
+  const localRes = loginWithKey(cleanIdentifier);
+  if (localRes.success && localRes.user) {
+    return { success: true, user: localRes.user };
   }
 
   return {
     success: false,
-    error: 'Supabase no está configurado aún. Configura tu archivo .env.',
+    error: 'Usuario, correo o contraseña incorrectos.',
   };
 }
 
 /**
  * Cambio de contraseña del alumno (desactiva debe_cambiar_password)
+ * Actualiza tanto en Supabase Auth nativo como en RPC si está configurado.
  */
 export async function changeStudentPassword(alumnoId: string, nuevaPass: string): Promise<{ success: boolean; error?: string }> {
   if (nuevaPass.trim().length < 8) {
@@ -173,23 +235,34 @@ export async function changeStudentPassword(alumnoId: string, nuevaPass: string)
   }
 
   if (isSupabaseConfigured() && supabase) {
+    // 1. Si hay sesión activa en Supabase Auth, actualizar con updateUser
+    try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (sessionData?.session?.user) {
+        const { error } = await supabase.auth.updateUser({
+          password: nuevaPass.trim(),
+          data: { debe_cambiar_password: false },
+        });
+        if (!error) {
+          return { success: true };
+        }
+      }
+    } catch (e) {
+      console.warn('Error en supabase.auth.updateUser:', e);
+    }
+
+    // 2. Intentar vía RPC cambiar_password
     try {
       const { data, error } = await supabase.rpc('cambiar_password', {
         p_alumno_id: alumnoId,
         p_nueva: nuevaPass.trim(),
       });
 
-      if (error) {
-        return { success: false, error: error.message };
+      if (!error && data?.ok) {
+        return { success: true };
       }
-
-      if (!data || !data.ok) {
-        return { success: false, error: data?.error || 'Error al cambiar contraseña' };
-      }
-
-      return { success: true };
     } catch (err: any) {
-      return { success: false, error: err?.message || 'Error de conexión' };
+      console.warn('Error en RPC cambiar_password:', err);
     }
   }
 
@@ -197,7 +270,7 @@ export async function changeStudentPassword(alumnoId: string, nuevaPass: string)
 }
 
 /**
- * Consulta la lista real de alumnos desde Supabase (vía RPC o tabla directa).
+ * Consulta la lista real de alumnos desde Supabase con tolerancia a esquemas sin columna email.
  */
 export async function fetchStudentsFromSupabase(): Promise<PortalUser[] | null> {
   if (!isSupabaseConfigured() || !supabase) return null;
@@ -209,31 +282,101 @@ export async function fetchStudentsFromSupabase(): Promise<PortalUser[] | null> 
 
     // 2. Fallback a consulta directa sobre la tabla si la RPC no existe aún
     if (!data) {
-      const { data: tableData, error: tableError } = await supabase
+      let { data: tableData, error: tableError } = await supabase
         .from('alumnos')
         .select('id, username, email, nombre_completo, clase, grupo, matricula, debe_cambiar_password')
         .eq('activo', true)
         .order('matricula', { ascending: true });
 
+      // Si la columna email aún no existe en la tabla remota de Supabase, consultar sin esa columna
+      if (tableError && tableError.message?.toLowerCase().includes('email')) {
+        const fallback = await supabase
+          .from('alumnos')
+          .select('id, username, nombre_completo, clase, grupo, matricula, debe_cambiar_password')
+          .eq('activo', true)
+          .order('matricula', { ascending: true });
+        tableData = fallback.data;
+        tableError = fallback.error;
+      }
+
       if (tableError || !tableData) throw tableError;
       data = tableData;
     }
 
-    return data.map((item: any) => ({
-      id: item.id,
-      username: item.username,
-      email: item.email || undefined,
-      nombre: item.nombre_completo,
-      rol: 'alumno' as const,
-      grupo: ((item.clase || item.grupo) as GroupId) || 'sabado',
-      clase: ((item.clase || item.grupo) as GroupId) || 'sabado',
-      matricula: item.matricula,
-      debeCambiarPassword: Boolean(item.debe_cambiar_password),
-    }));
+    const db = getPortalDB();
+    return data.map((item: any) => {
+      // Si el item no traía email, buscarlo en la base local del portal
+      const localMatch = db.usuarios.find(u =>
+        (u.username && u.username.toLowerCase() === item.username?.toLowerCase()) ||
+        (u.matricula && u.matricula.toLowerCase() === item.matricula?.toLowerCase())
+      );
+
+      return {
+        id: item.id,
+        username: item.username,
+        email: item.email || localMatch?.email || undefined,
+        nombre: item.nombre_completo,
+        rol: 'alumno' as const,
+        grupo: ((item.clase || item.grupo) as GroupId) || 'sabado',
+        clase: ((item.clase || item.grupo) as GroupId) || 'sabado',
+        matricula: item.matricula,
+        debeCambiarPassword: Boolean(item.debe_cambiar_password),
+      };
+    });
   } catch (e) {
     console.warn('Error al obtener alumnos desde Supabase:', e);
     return null;
   }
+}
+
+/**
+ * Registra o aprovisiona a los alumnos en el sistema nativo de Supabase Auth (auth.users).
+ * Permite que los alumnos inicien sesión directamente con supabase.auth.signInWithPassword.
+ */
+export async function provisionStudentsInSupabaseAuth(
+  students: Array<{ email: string; nombre: string; matricula?: string; username?: string; grupo?: string }>
+): Promise<{ provisioned: number; alreadyRegistered: number; errors: string[] }> {
+  const result = { provisioned: 0, alreadyRegistered: 0, errors: [] as string[] };
+  if (!isSupabaseConfigured() || !supabase) return result;
+
+  for (const st of students) {
+    if (!st.email) continue;
+    const cleanEmail = st.email.trim().toLowerCase();
+    const defaultPass = st.grupo === 'domingo' ? 'domcpi' : 'sabcpi';
+
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email: cleanEmail,
+        password: defaultPass,
+        options: {
+          data: {
+            nombre: st.nombre,
+            matricula: st.matricula || '',
+            username: st.username || cleanEmail.split('@')[0],
+            grupo: st.grupo || 'sabado',
+            clase: st.grupo || 'sabado',
+            rol: 'alumno',
+            debe_cambiar_password: true,
+          },
+        },
+      });
+
+      if (error) {
+        const msg = error.message.toLowerCase();
+        if (msg.includes('already') || msg.includes('registered') || msg.includes('exists')) {
+          result.alreadyRegistered++;
+        } else {
+          result.errors.push(`${cleanEmail}: ${error.message}`);
+        }
+      } else if (data?.user) {
+        result.provisioned++;
+      }
+    } catch (err: any) {
+      result.errors.push(`${cleanEmail}: ${err?.message || 'Error de red'}`);
+    }
+  }
+
+  return result;
 }
 
 /**
