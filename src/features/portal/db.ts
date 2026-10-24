@@ -1,6 +1,6 @@
-import type { PortalDB, PortalUser, GroupId, SessionState, TareaSemanal } from './types';
+import type { PortalDB, PortalUser, GroupId, SessionState, TareaSemanal, CsvImportResult } from './types';
 import { sanitizeWeekNumber } from '../../utils/security';
-export type { GroupId, PortalUser, PortalDB, SessionState, TareaSemanal } from './types';
+export type { GroupId, PortalUser, PortalDB, SessionState, TareaSemanal, CsvImportResult } from './types';
 
 export const SEED_PORTAL_DB: PortalDB = {
   meta: {
@@ -198,6 +198,13 @@ export function loginWithKey(rawKey: string): { success: boolean; user?: PortalU
     }
   }
 
+  // Por correo electrónico institucional o personal
+  const byEmail = db.usuarios.find(u => u.email?.toLowerCase() === key);
+  if (byEmail) {
+    setSessionUser(byEmail.id);
+    return { success: true, user: byEmail };
+  }
+
   // Por nombre de usuario (ej. erandi.alvarado, camila.lopez)
   const byUsername = db.usuarios.find(u => u.username?.toLowerCase() === key);
   if (byUsername) {
@@ -381,6 +388,155 @@ export function subscribePortal(cb: (db: PortalDB, user: PortalUser | null) => v
   return () => {
     listeners = listeners.filter(l => l !== cb);
   };
+}
+
+export function importStudentsFromCsv(
+  csvText: string,
+  options: { overwriteExisting?: boolean } = {}
+): CsvImportResult {
+  const overwrite = Boolean(options.overwriteExisting);
+  const result: CsvImportResult = {
+    totalRows: 0,
+    processed: 0,
+    updated: [],
+    skippedAlreadyHasEmail: [],
+    skippedEmptyEmail: [],
+    skippedNotFound: [],
+    errors: [],
+  };
+
+  if (!csvText || typeof csvText !== 'string') {
+    result.errors.push({ row: 0, error: 'El contenido del archivo CSV está vacío.' });
+    return result;
+  }
+
+  const rawLines = csvText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  if (rawLines.length === 0) {
+    result.errors.push({ row: 0, error: 'El archivo CSV no contiene registros.' });
+    return result;
+  }
+
+  const headerLine = rawLines[0];
+  const separator = headerLine.includes(';') && !headerLine.includes(',') ? ';' : ',';
+
+  const parseRow = (line: string): string[] => {
+    const fields: string[] = [];
+    let current = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+      if (char === '"' || char === "'") {
+        inQuotes = !inQuotes;
+      } else if (char === separator && !inQuotes) {
+        fields.push(current.trim().replace(/^["']|["']$/g, ''));
+        current = '';
+      } else {
+        current += char;
+      }
+    }
+    fields.push(current.trim().replace(/^["']|["']$/g, ''));
+    return fields;
+  };
+
+  const headers = parseRow(headerLine).map(h => h.toLowerCase().trim());
+  const colMatricula = headers.findIndex(h => h.includes('matricula') || h.includes('clave'));
+  const colUsuario = headers.findIndex(h => h.includes('usuario') || h.includes('username') || h.includes('user'));
+  const colNombre = headers.findIndex(h => h.includes('nombre') || h.includes('alumno'));
+  const colCorreo = headers.findIndex(h => h.includes('correo para ingresar') || h.includes('correo') || h.includes('email'));
+  const colRepite = headers.findIndex((h, idx) => idx !== colCorreo && (h.includes('repite') || h.includes('confirmar')));
+
+  if (colMatricula === -1 && colUsuario === -1) {
+    result.errors.push({ row: 1, error: 'No se encontró columna de Matrícula ni de Usuario en el encabezado.' });
+    return result;
+  }
+
+  if (colCorreo === -1) {
+    result.errors.push({ row: 1, error: 'No se encontró columna de Correo en el encabezado.' });
+    return result;
+  }
+
+  const db = getPortalDB();
+  let hasChanges = false;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  for (let i = 1; i < rawLines.length; i++) {
+    result.totalRows++;
+    const rowNum = i + 1;
+    const row = parseRow(rawLines[i]);
+    if (row.length === 0 || row.every(cell => !cell)) {
+      continue;
+    }
+
+    const matriculaVal = colMatricula !== -1 && row[colMatricula] ? row[colMatricula].trim() : '';
+    const usuarioVal = colUsuario !== -1 && row[colUsuario] ? row[colUsuario].trim().toLowerCase() : '';
+    const nombreVal = colNombre !== -1 && row[colNombre] ? row[colNombre].trim() : '';
+    const correoVal = colCorreo !== -1 && row[colCorreo] ? row[colCorreo].trim().toLowerCase() : '';
+    const repiteVal = colRepite !== -1 && row[colRepite] ? row[colRepite].trim().toLowerCase() : '';
+
+    result.processed++;
+
+    const alumno = db.usuarios.find(u => {
+      if (u.rol !== 'alumno') return false;
+      if (matriculaVal && u.matricula && u.matricula.toLowerCase() === matriculaVal.toLowerCase()) return true;
+      if (usuarioVal && u.username && u.username.toLowerCase() === usuarioVal) return true;
+      return false;
+    });
+
+    if (!alumno) {
+      result.skippedNotFound.push({ matricula: matriculaVal, username: usuarioVal, nombre: nombreVal });
+      continue;
+    }
+
+    if (!correoVal) {
+      result.skippedEmptyEmail.push({
+        matricula: alumno.matricula || matriculaVal,
+        username: alumno.username || usuarioVal,
+        nombre: alumno.nombre,
+      });
+      continue;
+    }
+
+    if (!emailRegex.test(correoVal)) {
+      result.errors.push({
+        row: rowNum,
+        error: `El correo "${correoVal}" de ${alumno.nombre} tiene un formato inválido.`,
+      });
+      continue;
+    }
+
+    if (repiteVal && repiteVal !== correoVal) {
+      result.errors.push({
+        row: rowNum,
+        error: `En la fila de ${alumno.nombre}, el correo "${correoVal}" no coincide con la repetición "${repiteVal}".`,
+      });
+      continue;
+    }
+
+    if (alumno.email && !overwrite) {
+      result.skippedAlreadyHasEmail.push({
+        matricula: alumno.matricula || matriculaVal,
+        username: alumno.username || usuarioVal,
+        currentEmail: alumno.email,
+        csvEmail: correoVal,
+      });
+      continue;
+    }
+
+    alumno.email = correoVal;
+    hasChanges = true;
+    result.updated.push({
+      matricula: alumno.matricula || matriculaVal,
+      username: alumno.username || usuarioVal,
+      nombre: alumno.nombre,
+      email: correoVal,
+    });
+  }
+
+  if (hasChanges) {
+    savePortalDB(db);
+  }
+
+  return result;
 }
 
 function notify(): void {

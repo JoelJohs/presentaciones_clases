@@ -12,6 +12,7 @@ import {
   saveTask,
   exportDB,
   importDB,
+  importStudentsFromCsv,
   SEED_PORTAL_DB,
 } from './db';
 
@@ -115,5 +116,74 @@ describe('Portal DB & BaaS Data Layer', () => {
     expect(json).toContain('Capacitación Profesional en Informática');
     const imported = importDB(json);
     expect(imported).toBe(true);
+  });
+
+  describe('Migración Parcial e Idempotente de Correos (CSV)', () => {
+    const csvMuestra = `Matricula,Usuario,Nombre completo,Correo para ingresar,Repite tu correo
+SAB-01,erandi.alvarado,Erandi Alvarado Morales,erandi@cpi.edu,erandi@cpi.edu
+SAB-02,camila.lopez,Camila Lopez Valdez,,
+SAB-03,fernando.madrigal,Fernando Alexander Madrigal Saldaña,fernando@cpi.edu,fernando@cpi.edu`;
+
+    it('ejecuta migración parcial: asigna correo solo a quienes lo tienen en el CSV y omite celdas vacías', () => {
+      const res = importStudentsFromCsv(csvMuestra);
+      expect(res.totalRows).toBe(3);
+      expect(res.updated.length).toBe(2);
+      expect(res.skippedEmptyEmail.length).toBe(1);
+      expect(res.skippedEmptyEmail[0].username).toBe('camila.lopez');
+
+      const db = getPortalDB();
+      const erandi = db.usuarios.find(u => u.username === 'erandi.alvarado');
+      const camila = db.usuarios.find(u => u.username === 'camila.lopez');
+      const fernando = db.usuarios.find(u => u.username === 'fernando.madrigal');
+
+      expect(erandi?.email).toBe('erandi@cpi.edu');
+      expect(fernando?.email).toBe('fernando@cpi.edu');
+      expect(camila?.email).toBeUndefined();
+    });
+
+    it('es idempotente: si se vuelve a usar el CSV, omite los que ya tienen correo y solo coloca los pendientes', () => {
+      // 1. Primera pasada
+      importStudentsFromCsv(csvMuestra);
+
+      // 2. Segunda pasada con un CSV donde Camila ya puso su correo
+      const csvSegundaPasada = `Matricula,Usuario,Nombre completo,Correo para ingresar,Repite tu correo
+SAB-01,erandi.alvarado,Erandi Alvarado Morales,erandi.nuevo@cpi.edu,erandi.nuevo@cpi.edu
+SAB-02,camila.lopez,Camila Lopez Valdez,camila@cpi.edu,camila@cpi.edu
+SAB-03,fernando.madrigal,Fernando Alexander Madrigal Saldaña,fernando@cpi.edu,fernando@cpi.edu`;
+
+      const resSegunda = importStudentsFromCsv(csvSegundaPasada);
+
+      // Erandi y Fernando ya tenían correo, por lo que se omiten y conservan su correo inicial
+      expect(resSegunda.skippedAlreadyHasEmail.length).toBe(2);
+      expect(resSegunda.updated.length).toBe(1);
+      expect(resSegunda.updated[0].username).toBe('camila.lopez');
+      expect(resSegunda.updated[0].email).toBe('camila@cpi.edu');
+
+      const db = getPortalDB();
+      const erandi = db.usuarios.find(u => u.username === 'erandi.alvarado');
+      const camila = db.usuarios.find(u => u.username === 'camila.lopez');
+
+      expect(erandi?.email).toBe('erandi@cpi.edu'); // Conserva el original
+      expect(camila?.email).toBe('camila@cpi.edu'); // Recibe su correo nuevo
+    });
+
+    it('permite login por correo una vez asignado', () => {
+      importStudentsFromCsv(csvMuestra);
+      const loginRes = loginWithKey('erandi@cpi.edu');
+      expect(loginRes.success).toBe(true);
+      expect(loginRes.user?.username).toBe('erandi.alvarado');
+      expect(getCurrentUser()?.nombre).toBe('Erandi Alvarado Morales');
+    });
+
+    it('permite sobreescribir correos si se activa la opción overwriteExisting', () => {
+      importStudentsFromCsv(csvMuestra);
+
+      const csvSobrescribir = `Matricula,Usuario,Nombre completo,Correo para ingresar,Repite tu correo
+SAB-01,erandi.alvarado,Erandi Alvarado Morales,erandi.actualizado@cpi.edu,erandi.actualizado@cpi.edu`;
+
+      const res = importStudentsFromCsv(csvSobrescribir, { overwriteExisting: true });
+      expect(res.updated.length).toBe(1);
+      expect(getPortalDB().usuarios.find(u => u.username === 'erandi.alvarado')?.email).toBe('erandi.actualizado@cpi.edu');
+    });
   });
 });

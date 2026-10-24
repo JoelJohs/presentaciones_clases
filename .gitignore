@@ -31,4 +31,7 @@ __pycache__/
 
 # local data
 lista_correos_alumnos.csv
+alumno-correo*.csv
+src/data/alumnos_correos.json
+supabase/migracion_correos_alumnos_data.sql
 INSTRUCCIONES_ALUMNOS_Y_ADMIN.txt

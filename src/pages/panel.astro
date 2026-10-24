@@ -5,6 +5,16 @@ import { getNavigationStructure } from '../utils/navigation';
 import { Icon } from 'astro-icon/components';
 
 import { getTodasLasSemanas } from '../data/plan-estudios';
+import fs from 'node:fs';
+import path from 'node:path';
+
+let defaultCsvContent = '';
+try {
+  const csvPath = path.resolve(process.cwd(), 'lista_correos_alumnos.csv');
+  if (fs.existsSync(csvPath)) {
+    defaultCsvContent = fs.readFileSync(csvPath, 'utf-8');
+  }
+} catch (e) {}
 
 const lecciones = await getCollection('lecciones');
 const nav = getNavigationStructure(lecciones);
@@ -217,6 +227,93 @@ const leccionesData = lecciones
         </div>
       </div>
 
+      <!-- Migración y Asignación de Correos de Alumnos (CSV) -->
+      <div class="p-6 rounded-2xl border border-brand-border bg-white dark:bg-brand-sidebar-bg space-y-4 shadow-xs">
+        <div class="flex items-center justify-between flex-wrap gap-3">
+          <div class="flex items-center gap-2.5">
+            <div class="h-8 w-8 rounded-lg bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center">
+              <Icon name="lucide:mail-plus" class="h-4 w-4" />
+            </div>
+            <div>
+              <h2 class="text-sm font-bold text-brand-text">Migración y Carga de Correos de Alumnos (CSV)</h2>
+              <p class="text-xs text-brand-muted">Importa correos para habilitar login institucional de forma parcial e incremental.</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-mono font-medium px-2.5 py-1 rounded-lg bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800">
+              Migración Parcial Idempotente
+            </span>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-xl border border-brand-border bg-brand-callout-bg/50 space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="space-y-1">
+              <span class="text-xs font-bold text-brand-text">Cargar listado de correos (CSV):</span>
+              <p class="text-[11px] text-brand-muted">
+                Detecta columnas <code>Matricula</code>, <code>Usuario</code> y <code>Correo para ingresar</code>. Omite automáticamente a quienes ya tienen correo o lo tienen vacío.
+              </p>
+            </div>
+
+            <div class="flex items-center gap-2 flex-wrap">
+              <label class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-brand-primary hover:bg-brand-accent text-white text-xs font-semibold transition-all cursor-pointer shadow-xs">
+                <Icon name="lucide:upload" class="h-4 w-4" />
+                <span>Cargar archivo .CSV</span>
+                <input type="file" id="input-csv-file" accept=".csv,text/csv" class="hidden" />
+              </label>
+
+              <button
+                type="button"
+                id="btn-load-default-csv"
+                class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-brand-border bg-white dark:bg-brand-sidebar-bg hover:border-brand-primary text-brand-text text-xs font-semibold transition-all cursor-pointer"
+                title="Cargar el archivo lista_correos_alumnos.csv detectado en el repositorio"
+              >
+                <Icon name="lucide:file-spreadsheet" class="h-3.5 w-3.5 text-brand-primary" />
+                <span>Cargar lista_correos_alumnos.csv</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 pt-1 text-xs">
+            <label class="inline-flex items-center gap-2 cursor-pointer text-brand-muted select-none">
+              <input type="checkbox" id="check-overwrite-emails" class="rounded border-brand-border text-brand-primary focus:ring-brand-primary" />
+              <span>Sobreescribir correos en alumnos que ya tenían uno asignado</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Feedback y resumen de migración -->
+        <div id="csv-migration-summary" class="hidden p-4 rounded-xl border border-emerald-300 dark:border-emerald-800 bg-emerald-50/60 dark:bg-emerald-950/30 space-y-3">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div class="flex items-center gap-2">
+              <Icon name="lucide:check-circle-2" class="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+              <span class="text-xs font-bold text-emerald-900 dark:text-emerald-200" id="csv-summary-title">Resultado de la Migración Parcial</span>
+            </div>
+            <button type="button" id="btn-close-csv-summary" class="text-xs text-brand-muted hover:text-brand-text cursor-pointer">Cerrar</button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 text-xs">
+            <div class="p-2.5 rounded-lg border border-emerald-200 dark:border-emerald-800 bg-white dark:bg-brand-sidebar-bg">
+              <span class="text-[10px] uppercase font-bold text-emerald-700 dark:text-emerald-300 block">Actualizados con correo</span>
+              <span id="stat-updated-count" class="text-lg font-bold text-emerald-700 dark:text-emerald-300">0</span>
+            </div>
+            <div class="p-2.5 rounded-lg border border-brand-border bg-white dark:bg-brand-sidebar-bg">
+              <span class="text-[10px] uppercase font-bold text-brand-muted block">Omitidos (ya tenían correo)</span>
+              <span id="stat-skipped-has-count" class="text-lg font-bold text-brand-text">0</span>
+            </div>
+            <div class="p-2.5 rounded-lg border border-amber-200 dark:border-amber-800 bg-white dark:bg-brand-sidebar-bg">
+              <span class="text-[10px] uppercase font-bold text-amber-700 dark:text-amber-300 block">Pendientes (sin correo en CSV)</span>
+              <span id="stat-skipped-empty-count" class="text-lg font-bold text-amber-700 dark:text-amber-300">0</span>
+            </div>
+          </div>
+
+          <div id="csv-migration-log" class="text-[11px] font-mono text-brand-muted space-y-1 max-h-36 overflow-y-auto pt-1">
+            <!-- Detalles de cada fila procesada -->
+          </div>
+        </div>
+      </div>
+
       <!-- Directorio de Alumnos y Credenciales de Acceso -->
       <div class="p-6 rounded-2xl border border-brand-border bg-white dark:bg-brand-sidebar-bg space-y-4 shadow-xs">
         <div class="flex items-center justify-between flex-wrap gap-3">
@@ -226,7 +323,7 @@ const leccionesData = lecciones
             </div>
             <div>
               <h2 class="text-sm font-bold text-brand-text">Directorio de Alumnos y Credenciales</h2>
-              <p class="text-xs text-brand-muted">Consulta el nombre de usuario y contraseña provisional para cada alumno</p>
+              <p class="text-xs text-brand-muted">Consulta el nombre de usuario, correo y contraseña provisional para cada alumno</p>
             </div>
           </div>
 
@@ -243,6 +340,7 @@ const leccionesData = lecciones
                 <tr>
                   <th class="py-2.5 px-3">Estudiante</th>
                   <th class="py-2.5 px-3">Usuario (Login)</th>
+                  <th class="py-2.5 px-3">Correo para Ingresar</th>
                   <th class="py-2.5 px-3 text-center">Clave / Matrícula</th>
                   <th class="py-2.5 px-3 text-center">Clase</th>
                   <th class="py-2.5 px-3 text-right">Copiar</th>
@@ -311,11 +409,12 @@ const leccionesData = lecciones
   <!-- Datos del Plan de Estudio y Lecciones para el cliente -->
   <script is:inline id="panel-semanas-json" type="application/json" set:html={JSON.stringify(todasLasSemanas)}></script>
   <script is:inline id="panel-lecciones-json" type="application/json" set:html={JSON.stringify(leccionesData)}></script>
+  <script is:inline id="panel-default-csv" type="text/plain" set:html={defaultCsvContent}></script>
 </Layout>
 
 <script>
-  import { getPortalDB, getCurrentUser, updateWeek, exportDB, importDB, savePortalDB, SEED_PORTAL_DB, syncRemoteGroups } from '../features/portal/db';
-  import { isSupabaseConfigured, fetchStudentsFromSupabase } from '../lib/supabase';
+  import { getPortalDB, getCurrentUser, updateWeek, exportDB, importDB, savePortalDB, SEED_PORTAL_DB, syncRemoteGroups, importStudentsFromCsv } from '../features/portal/db';
+  import { isSupabaseConfigured, fetchStudentsFromSupabase, batchSyncStudentEmails } from '../lib/supabase';
   import { escapeHtml } from '../utils/security';
 
   let isSyncingStudents = false;
@@ -476,7 +575,7 @@ const leccionesData = lecciones
     const studentsTbody = document.getElementById('panel-students-tbody');
     if (!studentsTbody) return;
     if (students.length === 0) {
-      studentsTbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-xs text-brand-muted">No hay alumnos registrados.</td></tr>`;
+      studentsTbody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-xs text-brand-muted">No hay alumnos registrados.</td></tr>`;
       return;
     }
     studentsTbody.innerHTML = students.map(st => `
@@ -484,6 +583,13 @@ const leccionesData = lecciones
         <td class="py-2.5 px-3 font-semibold text-brand-text">${escapeHtml(st.nombre)}</td>
         <td class="py-2.5 px-3">
           <code class="font-mono text-xs px-2 py-0.5 rounded bg-brand-border/40 text-brand-primary font-bold select-all">${escapeHtml(st.username || st.id)}</code>
+        </td>
+        <td class="py-2.5 px-3">
+          ${st.email ? `
+            <code class="font-mono text-xs px-2 py-0.5 rounded bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800/60 select-all">${escapeHtml(st.email)}</code>
+          ` : `
+            <span class="inline-flex items-center gap-1 text-[11px] font-medium text-amber-600 dark:text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full">Sin correo</span>
+          `}
         </td>
         <td class="py-2.5 px-3 text-center font-mono text-[11px] text-brand-muted">${escapeHtml(st.matricula || '—')}</td>
         <td class="py-2.5 px-3 text-center">
@@ -495,8 +601,9 @@ const leccionesData = lecciones
           <button
             type="button"
             data-copy-user="${escapeHtml(st.username || st.id)}"
-            class="btn-copy-user px-2 py-1 rounded-md text-[11px] font-semibold border border-brand-border bg-white dark:bg-brand-sidebar-bg hover:border-brand-primary text-brand-text transition-all"
-            title="Copiar usuario y contraseña provisional"
+            data-copy-email="${escapeHtml(st.email || '')}"
+            class="btn-copy-user px-2 py-1 rounded-md text-[11px] font-semibold border border-brand-border bg-white dark:bg-brand-sidebar-bg hover:border-brand-primary text-brand-text transition-all cursor-pointer"
+            title="Copiar credenciales de acceso"
           >
             Copiar datos
           </button>
@@ -507,7 +614,8 @@ const leccionesData = lecciones
     studentsTbody.querySelectorAll<HTMLButtonElement>('.btn-copy-user').forEach(btn => {
       btn.addEventListener('click', () => {
         const userStr = btn.dataset.copyUser || '';
-        const textToCopy = `Usuario: ${userStr}\nContraseña provisional: sabcpi`;
+        const emailStr = btn.dataset.copyEmail ? `\nCorreo: ${btn.dataset.copyEmail}` : '';
+        const textToCopy = `Usuario: ${userStr}${emailStr}\nContraseña provisional: sabcpi`;
         navigator.clipboard.writeText(textToCopy).then(() => {
           const prevText = btn.textContent;
           btn.textContent = '¡Copiado!';
@@ -519,6 +627,68 @@ const leccionesData = lecciones
         });
       });
     });
+  }
+
+  // Procesamiento del CSV con lógica de migración parcial e idempotente
+  async function processCsvContent(csvText: string) {
+    const overwriteEl = document.getElementById('check-overwrite-emails') as HTMLInputElement | null;
+    const overwrite = Boolean(overwriteEl?.checked);
+
+    const summaryBox = document.getElementById('csv-migration-summary');
+    const statUpdated = document.getElementById('stat-updated-count');
+    const statSkippedHas = document.getElementById('stat-skipped-has-count');
+    const statSkippedEmpty = document.getElementById('stat-skipped-empty-count');
+    const logBox = document.getElementById('csv-migration-log');
+
+    const result = importStudentsFromCsv(csvText, { overwriteExisting: overwrite });
+
+    if (statUpdated) statUpdated.textContent = String(result.updated.length);
+    if (statSkippedHas) statSkippedHas.textContent = String(result.skippedAlreadyHasEmail.length);
+    if (statSkippedEmpty) statSkippedEmpty.textContent = String(result.skippedEmptyEmail.length);
+
+    if (logBox) {
+      const logLines: string[] = [];
+      if (result.updated.length > 0) {
+        logLines.push(`[ACTUALIZADOS CON CORREO NUEVO: ${result.updated.length}]`);
+        result.updated.forEach(u => {
+          logLines.push(`  ✓ ${u.matricula || u.username}: ${u.nombre} -> ${u.email}`);
+        });
+      }
+      if (result.skippedAlreadyHasEmail.length > 0) {
+        logLines.push(`\n[OMITIDOS - YA TENÍAN CORREO: ${result.skippedAlreadyHasEmail.length}]`);
+        result.skippedAlreadyHasEmail.forEach(s => {
+          logLines.push(`  ⊘ ${s.matricula || s.username}: conserva ${s.currentEmail}`);
+        });
+      }
+      if (result.skippedEmptyEmail.length > 0) {
+        logLines.push(`\n[OMITIDOS - PENDIENTES SIN CORREO EN CSV: ${result.skippedEmptyEmail.length}]`);
+        result.skippedEmptyEmail.forEach(e => {
+          logLines.push(`  - ${e.matricula || e.username}: ${e.nombre} (celda vacía)`);
+        });
+      }
+      if (result.errors.length > 0) {
+        logLines.push(`\n[ERRORES O ADVERTENCIAS: ${result.errors.length}]`);
+        result.errors.forEach(err => {
+          logLines.push(`  ⚠ Fila ${err.row}: ${err.error}`);
+        });
+      }
+      logBox.textContent = logLines.join('\n');
+    }
+
+    summaryBox?.classList.remove('hidden');
+
+    // Sincronizar hacia Supabase si está disponible
+    if (isSupabaseConfigured() && result.updated.length > 0) {
+      try {
+        await batchSyncStudentEmails(result.updated);
+      } catch (err) {
+        console.warn('Error al sincronizar correos en Supabase:', err);
+      }
+    }
+
+    // Refrescar tabla visual de alumnos
+    const db = getPortalDB();
+    renderStudentsTable(db.usuarios.filter(u => u.rol === 'alumno'));
   }
 
   // Carga inicial sincronizada sin bucles de eventos
@@ -654,6 +824,45 @@ const leccionesData = lecciones
       initPanel();
       alert('Base restablecida con éxito.');
     }
+  });
+
+  // Eventos de Migración de Correos (CSV)
+  const inputCsv = document.getElementById('input-csv-file') as HTMLInputElement | null;
+  inputCsv?.addEventListener('change', (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          processCsvContent(reader.result);
+        }
+      };
+      reader.readAsText(file);
+    }
+  });
+
+  document.getElementById('btn-load-default-csv')?.addEventListener('click', async () => {
+    const embeddedCsv = document.getElementById('panel-default-csv')?.textContent?.trim();
+    if (embeddedCsv) {
+      processCsvContent(embeddedCsv);
+      return;
+    }
+
+    try {
+      const res = await fetch('/lista_correos_alumnos.csv');
+      if (res.ok) {
+        const text = await res.text();
+        processCsvContent(text);
+      } else {
+        alert('No se pudo cargar el archivo por red. Usa el botón "Cargar archivo .CSV".');
+      }
+    } catch {
+      alert('Selecciona el archivo manualmente con "Cargar archivo .CSV".');
+    }
+  });
+
+  document.getElementById('btn-close-csv-summary')?.addEventListener('click', () => {
+    document.getElementById('csv-migration-summary')?.classList.add('hidden');
   });
 
   initialSync();

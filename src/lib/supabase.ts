@@ -117,14 +117,14 @@ export async function teacherLogout(): Promise<void> {
  * Iniciar sesión de alumno mediante RPC 'login_alumno'.
  * Compara el hash bcrypt dentro de Postgres y maneja intentos fallidos.
  */
-export async function studentLogin(username: string, pass: string): Promise<SupabaseAuthResult> {
-  const cleanUsername = username.trim().toLowerCase();
+export async function studentLogin(usernameOrEmail: string, pass: string): Promise<SupabaseAuthResult> {
+  const cleanIdentifier = usernameOrEmail.trim().toLowerCase();
   const cleanPass = pass.trim();
 
   if (isSupabaseConfigured() && supabase) {
     try {
       const { data, error } = await supabase.rpc('login_alumno', {
-        p_username: cleanUsername,
+        p_username: cleanIdentifier,
         p_password: cleanPass,
       });
 
@@ -141,6 +141,7 @@ export async function studentLogin(username: string, pass: string): Promise<Supa
         user: {
           id: data.alumno_id,
           username: data.username,
+          email: data.email || undefined,
           nombre: data.nombre_completo,
           rol: 'alumno',
           grupo: ((data.clase || data.grupo) as GroupId) || 'sabado',
@@ -210,7 +211,7 @@ export async function fetchStudentsFromSupabase(): Promise<PortalUser[] | null> 
     if (!data) {
       const { data: tableData, error: tableError } = await supabase
         .from('alumnos')
-        .select('id, username, nombre_completo, clase, grupo, matricula, debe_cambiar_password')
+        .select('id, username, email, nombre_completo, clase, grupo, matricula, debe_cambiar_password')
         .eq('activo', true)
         .order('matricula', { ascending: true });
 
@@ -221,6 +222,7 @@ export async function fetchStudentsFromSupabase(): Promise<PortalUser[] | null> 
     return data.map((item: any) => ({
       id: item.id,
       username: item.username,
+      email: item.email || undefined,
       nombre: item.nombre_completo,
       rol: 'alumno' as const,
       grupo: ((item.clase || item.grupo) as GroupId) || 'sabado',
@@ -232,6 +234,57 @@ export async function fetchStudentsFromSupabase(): Promise<PortalUser[] | null> 
     console.warn('Error al obtener alumnos desde Supabase:', e);
     return null;
   }
+}
+
+/**
+ * Actualiza el correo de un alumno en Supabase si aún no tiene o se sincroniza
+ */
+export async function updateRemoteStudentEmail(matriculaOrUsername: string, email: string): Promise<boolean> {
+  if (!isSupabaseConfigured() || !supabase) return false;
+  try {
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanId = matriculaOrUsername.trim().toLowerCase();
+    const { error } = await supabase
+      .from('alumnos')
+      .update({ email: cleanEmail })
+      .or(`username.eq.${cleanId},matricula.eq.${matriculaOrUsername.trim()}`);
+    return !error;
+  } catch (e) {
+    console.warn('Error al actualizar correo en Supabase:', e);
+    return false;
+  }
+}
+
+/**
+ * Sincroniza en lote una lista de correos actualizados hacia Supabase
+ */
+export async function batchSyncStudentEmails(
+  updates: Array<{ matricula?: string; username?: string; email: string }>
+): Promise<{ successCount: number; errors: string[] }> {
+  const result = { successCount: 0, errors: [] as string[] };
+  if (!isSupabaseConfigured() || !supabase) return result;
+
+  for (const item of updates) {
+    try {
+      const cleanEmail = item.email.trim().toLowerCase();
+      let query = supabase.from('alumnos').update({ email: cleanEmail });
+      if (item.matricula) {
+        query = query.eq('matricula', item.matricula.trim());
+      } else if (item.username) {
+        query = query.eq('username', item.username.trim().toLowerCase());
+      }
+      const { error } = await query;
+      if (error) {
+        result.errors.push(`${item.matricula || item.username}: ${error.message}`);
+      } else {
+        result.successCount++;
+      }
+    } catch (err: any) {
+      result.errors.push(`${item.matricula || item.username}: ${err?.message || 'Error desconocido'}`);
+    }
+  }
+
+  return result;
 }
 
 /**

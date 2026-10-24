@@ -13,7 +13,8 @@
     "test": "vitest run",
     "check": "astro check",
     "scaffold": "bun run scripts/scaffold-curriculum.ts",
-    "generar-clases": "bun run scripts/generar-clases-base.ts"
+    "generar-clases": "bun run scripts/generar-clases-base.ts",
+    "migrar-correos": "bun run scripts/migrar-correos-csv.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.0",

@@ -22,6 +22,9 @@ create table if not exists public.alumnos (
   -- Username para login (único, insensible a mayúsculas y minúsculas: juan, maria.g, etc.)
   username citext unique not null check (username ~ '^[a-z0-9._-]{3,30}$'),
   
+  -- Correo electrónico institucional o personal para login alternativo
+  email citext unique,
+  
   -- Nombre completo para mostrar en la interfaz y en su boleta
   nombre_completo text not null check (char_length(nombre_completo) >= 3),
   
@@ -173,37 +176,33 @@ $$;
 grant execute on function public.obtener_grupos() to anon, authenticated;
 grant execute on function public.actualizar_semana_grupo(text, int) to anon, authenticated;
 
--- Función 1: Login del Alumno (verifica hash dentro de Postgres con anti brute-force)
+-- Función 1: Login del Alumno (verifica hash bcrypt dentro de Postgres; soporta username, email o matrícula; sin bloqueo de cuenta)
 create or replace function public.login_alumno(p_username text, p_password text)
 returns json
 language plpgsql security definer set search_path = public, extensions
 as $$
 declare
   v_alumno public.alumnos%rowtype;
+  v_clean text;
 begin
+  v_clean := lower(trim(p_username));
+
   select * into v_alumno from public.alumnos
-  where username = p_username and activo = true;
+  where (username = v_clean or email = v_clean or lower(matricula) = v_clean)
+    and activo = true
+  limit 1;
 
   if not found then
-    -- Quema tiempo equivalente para evitar enumeración de cuentas
     perform extensions.crypt(p_password, extensions.gen_salt('bf', 8));
     return json_build_object('ok', false, 'error', 'Usuario o contraseña incorrectos');
   end if;
 
-  if v_alumno.bloqueado_hasta is not null and v_alumno.bloqueado_hasta > now() then
-    return json_build_object('ok', false, 'error', 'Cuenta bloqueada temporalmente por intentos fallidos. Intenta más tarde.');
-  end if;
-
   if v_alumno.password_hash = extensions.crypt(p_password, v_alumno.password_hash) then
-    -- Login exitoso: restablece intentos fallidos
-    update public.alumnos
-      set intentos_fallidos = 0, bloqueado_hasta = null
-      where id = v_alumno.id;
-
     return json_build_object(
       'ok', true,
       'alumno_id', v_alumno.id,
       'username', v_alumno.username,
+      'email', v_alumno.email,
       'nombre_completo', v_alumno.nombre_completo,
       'clase', coalesce(v_alumno.clase, v_alumno.grupo),
       'grupo', coalesce(v_alumno.grupo, v_alumno.clase),
@@ -211,15 +210,6 @@ begin
       'debe_cambiar_password', v_alumno.debe_cambiar_password
     );
   else
-    -- Contraseña inválida: incrementa contador y bloquea tras 5 fallos
-    update public.alumnos
-      set intentos_fallidos = intentos_fallidos + 1,
-          bloqueado_hasta = case
-            when intentos_fallidos + 1 >= 5 then now() + interval '15 minutes'
-            else null
-          end
-      where id = v_alumno.id;
-
     return json_build_object('ok', false, 'error', 'Usuario o contraseña incorrectos');
   end if;
 end;
@@ -345,6 +335,7 @@ create or replace function public.obtener_alumnos()
 returns table (
   id uuid,
   username citext,
+  email citext,
   nombre_completo text,
   clase text,
   grupo text,
@@ -353,7 +344,7 @@ returns table (
 )
 language sql security definer set search_path = public
 as $$
-  select id, username, nombre_completo, clase, grupo, matricula, debe_cambiar_password
+  select id, username, email, nombre_completo, clase, grupo, matricula, debe_cambiar_password
   from public.alumnos
   where activo = true
   order by matricula asc;

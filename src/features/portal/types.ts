@@ -9,7 +9,18 @@ export interface PortalUser {
   clase?: GroupId;
   matricula?: string;
   username?: string;
+  email?: string;
   debeCambiarPassword?: boolean;
+}
+
+export interface CsvImportResult {
+  totalRows: number;
+  processed: number;
+  updated: Array<{ matricula: string; username: string; nombre: string; email: string }>;
+  skippedAlreadyHasEmail: Array<{ matricula: string; username: string; currentEmail: string; csvEmail: string }>;
+  skippedEmptyEmail: Array<{ matricula: string; username: string; nombre: string }>;
+  skippedNotFound: Array<{ matricula?: string; username?: string; nombre?: string }>;
+  errors: Array<{ row: number; error: string }>;
 }
 
 export interface GroupConfig {
