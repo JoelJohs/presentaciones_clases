@@ -41,10 +41,6 @@ create table if not exists public.alumnos (
   -- Matrícula o identificador de control escolar
   matricula text,
   
-  -- Control de seguridad anti fuerza bruta
-  intentos_fallidos int not null default 0,
-  bloqueado_hasta timestamptz,
-  
   activo boolean not null default true,
   created_at timestamptz not null default now()
 );
@@ -229,9 +225,7 @@ begin
 
   update public.alumnos
     set password_hash = extensions.crypt(p_nueva, extensions.gen_salt('bf', 10)),
-        debe_cambiar_password = false,
-        intentos_fallidos = 0,
-        bloqueado_hasta = null
+        debe_cambiar_password = false
     where id = p_alumno_id;
 
   if not found then

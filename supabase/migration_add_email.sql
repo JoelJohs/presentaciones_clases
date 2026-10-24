@@ -47,8 +47,9 @@ begin
 end;
 $$;
 
--- 2.1 Desbloquear inmediatamente a todos los alumnos existentes si quedaron bloqueados
-update public.alumnos set bloqueado_hasta = null, intentos_fallidos = 0;
+-- 2.1 Eliminar columnas de bloqueo de la tabla
+alter table public.alumnos drop column if exists intentos_fallidos;
+alter table public.alumnos drop column if exists bloqueado_hasta;
 
 -- 3. Actualizar función RPC obtener_alumnos para incluir email
 create or replace function public.obtener_alumnos()
