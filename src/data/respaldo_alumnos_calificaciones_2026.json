@@ -1,0 +1,403 @@
+{
+  "fecha_respaldo": "2026-10-25T01:48:59.153Z",
+  "escuela": "CPI",
+  "total_alumnos": 12,
+  "total_calificaciones": 33,
+  "alumnos": [
+    {
+      "id": "bd8444dd-ec00-4107-a313-791d45c53f32",
+      "username": "mariana.negrete",
+      "nombre_completo": "Mariana Guadalupe Negrete Aguilera",
+      "password_hash": "$2a$10$ySbRWa5aeGlPq7JDp6OJBuNoNQcJIXao4PWPbXKN9YzcTEpREsF7C",
+      "debe_cambiar_password": true,
+      "clase": "sabado",
+      "grupo": "sabado",
+      "matricula": "SAB-05",
+      "activo": true,
+      "created_at": "2026-09-22T04:49:04.793648+00:00"
+    },
+    {
+      "id": "6ac3fb22-a868-43b9-8323-7a4fc4500797",
+      "username": "camila.lopez",
+      "nombre_completo": "Camila Lopez Valdez",
+      "password_hash": "$2a$10$/Wc.1vYvxuMo3FEzFh6eguHeVmBUJEbvqAIoV.n/H1CYWfXphvsRa",
+      "debe_cambiar_password": true,
+      "clase": "sabado",
+      "grupo": "sabado",
+      "matricula": "SAB-02",
+      "activo": true,
+      "created_at": "2026-09-22T04:49:04.793648+00:00"
+    },
+    {
+      "id": "7e746df1-6fcd-41f0-a6ae-17175d77a538",
+      "username": "erika.maciel",
+      "nombre_completo": "Erika Maciel Hernández",
+      "password_hash": "$2a$10$xpaPgeoYT5dNlKT6Eop6PO.XQ2xyiWHSuKbJj606AvO6L73ouFHo6",
+      "debe_cambiar_password": true,
+      "clase": "sabado",
+      "grupo": "sabado",
+      "matricula": "SAB-12",
+      "activo": true,
+      "created_at": "2026-09-26T16:39:39.03377+00:00"
+    },
+    {
+      "id": "c123eebd-342c-4cb3-a460-147710d80438",
+      "username": "erandi.alvarado",
+      "nombre_completo": "Erandi Alvarado Morales",
+      "password_hash": "$2a$10$u8ahPZhbhIVQz/6b6QeIU.zpSFg5ARUba8t3pAqGdY9Rldrq4Axi.",
+      "debe_cambiar_password": true,
+      "clase": "sabado",
+      "grupo": "sabado",
+      "matricula": "SAB-01",
+      "activo": true,
+      "created_at": "2026-09-22T04:49:04.793648+00:00"
+    },
+    {
+      "id": "871be0f9-c9d7-428f-8f44-99df9576911c",
+      "username": "mateo.urueta",
+      "nombre_completo": "Mateo Urueta Nara",
+      "password_hash": "$2a$10$/uUunJ0Kh/OXQL95Gd4BWOfZNxyBECiipYvzjYJvEwyaXXoQopyqu",
+      "debe_cambiar_password": true,
+      "clase": "sabado",
+      "grupo": "sabado",
+      "matricula": "SAB-10",
+      "activo": true,
+      "created_at": "2026-09-22T04:49:04.793648+00:00"
+    },
+    {
+      "id": "715a2dd2-5b3e-4769-8e74-6f7583bb8a89",
+      "username": "jose.soto",
+      "nombre_completo": "Jose Eduardo Soto Zavala",
+      "password_hash": "$2a$10$Ot7gTuq1wWzyGH62esiwi.Myz2DzjTRlcMk/Xfc8DPkqJdYzjfU0m",
+      "debe_cambiar_password": true,
+      "clase": "sabado",
+      "grupo": "sabado",
+      "matricula": "SAB-08",
+      "activo": true,
+      "created_at": "2026-09-22T04:49:04.793648+00:00"
+    },
+    {
+      "id": "47be2400-3ecf-4fea-bf69-1044935b715f",
+      "username": "fernando.madrigal",
+      "nombre_completo": "Fernando Alexander Madrigal Saldaña",
+      "password_hash": "$2a$10$YGqW1v3ryqrrG4rRqIsbQ.3yqEyDCI7/x88daJbUJIqmY2681qILK",
+      "debe_cambiar_password": true,
+      "clase": "sabado",
+      "grupo": "sabado",
+      "matricula": "SAB-03",
+      "activo": true,
+      "created_at": "2026-09-22T04:49:04.793648+00:00"
+    },
+    {
+      "id": "e57d6aea-3b4c-4d91-93b5-1cbf49cf8e90",
+      "username": "helen.moreno",
+      "nombre_completo": "Helen Judith Moreno Bernal",
+      "password_hash": "$2a$10$qRiShv5cM07SoWxfLC4Iwu.CsBjRecLZMnYfyXZD856NJltiHfWfu",
+      "debe_cambiar_password": true,
+      "clase": "sabado",
+      "grupo": "sabado",
+      "matricula": "SAB-04",
+      "activo": true,
+      "created_at": "2026-09-22T04:49:04.793648+00:00"
+    },
+    {
+      "id": "c63abbb7-164f-48fa-bc3d-39a7dc712fc9",
+      "username": "alumno.domingo",
+      "nombre_completo": "Alumno Prueba (Domingo)",
+      "password_hash": "$2a$10$rBS6YF844Q2Zw0UOlgL.leyb.3K5MnPrCe8C7bCJ5Q2IkAa/dWWJq",
+      "debe_cambiar_password": true,
+      "clase": "domingo",
+      "grupo": "domingo",
+      "matricula": "DOM-01",
+      "activo": true,
+      "created_at": "2026-09-25T23:30:21.059979+00:00"
+    },
+    {
+      "id": "dbc8b370-fdcf-446a-8fcf-7ca1917c063d",
+      "username": "elizabeth.negrete",
+      "nombre_completo": "Elizabeth Negrete",
+      "password_hash": "$2a$10$OKb3a8jn5Se/66g5Pt1UUudPoC/65b4hO0Hb6TfkebvkzZ0mezOsq",
+      "debe_cambiar_password": true,
+      "clase": "sabado",
+      "grupo": "sabado",
+      "matricula": "SAB-06",
+      "activo": true,
+      "created_at": "2026-09-22T04:49:04.793648+00:00"
+    },
+    {
+      "id": "bef4170f-2c67-44ed-aca8-ba651d83162b",
+      "username": "ana.aguilera",
+      "nombre_completo": "Ana Jazmin Aguilera Alvarado",
+      "password_hash": "$2a$10$KArU5uu2V4d/0PVV1Whu3.0hgncWOp1fTv/l2tvmrCNuE/ZIfOBiu",
+      "debe_cambiar_password": true,
+      "clase": "sabado",
+      "grupo": "sabado",
+      "matricula": "SAB-09",
+      "activo": true,
+      "created_at": "2026-09-22T04:49:04.793648+00:00"
+    },
+    {
+      "id": "e1e9e091-687f-41c6-87cb-a57b41cfc006",
+      "username": "alejandro.rangel",
+      "nombre_completo": "Alejandro Rangel Valdez",
+      "password_hash": "$2a$10$vu9Hzmu4ep5sENpju2sbbukJqQPhXY8uoJ9eUppWMYheqma11yrFe",
+      "debe_cambiar_password": true,
+      "clase": "sabado",
+      "grupo": "sabado",
+      "matricula": "SAB-07",
+      "activo": true,
+      "created_at": "2026-09-22T04:49:04.793648+00:00"
+    }
+  ],
+  "calificaciones": [
+    {
+      "alumno_id": "c123eebd-342c-4cb3-a460-147710d80438",
+      "modulo_id": 1,
+      "calificacion": 8.8,
+      "subida_en": "2026-09-22T18:53:24.342424+00:00",
+      "actualizada_en": "2026-09-26T16:59:33.414036+00:00"
+    },
+    {
+      "alumno_id": "c123eebd-342c-4cb3-a460-147710d80438",
+      "modulo_id": 2,
+      "calificacion": 10,
+      "subida_en": "2026-09-22T18:53:26.588727+00:00",
+      "actualizada_en": "2026-09-26T16:59:33.454072+00:00"
+    },
+    {
+      "alumno_id": "c123eebd-342c-4cb3-a460-147710d80438",
+      "modulo_id": 3,
+      "calificacion": 10,
+      "subida_en": "2026-09-26T16:09:54.406522+00:00",
+      "actualizada_en": "2026-09-26T16:59:33.476853+00:00"
+    },
+    {
+      "alumno_id": "6ac3fb22-a868-43b9-8323-7a4fc4500797",
+      "modulo_id": 1,
+      "calificacion": 9.4,
+      "subida_en": "2026-09-22T18:53:29.28191+00:00",
+      "actualizada_en": "2026-09-26T16:59:33.531294+00:00"
+    },
+    {
+      "alumno_id": "6ac3fb22-a868-43b9-8323-7a4fc4500797",
+      "modulo_id": 2,
+      "calificacion": 10,
+      "subida_en": "2026-09-22T18:53:31.468659+00:00",
+      "actualizada_en": "2026-09-26T16:59:33.539235+00:00"
+    },
+    {
+      "alumno_id": "6ac3fb22-a868-43b9-8323-7a4fc4500797",
+      "modulo_id": 3,
+      "calificacion": 10,
+      "subida_en": "2026-09-26T16:09:54.646649+00:00",
+      "actualizada_en": "2026-09-26T16:59:33.60349+00:00"
+    },
+    {
+      "alumno_id": "47be2400-3ecf-4fea-bf69-1044935b715f",
+      "modulo_id": 2,
+      "calificacion": 10,
+      "subida_en": "2026-09-22T18:53:38.291969+00:00",
+      "actualizada_en": "2026-09-26T16:59:36.207187+00:00"
+    },
+    {
+      "alumno_id": "47be2400-3ecf-4fea-bf69-1044935b715f",
+      "modulo_id": 1,
+      "calificacion": 10,
+      "subida_en": "2026-09-22T18:53:35.695856+00:00",
+      "actualizada_en": "2026-09-26T16:59:36.211955+00:00"
+    },
+    {
+      "alumno_id": "47be2400-3ecf-4fea-bf69-1044935b715f",
+      "modulo_id": 3,
+      "calificacion": 10,
+      "subida_en": "2026-09-26T16:09:57.198749+00:00",
+      "actualizada_en": "2026-09-26T16:59:36.212749+00:00"
+    },
+    {
+      "alumno_id": "e57d6aea-3b4c-4d91-93b5-1cbf49cf8e90",
+      "modulo_id": 2,
+      "calificacion": 9.5,
+      "subida_en": "2026-09-22T18:53:45.105992+00:00",
+      "actualizada_en": "2026-09-26T16:59:36.478139+00:00"
+    },
+    {
+      "alumno_id": "e57d6aea-3b4c-4d91-93b5-1cbf49cf8e90",
+      "modulo_id": 1,
+      "calificacion": 8.2,
+      "subida_en": "2026-09-22T18:53:41.703576+00:00",
+      "actualizada_en": "2026-09-26T16:59:36.513417+00:00"
+    },
+    {
+      "alumno_id": "e57d6aea-3b4c-4d91-93b5-1cbf49cf8e90",
+      "modulo_id": 3,
+      "calificacion": 10,
+      "subida_en": "2026-09-26T16:10:04.644699+00:00",
+      "actualizada_en": "2026-09-26T16:59:36.561281+00:00"
+    },
+    {
+      "alumno_id": "bd8444dd-ec00-4107-a313-791d45c53f32",
+      "modulo_id": 1,
+      "calificacion": 7.7,
+      "subida_en": "2026-09-22T18:53:48.262422+00:00",
+      "actualizada_en": "2026-09-26T16:59:36.929969+00:00"
+    },
+    {
+      "alumno_id": "bd8444dd-ec00-4107-a313-791d45c53f32",
+      "modulo_id": 3,
+      "calificacion": 10,
+      "subida_en": "2026-09-26T16:10:06.98705+00:00",
+      "actualizada_en": "2026-09-26T16:59:36.932717+00:00"
+    },
+    {
+      "alumno_id": "bd8444dd-ec00-4107-a313-791d45c53f32",
+      "modulo_id": 2,
+      "calificacion": 8.7,
+      "subida_en": "2026-09-22T18:53:52.529143+00:00",
+      "actualizada_en": "2026-09-26T16:59:36.9339+00:00"
+    },
+    {
+      "alumno_id": "dbc8b370-fdcf-446a-8fcf-7ca1917c063d",
+      "modulo_id": 3,
+      "calificacion": 10,
+      "subida_en": "2026-09-26T16:10:10.466176+00:00",
+      "actualizada_en": "2026-09-26T16:59:37.345414+00:00"
+    },
+    {
+      "alumno_id": "dbc8b370-fdcf-446a-8fcf-7ca1917c063d",
+      "modulo_id": 1,
+      "calificacion": 6,
+      "subida_en": "2026-09-22T18:53:59.073592+00:00",
+      "actualizada_en": "2026-09-26T16:59:37.345221+00:00"
+    },
+    {
+      "alumno_id": "dbc8b370-fdcf-446a-8fcf-7ca1917c063d",
+      "modulo_id": 2,
+      "calificacion": 7.5,
+      "subida_en": "2026-09-22T18:54:02.912627+00:00",
+      "actualizada_en": "2026-09-26T16:59:37.34822+00:00"
+    },
+    {
+      "alumno_id": "e1e9e091-687f-41c6-87cb-a57b41cfc006",
+      "modulo_id": 1,
+      "calificacion": 10,
+      "subida_en": "2026-09-22T18:54:10.958252+00:00",
+      "actualizada_en": "2026-09-26T16:59:38.160186+00:00"
+    },
+    {
+      "alumno_id": "e1e9e091-687f-41c6-87cb-a57b41cfc006",
+      "modulo_id": 2,
+      "calificacion": 8.7,
+      "subida_en": "2026-09-22T18:54:16.396796+00:00",
+      "actualizada_en": "2026-09-26T16:59:38.263927+00:00"
+    },
+    {
+      "alumno_id": "e1e9e091-687f-41c6-87cb-a57b41cfc006",
+      "modulo_id": 3,
+      "calificacion": 10,
+      "subida_en": "2026-09-26T16:10:12.415278+00:00",
+      "actualizada_en": "2026-09-26T16:59:38.265991+00:00"
+    },
+    {
+      "alumno_id": "715a2dd2-5b3e-4769-8e74-6f7583bb8a89",
+      "modulo_id": 1,
+      "calificacion": 6.9,
+      "subida_en": "2026-09-22T18:54:20.374423+00:00",
+      "actualizada_en": "2026-09-26T16:59:38.35878+00:00"
+    },
+    {
+      "alumno_id": "715a2dd2-5b3e-4769-8e74-6f7583bb8a89",
+      "modulo_id": 2,
+      "calificacion": 8.7,
+      "subida_en": "2026-09-22T18:54:24.785561+00:00",
+      "actualizada_en": "2026-09-26T16:59:38.36162+00:00"
+    },
+    {
+      "alumno_id": "715a2dd2-5b3e-4769-8e74-6f7583bb8a89",
+      "modulo_id": 3,
+      "calificacion": 10,
+      "subida_en": "2026-09-26T16:10:15.036196+00:00",
+      "actualizada_en": "2026-09-26T16:59:38.366492+00:00"
+    },
+    {
+      "alumno_id": "bef4170f-2c67-44ed-aca8-ba651d83162b",
+      "modulo_id": 2,
+      "calificacion": 9.5,
+      "subida_en": "2026-09-22T18:54:50.348344+00:00",
+      "actualizada_en": "2026-09-26T16:59:38.686815+00:00"
+    },
+    {
+      "alumno_id": "bef4170f-2c67-44ed-aca8-ba651d83162b",
+      "modulo_id": 1,
+      "calificacion": 9.1,
+      "subida_en": "2026-09-22T18:54:28.041404+00:00",
+      "actualizada_en": "2026-09-26T16:59:38.686831+00:00"
+    },
+    {
+      "alumno_id": "bef4170f-2c67-44ed-aca8-ba651d83162b",
+      "modulo_id": 3,
+      "calificacion": 10,
+      "subida_en": "2026-09-26T16:10:16.973364+00:00",
+      "actualizada_en": "2026-09-26T16:59:38.98781+00:00"
+    },
+    {
+      "alumno_id": "871be0f9-c9d7-428f-8f44-99df9576911c",
+      "modulo_id": 1,
+      "calificacion": 6.1,
+      "subida_en": "2026-09-22T18:54:49.71969+00:00",
+      "actualizada_en": "2026-09-26T16:59:39.13689+00:00"
+    },
+    {
+      "alumno_id": "871be0f9-c9d7-428f-8f44-99df9576911c",
+      "modulo_id": 3,
+      "calificacion": 10,
+      "subida_en": "2026-09-26T16:10:22.687297+00:00",
+      "actualizada_en": "2026-09-26T16:59:39.139792+00:00"
+    },
+    {
+      "alumno_id": "871be0f9-c9d7-428f-8f44-99df9576911c",
+      "modulo_id": 2,
+      "calificacion": 9.2,
+      "subida_en": "2026-09-22T18:55:00.552944+00:00",
+      "actualizada_en": "2026-09-26T16:59:39.143057+00:00"
+    },
+    {
+      "alumno_id": "7e746df1-6fcd-41f0-a6ae-17175d77a538",
+      "modulo_id": 2,
+      "calificacion": 5,
+      "subida_en": "2026-09-26T16:39:39.03377+00:00",
+      "actualizada_en": "2026-09-26T16:59:39.397475+00:00"
+    },
+    {
+      "alumno_id": "7e746df1-6fcd-41f0-a6ae-17175d77a538",
+      "modulo_id": 3,
+      "calificacion": 10,
+      "subida_en": "2026-09-26T16:59:32.537928+00:00",
+      "actualizada_en": "2026-09-26T16:59:39.400454+00:00"
+    },
+    {
+      "alumno_id": "7e746df1-6fcd-41f0-a6ae-17175d77a538",
+      "modulo_id": 1,
+      "calificacion": 6.7,
+      "subida_en": "2026-09-26T16:39:39.03377+00:00",
+      "actualizada_en": "2026-09-26T16:59:39.404815+00:00"
+    }
+  ],
+  "grupos": [
+    {
+      "id": "domingo",
+      "nombre": "Clase Domingo",
+      "dia": "Domingo",
+      "horario": "09:00 – 11:00 h",
+      "semana_actual": 1,
+      "actualizada_en": "2026-09-22T15:09:50.884853+00:00"
+    },
+    {
+      "id": "sabado",
+      "nombre": "Clase Sábado",
+      "dia": "Sábado",
+      "horario": "09:00 – 11:00 h",
+      "semana_actual": 15,
+      "actualizada_en": "2026-10-24T15:26:06.951027+00:00"
+    }
+  ]
+}

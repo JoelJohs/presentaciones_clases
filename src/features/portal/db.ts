@@ -77,6 +77,43 @@ export const ACCESS_KEYS: Record<string, { rol: 'profesor' | 'alumno'; grupo?: G
 };
 
 export const KNOWN_STUDENT_EMAILS: Record<string, string> = {
+  // Matrículas (clave canónica)
+  'sab-01': 'alvaradoerandi40@gmail.com',
+  'sab-02': 'cecivaldez823@gmail.com',
+  'sab-03': 'alexandermadrigal207@gmail.com',
+  'sab-04': 'mhelenjudith@gmail.com',
+  'sab-05': 'negretemariana448@gmail.com',
+  'sab-07': 'alejandrin1109@gmail.com',
+  'sab-08': 'eduardosotozavala81@gmail.com',
+  'sab-09': 'jazminaguilera2007@gmail.com',
+  'sab-12': 'wuendymaciel12@gmail.com',
+  'dom-01': 'prueba.domingo@example.com',
+
+  // Nombres de usuario
+  'erandi.alvarado': 'alvaradoerandi40@gmail.com',
+  'camila.lopez': 'cecivaldez823@gmail.com',
+  'fernando.madrigal': 'alexandermadrigal207@gmail.com',
+  'helen.moreno': 'mhelenjudith@gmail.com',
+  'mariana.negrete': 'negretemariana448@gmail.com',
+  'alejandro.rangel': 'alejandrin1109@gmail.com',
+  'jose.soto': 'eduardosotozavala81@gmail.com',
+  'ana.aguilera': 'jazminaguilera2007@gmail.com',
+  'erika.maciel': 'wuendymaciel12@gmail.com',
+  'alumno.domingo': 'prueba.domingo@example.com',
+
+  // UUIDs reales de Supabase
+  'c123eebd-342c-4cb3-a460-147710d80438': 'alvaradoerandi40@gmail.com',
+  '6ac3fb22-a868-43b9-8323-7a4fc4500797': 'cecivaldez823@gmail.com',
+  '47be2400-3ecf-4fea-bf69-1044935b715f': 'alexandermadrigal207@gmail.com',
+  'e57d6aea-3b4c-4d91-93b5-1cbf49cf8e90': 'mhelenjudith@gmail.com',
+  'bd8444dd-ec00-4107-a313-791d45c53f32': 'negretemariana448@gmail.com',
+  'e1e9e091-687f-41c6-87cb-a57b41cfc006': 'alejandrin1109@gmail.com',
+  '715a2dd2-5b3e-4769-8e74-6f7583bb8a89': 'eduardosotozavala81@gmail.com',
+  'bef4170f-2c67-44ed-aca8-ba651d83162b': 'jazminaguilera2007@gmail.com',
+  '7e746df1-6fcd-41f0-a6ae-17175d77a538': 'wuendymaciel12@gmail.com',
+  'c63abbb7-164f-48fa-bc3d-39a7dc712fc9': 'prueba.domingo@example.com',
+
+  // IDs semilla legacy
   u_sab_01: 'alvaradoerandi40@gmail.com',
   u_sab_02: 'cecivaldez823@gmail.com',
   u_sab_03: 'alexandermadrigal207@gmail.com',
@@ -89,6 +126,73 @@ export const KNOWN_STUDENT_EMAILS: Record<string, string> = {
   u_dom_01: 'prueba.domingo@example.com',
 };
 
+/**
+ * Deduplica la base de datos de usuarios protegiendo y migrando calificaciones existentes.
+ * Elimina registros fantasma u obsoletos conservando los registros canónicos con calificaciones.
+ */
+export function deduplicatePortalDB(db: PortalDB): { db: PortalDB; removedCount: number } {
+  const userMap = new Map<string, PortalUser>();
+  const idReplacements: Record<string, string> = {};
+
+  const prof = db.usuarios.find(u => u.rol === 'profesor') || SEED_PORTAL_DB.usuarios[0];
+  userMap.set('profesor', prof);
+
+  let removedCount = 0;
+
+  for (const u of db.usuarios) {
+    if (u.rol === 'profesor') continue;
+    const key = (u.matricula || u.username || u.id).trim().toLowerCase();
+
+    const knownEmail = (u.matricula && KNOWN_STUDENT_EMAILS[u.matricula.toLowerCase()]) ||
+                       (u.username && KNOWN_STUDENT_EMAILS[u.username.toLowerCase()]) ||
+                       KNOWN_STUDENT_EMAILS[u.id];
+
+    if (!userMap.has(key)) {
+      userMap.set(key, { ...u, email: u.email || knownEmail });
+    } else {
+      const existing = userMap.get(key)!;
+      const isExistingUuid = existing.id.includes('-');
+      const isNewUuid = u.id.includes('-');
+
+      let canonical: PortalUser;
+      let obsoleteId: string;
+
+      if (isNewUuid && !isExistingUuid) {
+        canonical = { ...u };
+        obsoleteId = existing.id;
+        canonical.email = u.email || existing.email || knownEmail;
+      } else {
+        canonical = { ...existing };
+        obsoleteId = u.id;
+        canonical.email = existing.email || u.email || knownEmail;
+      }
+
+      idReplacements[obsoleteId] = canonical.id;
+      userMap.set(key, canonical);
+      removedCount++;
+    }
+  }
+
+  db.usuarios = Array.from(userMap.values());
+
+  // Migrar calificaciones si algún alumno duplicado u obsoleto tenía notas asociadas
+  if (db.calificaciones) {
+    for (const grupoKey of ['sabado', 'domingo'] as const) {
+      const grupoGrades = db.calificaciones[grupoKey];
+      if (grupoGrades) {
+        for (const [oldId, newId] of Object.entries(idReplacements)) {
+          if (grupoGrades[oldId]) {
+            grupoGrades[newId] = { ...(grupoGrades[newId] || {}), ...grupoGrades[oldId] };
+            delete grupoGrades[oldId];
+          }
+        }
+      }
+    }
+  }
+
+  return { db, removedCount };
+}
+
 export function findStudentByIdentifier(rawKey: string): PortalUser | undefined {
   const key = rawKey.trim().toLowerCase();
   if (!key) return undefined;
@@ -99,10 +203,18 @@ export function findStudentByIdentifier(rawKey: string): PortalUser | undefined 
                       SEED_PORTAL_DB.usuarios.find(u => u.email?.trim().toLowerCase() === key);
   if (byUserEmail) return byUserEmail;
 
-  // 2. Coincidencia por correo en el catálogo de correos migrados
-  for (const [userId, email] of Object.entries(KNOWN_STUDENT_EMAILS)) {
+  // 2. Coincidencia por correo en el catálogo maestro
+  for (const [studentKey, email] of Object.entries(KNOWN_STUDENT_EMAILS)) {
     if (email.trim().toLowerCase() === key) {
-      const u = db.usuarios.find(x => x.id === userId) || SEED_PORTAL_DB.usuarios.find(x => x.id === userId);
+      const u = db.usuarios.find(x =>
+        x.id === studentKey ||
+        (x.matricula && x.matricula.toLowerCase() === studentKey.toLowerCase()) ||
+        (x.username && x.username.toLowerCase() === studentKey.toLowerCase())
+      ) || SEED_PORTAL_DB.usuarios.find(x =>
+        x.id === studentKey ||
+        (x.matricula && x.matricula.toLowerCase() === studentKey.toLowerCase()) ||
+        (x.username && x.username.toLowerCase() === studentKey.toLowerCase())
+      );
       if (u) return { ...u, email: email.trim().toLowerCase() };
     }
   }
@@ -111,14 +223,22 @@ export function findStudentByIdentifier(rawKey: string): PortalUser | undefined 
   const byUsername = db.usuarios.find(u => u.username?.trim().toLowerCase() === key) ||
                      SEED_PORTAL_DB.usuarios.find(u => u.username?.trim().toLowerCase() === key);
   if (byUsername) {
-    return { ...byUsername, email: byUsername.email || KNOWN_STUDENT_EMAILS[byUsername.id] };
+    const email = byUsername.email ||
+                  (byUsername.username && KNOWN_STUDENT_EMAILS[byUsername.username.toLowerCase()]) ||
+                  (byUsername.matricula && KNOWN_STUDENT_EMAILS[byUsername.matricula.toLowerCase()]) ||
+                  KNOWN_STUDENT_EMAILS[byUsername.id];
+    return { ...byUsername, email };
   }
 
   // 4. Coincidencia por matrícula
   const byMatricula = db.usuarios.find(u => u.matricula?.trim().toLowerCase() === key) ||
                       SEED_PORTAL_DB.usuarios.find(u => u.matricula?.trim().toLowerCase() === key);
   if (byMatricula) {
-    return { ...byMatricula, email: byMatricula.email || KNOWN_STUDENT_EMAILS[byMatricula.id] };
+    const email = byMatricula.email ||
+                  (byMatricula.matricula && KNOWN_STUDENT_EMAILS[byMatricula.matricula.toLowerCase()]) ||
+                  (byMatricula.username && KNOWN_STUDENT_EMAILS[byMatricula.username.toLowerCase()]) ||
+                  KNOWN_STUDENT_EMAILS[byMatricula.id];
+    return { ...byMatricula, email };
   }
 
   // 5. Coincidencia por ID
@@ -153,20 +273,14 @@ export function getPortalDB(): PortalDB {
     if (raw) {
       const parsed = JSON.parse(raw);
       if (parsed?.usuarios && parsed?.grupos) {
-        // Sincronizar automáticamente usuarios del catálogo semilla que falten en la caché local
-        let changed = false;
-        for (const seedUser of SEED_PORTAL_DB.usuarios) {
-          if (!parsed.usuarios.some((u: any) => u.id === seedUser.id)) {
-            parsed.usuarios.push({ ...seedUser });
-            changed = true;
-          }
-        }
-        if (changed) {
+        // Ejecutar deduplicación automática para limpiar duplicados protegiendo calificaciones
+        const { db: cleaned, removedCount } = deduplicatePortalDB(parsed);
+        if (removedCount > 0) {
           try {
-            storage.setItem(LS_DB_KEY, JSON.stringify(parsed));
+            storage.setItem(LS_DB_KEY, JSON.stringify(cleaned));
           } catch {}
         }
-        return parsed;
+        return cleaned;
       }
     }
   } catch (e) {

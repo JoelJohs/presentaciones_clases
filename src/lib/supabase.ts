@@ -167,7 +167,6 @@ export async function studentLogin(usernameOrEmail: string, pass: string): Promi
   }
 
   const grupo: GroupId = ((student?.grupo || student?.clase || (cleanIdentifier.includes('dom') || student?.matricula?.startsWith('DOM') ? 'domingo' : 'sabado')) as GroupId);
-  const defaultPass = grupo === 'domingo' ? 'domcpi' : 'sabcpi';
   
   // Acepta tanto 'sabcpi' como 'domcpi' como contraseñas provisionales válidas de primer ingreso
   const isProvisionalPass = cleanPass.toLowerCase() === 'sabcpi' || cleanPass.toLowerCase() === 'domcpi';
