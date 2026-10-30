@@ -37,7 +37,7 @@ const { slug, nextLesson } = Astro.props;
       <button
         type="button"
         id="btn-toggle-completion"
-        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-brand-primary text-white text-xs font-bold hover:bg-brand-accent active:scale-95 transition-all shadow-xs cursor-pointer"
+        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-brand-primary text-white text-xs font-semibold hover:bg-brand-accent active:scale-98 transition-colors shadow-xs cursor-pointer"
       >
         <Icon name="lucide:check" class="h-4 w-4" />
         <span id="btn-toggle-text">Marcar como Realizada</span>
@@ -47,7 +47,7 @@ const { slug, nextLesson } = Astro.props;
         <a
           href={`/${nextLesson.slug}`}
           id="btn-next-lesson-shortcut"
-          class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-brand-border bg-brand-bg dark:bg-brand-hover-bg/40 text-xs font-semibold hover:border-brand-primary text-brand-text dark:text-white transition-all"
+          class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-brand-border bg-brand-bg dark:bg-brand-hover-bg/40 text-xs font-semibold hover:border-brand-primary text-brand-text dark:text-white transition-colors"
         >
           <span>Siguiente</span>
           <Icon name="lucide:arrow-right" class="h-3.5 w-3.5" />

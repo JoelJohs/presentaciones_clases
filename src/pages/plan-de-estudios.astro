@@ -46,15 +46,15 @@ const nav = getNavigationStructure(lecciones);
     </header>
 
     <!-- Banner Interactivo: Progreso Personalizado de la Clase (Se hidrata con la sesión activa) -->
-    <div id="student-progress-banner" class="hidden rounded-2xl border border-emerald-200 dark:border-emerald-800/80 bg-gradient-to-r from-emerald-50/90 to-teal-50/50 dark:from-emerald-950/40 dark:to-teal-950/20 p-4 sm:p-5 shadow-xs space-y-3">
+    <div id="student-progress-banner" class="hidden rounded-2xl border border-emerald-500/20 bg-emerald-50/80 dark:bg-emerald-950/30 p-4 sm:p-5 shadow-xs space-y-3">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div class="space-y-1">
           <div class="flex items-center gap-2">
-            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-600 text-white shadow-2xs">
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-emerald-600 text-white">
               <Icon name="lucide:map-pin" class="h-3 w-3" />
               <span id="banner-group-name">Clase Sábado</span>
             </span>
-            <span id="banner-week-label" class="text-xs font-bold text-emerald-900 dark:text-emerald-200 font-mono">
+            <span id="banner-week-label" class="text-xs font-semibold text-emerald-900 dark:text-emerald-200 font-mono">
               Semana 4 de 54
             </span>
           </div>
@@ -66,7 +66,7 @@ const nav = getNavigationStructure(lecciones);
         <button
           id="btn-scroll-to-current"
           type="button"
-          class="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-all shadow-xs shrink-0 cursor-pointer"
+          class="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-colors shadow-xs shrink-0 cursor-pointer"
         >
           <span>Ir a mi clase actual</span>
           <Icon name="lucide:arrow-down" class="h-3.5 w-3.5" />
@@ -78,7 +78,7 @@ const nav = getNavigationStructure(lecciones);
         <div class="h-2 w-full rounded-full bg-emerald-200/60 dark:bg-emerald-900/60 overflow-hidden">
           <div
             id="banner-progress-bar"
-            class="h-full rounded-full bg-emerald-600 transition-all duration-500"
+            class="h-full rounded-full bg-emerald-600 transition-[width] duration-500"
             style="width: 7%;"
           ></div>
         </div>
@@ -136,7 +136,7 @@ const nav = getNavigationStructure(lecciones);
               </tr>
             ))}
             <tr class="border-t-2 border-brand-border bg-slate-50/50 dark:bg-brand-bg/20 font-bold text-brand-text">
-              <td class="py-2.5 px-4 text-center font-mono uppercase tracking-wider text-[11px]">Total</td>
+              <td class="py-2.5 px-4 text-center font-mono font-semibold text-[11px]">Total</td>
               <td class="py-2.5 px-4">11 Módulos de Especialidad</td>
               <td class="py-2.5 px-4 text-center font-mono text-brand-primary font-bold">
                 Semanas 1 a {TOTAL_SEMANAS}
@@ -159,7 +159,7 @@ const nav = getNavigationStructure(lecciones);
             id="search-input"
             type="search"
             placeholder="Buscar tema (ej. Python, Linux, SQL, CSS, Git, GIMP, Videojuegos)..."
-            class="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-brand-border bg-brand-bg text-brand-text placeholder:text-brand-muted outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/20 transition-all"
+            class="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-brand-border bg-brand-bg text-brand-text placeholder:text-brand-muted outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/20 transition-colors"
           />
         </div>
         <div class="flex items-center gap-2 shrink-0">
@@ -286,8 +286,8 @@ const nav = getNavigationStructure(lecciones);
                     </h4>
 
                     <div class="week-indicator-badge hidden">
-                      <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-600 text-white shadow-2xs">
-                        <span class="h-1.5 w-1.5 rounded-full bg-white animate-pulse"></span>
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[10px] font-semibold bg-emerald-600 text-white">
+                        <span class="h-1.5 w-1.5 rounded-full bg-white"></span>
                         <span>Tu clase esta semana</span>
                       </span>
                     </div>

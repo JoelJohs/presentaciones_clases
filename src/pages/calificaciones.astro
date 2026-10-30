@@ -59,9 +59,9 @@ const nav = getNavigationStructure(lecciones);
       <!-- Tarjeta Resumen de Promedio -->
       <div class="p-6 rounded-2xl border border-brand-border bg-white dark:bg-brand-sidebar-bg flex flex-col sm:flex-row sm:items-center justify-between gap-6 shadow-xs">
         <div class="flex items-center gap-4">
-          <div class="h-16 w-16 rounded-2xl bg-gradient-to-tr from-brand-primary to-brand-accent text-white flex flex-col items-center justify-center font-bold">
+          <div class="h-16 w-16 rounded-xl bg-brand-primary text-white flex flex-col items-center justify-center font-bold shadow-xs">
             <span id="student-average" class="text-2xl font-mono leading-none">0.0</span>
-            <span class="text-[9px] uppercase tracking-wider font-semibold opacity-90 mt-1">Promedio</span>
+            <span class="text-[10px] font-medium opacity-90 mt-0.5">Promedio</span>
           </div>
           <div>
             <h2 id="student-name-display" class="text-base font-bold text-brand-text">Nombre del Alumno</h2>
@@ -80,11 +80,11 @@ const nav = getNavigationStructure(lecciones);
 
       <!-- Tarjetas de Notas por Módulo -->
       <div>
-        <h3 class="text-sm font-bold uppercase tracking-wider text-brand-muted mb-3 flex items-center gap-2">
-          <Icon name="lucide:layers" class="h-4 w-4" />
-          <span>Calificaciones por Módulo</span>
+        <h3 class="text-sm font-semibold text-brand-text mb-3 flex items-center gap-2">
+          <Icon name="lucide:layers" class="h-4 w-4 text-brand-primary" />
+          <span>Calificaciones por módulo</span>
         </h3>
-        <div id="student-modules-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+        <div id="student-modules-grid" class="rounded-xl border border-brand-border bg-white dark:bg-brand-sidebar-bg overflow-hidden shadow-xs divide-y divide-brand-border">
           <!-- Renderizado dinámicamente con JavaScript -->
         </div>
       </div>
@@ -98,7 +98,7 @@ const nav = getNavigationStructure(lecciones);
           <button
             type="button"
             id="tab-sabado"
-            class="pb-2 px-3 text-xs font-semibold border-b-2 border-brand-primary text-brand-text transition-all flex items-center gap-1.5"
+            class="pb-2 px-3 text-xs font-semibold border-b-2 border-brand-primary text-brand-text transition-colors flex items-center gap-1.5"
           >
             <span class="w-2 h-2 rounded-full bg-amber-400 inline-block"></span>
             <span>Clase Sábado</span>
@@ -106,7 +106,7 @@ const nav = getNavigationStructure(lecciones);
           <button
             type="button"
             id="tab-domingo"
-            class="pb-2 px-3 text-xs font-semibold border-b-2 border-transparent text-brand-muted hover:text-brand-text transition-all flex items-center gap-1.5"
+            class="pb-2 px-3 text-xs font-semibold border-b-2 border-transparent text-brand-muted hover:text-brand-text transition-colors flex items-center gap-1.5"
           >
             <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
             <span>Clase Domingo</span>
@@ -117,7 +117,7 @@ const nav = getNavigationStructure(lecciones);
           <button
             type="button"
             id="btn-save-grades"
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-all shadow-xs"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-colors shadow-xs"
           >
             <Icon name="lucide:save" class="h-4 w-4" />
             <span>Guardar Calificaciones</span>
@@ -134,7 +134,7 @@ const nav = getNavigationStructure(lecciones);
       <div class="rounded-2xl border border-brand-border bg-white dark:bg-brand-sidebar-bg overflow-hidden shadow-xs">
         <div class="overflow-x-auto">
           <table class="w-full text-xs text-left">
-            <thead class="bg-brand-callout-bg/60 border-b border-brand-border text-brand-muted uppercase font-bold text-[10px] tracking-wider">
+            <thead class="bg-brand-callout-bg/60 border-b border-brand-border text-brand-muted font-semibold text-[11px]">
               <tr>
                 <th class="py-3 px-4 min-w-[170px]">Estudiante</th>
                 <th class="py-3 px-1 text-center w-12" title="M01: Hardware, SO y Linux Mint">M01</th>
@@ -243,16 +243,20 @@ const nav = getNavigationStructure(lecciones);
           const isGraded = typeof val === 'number';
           const modTitle = MODULE_TITLES[num - 1] || `Módulo ${num}`;
           return `
-            <div class="p-4 rounded-xl border border-brand-border bg-white dark:bg-brand-sidebar-bg flex items-center justify-between shadow-2xs">
-              <div class="min-w-0 pr-2">
-                <span class="text-[10px] font-bold uppercase tracking-wider text-brand-muted block">Módulo ${num < 10 ? '0' + num : num}</span>
-                <p class="text-xs font-semibold text-brand-text truncate max-w-[160px]" title="${modTitle}">${modTitle}</p>
+            <div class="px-4 py-3 flex items-center justify-between gap-3 hover:bg-brand-hover-bg/25 transition-colors">
+              <div class="flex items-center gap-3 min-w-0">
+                <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-brand-border/60 text-brand-text shrink-0">
+                  M${num < 10 ? '0' + num : num}
+                </span>
+                <p class="text-xs sm:text-sm font-semibold text-brand-text truncate" title="${modTitle}">${modTitle}</p>
               </div>
-              <div class="text-right shrink-0">
-                <span class="text-base font-mono font-bold ${isGraded ? (val >= 6 ? 'text-brand-primary' : 'text-rose-500') : 'text-brand-muted'}">
+              <div class="flex items-center gap-3 shrink-0">
+                <span class="text-[11px] font-medium px-2 py-0.5 rounded ${isGraded ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'}">
+                  ${isGraded ? 'Calificado' : 'Pendiente'}
+                </span>
+                <span class="w-12 text-right text-sm sm:text-base font-mono font-bold ${isGraded ? (val >= 6 ? 'text-brand-primary' : 'text-rose-500') : 'text-brand-muted'}">
                   ${isGraded ? val.toFixed(1) : '—'}
                 </span>
-                <span class="block text-[9px] text-brand-muted">${isGraded ? 'Calificado' : 'Pendiente'}</span>
               </div>
             </div>
           `;
@@ -470,8 +474,8 @@ const nav = getNavigationStructure(lecciones);
   // Tabs de grupo
   const tabSab = document.getElementById('tab-sabado');
   const tabDom = document.getElementById('tab-domingo');
-  const TAB_ACTIVE = 'pb-2 px-3 text-xs font-semibold border-b-2 border-brand-primary text-brand-text transition-all flex items-center gap-1.5';
-  const TAB_INACTIVE = 'pb-2 px-3 text-xs font-semibold border-b-2 border-transparent text-brand-muted hover:text-brand-text transition-all flex items-center gap-1.5';
+  const TAB_ACTIVE = 'pb-2 px-3 text-xs font-semibold border-b-2 border-brand-primary text-brand-text transition-colors flex items-center gap-1.5';
+  const TAB_INACTIVE = 'pb-2 px-3 text-xs font-semibold border-b-2 border-transparent text-brand-muted hover:text-brand-text transition-colors flex items-center gap-1.5';
 
   tabSab?.addEventListener('click', () => {
     if (currentTeacherGroup === 'sabado') return;

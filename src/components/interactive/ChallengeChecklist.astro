@@ -59,7 +59,7 @@ const { title = 'Reto Práctico de Laboratorio', steps } = Astro.props;
   <div class="space-y-2">
     {steps.map((step, idx) => (
       <div
-        class="flex items-start gap-3 p-2.5 rounded-lg border transition-all duration-200 cursor-pointer select-none"
+        class="flex items-start gap-3 p-2.5 rounded-lg border transition-colors duration-150 cursor-pointer select-none"
         :class={`checked[${idx}] ? 'bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-500/30' : 'bg-white dark:bg-brand-sidebar-bg border-brand-border hover:border-brand-primary/40'`}
         @click={`toggle(${idx})`}
       >

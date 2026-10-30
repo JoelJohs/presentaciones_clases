@@ -35,7 +35,7 @@ import { Icon } from 'astro-icon/components';
   <!-- Modal Minimalista de Acceso y Gestión de Sesión -->
   <dialog
     id="auth-modal"
-    class="fixed inset-0 m-auto z-50 p-0 rounded-2xl bg-white dark:bg-surface-elevated border border-brand-border shadow-2xl backdrop:bg-black/50 backdrop:backdrop-blur-xs max-w-sm w-full"
+    class="fixed inset-0 m-auto z-50 p-0 rounded-2xl bg-white dark:bg-surface-elevated border border-brand-border shadow-2xl backdrop:bg-black/50 backdrop:backdrop-blur-xs max-w-sm w-full max-h-[90dvh] overflow-y-auto"
   >
     <div class="p-4 sm:p-5 border-b border-brand-border flex items-center justify-between bg-brand-callout-bg/60">
       <div class="flex items-center gap-2.5">
@@ -61,7 +61,7 @@ import { Icon } from 'astro-icon/components';
       <!-- Tarjeta cuando ya hay sesión iniciada -->
       <div id="modal-active-session" class="hidden space-y-3">
         <div class="p-3.5 rounded-xl border border-brand-border bg-brand-callout-bg dark:bg-brand-sidebar-bg/60 space-y-1">
-          <span class="text-[10px] uppercase tracking-wider font-bold text-brand-muted block">Sesión actual</span>
+          <span class="text-[11px] font-semibold text-brand-muted block">Sesión actual</span>
           <p id="modal-active-user-name" class="font-bold text-sm text-brand-text">Usuario</p>
           <p id="modal-active-user-role" class="text-xs text-brand-muted">Grupo</p>
         </div>
