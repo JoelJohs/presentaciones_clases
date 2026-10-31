@@ -7,45 +7,49 @@
 web
 
 ## Users
-- **Docente (Joel)**: Único docente que administra la plataforma, imparte las clases presenciales, proyecta diapositivas interactivas en pantalla gigante/proyector en el laboratorio y monitorea el avance y calificaciones de los estudiantes.
-- **Estudiantes de Computación y Ofimática**: Alumnos inscritos en cursos presenciales (turnos de fin de semana: Sábado/Domingo) que consultan el temario, siguen la lección en vivo desde sus equipos en el laboratorio y realizan autoestudio y práctica autónoma en casa.
+- **Docente (Joel)**: Único docente que administra la plataforma, imparte clases presenciales en el laboratorio de cómputo y monitorea el avance y calificaciones prácticas de los estudiantes.
+- **Estudiantes de Computación y Ofimática**: Alumnos inscritos en cursos presenciales (turnos de fin de semana: Sábado/Domingo) que consultan el temario, siguen la guía técnica paso a paso en vivo desde sus equipos en el laboratorio y realizan autoestudio y práctica autónoma en casa.
 
 ## Product Purpose
-Proporcionar un entorno unificado, ágil y libre de distracciones tanto para la proyección interactiva de clases en el laboratorio como para el autoestudio guiado de los estudiantes. El objetivo es maximizar el aprendizaje práctico mediante lecciones modulares con retos técnicos verificables, sin depender de LMS pesados ni de plataformas de terceros.
+Proporcionar una plataforma educativa ágil, legible y libre de distracciones para el aprendizaje técnico en laboratorio y autoestudio. El objetivo es estructurar lecciones modulares con retos prácticos verificables mediante una experiencia fluida de documentación técnica de ingeniería (scroll continuo), sustituyendo interfaces de diapositivas artificiales o LMS sobrecargados.
 
 ## Positioning
-Una plataforma educativa web estática hiper-optimizada (Astro + Tailwind CSS + Alpine.js + MDX) diseñada específicamente para la dinámica de clase del docente y sus estudiantes de computación: conmutación instantánea entre Modo Presentación para proyector y Modo Lectura individual, lecciones modulares en código/Markdown que funcionan de manera ultra-rápida y con soporte local, y un modelo de evaluación estrictamente meritocrático centrado en el desempeño práctico.
+Una plataforma web estática de documentación y guías técnicas hiper-optimizada (Astro + Tailwind CSS + Alpine.js + MDX): lectura fluida con scroll natural, navegación lateral jerárquica con índice de página (TOC scrollspy), bloques interactivos de código con copia en un clic, retos técnicos persistentes ("Modo Ninja"), y un modelo pedagógico centrado 100% en el desempeño práctico.
 
 ## Operating Context
-- **Laboratorio de cómputo (presencial)**: Proyector conectado al equipo del docente (resoluciones 1080p o estándar de proyección de aula), equipos de los alumnos con pantallas variadas (desktop/laptop) siguiendo ejercicios y comandos en vivo.
-- **Sesiones de fin de semana**: Grupos organizados en bloques de clase intensivos (ej. Sábados 09:00 - 13:00 en Laboratorio A; Domingos opcional).
-- **Autoestudio en casa**: Estudiantes repasando lecciones, ejecutando retos técnicos ("Modo Ninja"), consultando el plan de estudios y verificando su progreso en local o portal de calificaciones.
+- **Laboratorio de cómputo (presencial)**: Equipos de alumnos con monitores de diversas resoluciones siguiendo comandos, procedimientos y diagramas en tiempo real a su propio ritmo de lectura y ejecución.
+- **Sesiones de fin de semana**: Bloques de clase intensivos (ej. Sábados 09:00 - 13:00 en Laboratorio A).
+- **Autoestudio en casa**: Estudiantes repasando lecciones completas en pantallas de escritorio o portátiles, completando retos técnicos y consultando el plan de estudios sin fricciones de navegación fragmentada.
 
 ## Capabilities and Constraints
-- **Modo Dual nativo**: Conmutación fluida entre Modo Lectura (prosa continua, navegación vertical) y Modo Presentación (diapositivas automáticas divididas por encabezados `##`, atajos de teclado, pantalla completa, temporizador y vista de proyector).
-- **Cero ponderación de asistencia**: La asistencia tiene 0% de validez numérica; la evaluación es 100% técnica/práctica (proyectos, retos de código, tareas y exámenes).
-- **Estructura jerárquica obligatoria**: Módulos (`[00-99]-[modulo]`), Temas (`[00-99]-[tema]`), y Clases (`[00-99]-[clase]/index.mdx`).
-- **Tablas estrictamente en HTML**: Restricción mandatoria de no usar tablas markdown con barras (`|---|`), únicamente marcado HTML semántico (`<table><thead>...</thead><tbody>...</tbody></table>`).
-- **Persistencia y datos**: Seguimiento de progreso en almacenamiento local (`localStorage`) complementado con integración en Supabase para sincronización de calificaciones/portal estudiantil.
+- **Lectura fluida y continua (Scroll First)**: Sin modo diapositiva ni segmentación artificial de pantalla; navegación natural vertical estilo manual técnico de ingeniería.
+- **Interacciones clave de documentación**:
+  - Índice flotante contextual "En esta página" (Table of Contents) con detección activa de sección al desplazarse (scrollspy).
+  - Bloques de código y comandos de terminal con botón de copiado rápido al portapapeles.
+  - Checklists interactivos para retos prácticos ("Modo Ninja") con guardado de estado en almacenamiento local (`localStorage`).
+  - Barra sutil de progreso de lectura.
+- **Cero ponderación de asistencia**: La asistencia tiene 0% de validez numérica; la evaluación es 100% técnica/práctica (proyectos, retos en máquina, tareas y exámenes).
+- **Estructura jerárquica de contenidos**: Módulos (`[00-99]-[modulo]`), Temas (`[00-99]-[tema]`), y Clases (`[00-99]-[clase]/index.mdx`).
+- **Tablas estrictamente en HTML**: Prohibido usar tablas Markdown de barras (`|---|`); uso exclusivo de marcado semántico HTML (`<table><thead>...</thead><tbody>...</tbody></table>`).
+- **Persistencia y datos**: Almacenamiento local (`localStorage`) para retos y progreso, con respaldo/sincronización vía Supabase para el portal estudiantil y calificaciones.
 
 ## Brand Commitments
 - **Voz pedagógica directa**: Redacción en 2ª persona imperativo dirigida directamente al estudiante ("Observa", "Prueba", "Crea", "Compara", "Comprueba"). Cero notas o recordatorios para el docente en el cuerpo de las lecciones.
-- **Identidad técnica y sobria**: Estilo visual limpio, moderno y enfocado en la legibilidad técnica, sin adornos superfluos, muletillas corporativas ni ruido visual.
+- **Estética de Manual de Ingeniería (Cero Slop IA)**: Tipografía técnica limpia, bordes nítidos de 1px, superficies sobrias con alto contraste (estilo Stripe Docs / Tailwind Docs / Rust Book), descartando gradientes ruidosos, halos brillantes, blobs decorativos o componentes con ornamentos innecesarios.
 
 ## Evidence on Hand
-- Lecciones reales en `src/content/lecciones/` (Hardware y Sistemas Operativos, Productividad y Ofimática, Multimedia Práctica).
+- Lecciones reales en `src/content/lecciones/` (Hardware y Sistemas Operativos, Productividad y Ofimática, Multimedia Práctica, Redes, Programación Python).
 - Plan de estudios y módulos definidos en `src/data/plan-estudios.ts` y `src/config/curriculum.ts`.
-- Configuración de grupos en `src/config/groups.ts`.
-- Componentes funcionales en `src/components/` (Dashboard, Sidebar, Header, PlanEstudio, SlideControls).
-- Guías pedagógicas y operativas en `AGENTS.md`, `CLAUDE.md` y `GUIA_CONTENIDO.md`.
+- Componentes funcionales en `src/components/` (Layout, Sidebar, Header, PlanEstudio, Dashboard, Quiz, ChallengeChecklist).
+- Pautas técnicas y operativas en `AGENTS.md` y `CLAUDE.md`.
 
 ## Product Principles
-1. **La práctica es la única métrica**: Si el estudiante no puede ejecutar, demostrar o resolver el reto en la máquina, el concepto no está afianzado. La asistencia no califica; la habilidad técnica demostrable sí.
-2. **Pedagogía imperativa y autosuficiente**: Cada lección se explica por sí misma y conduce al estudiante a la acción inmediata sin requerir la intervención continua del docente.
-3. **Dualidad sin fricción**: La misma fuente de verdad en MDX debe proyectarse impecablemente en pantalla de aula y leerse con máxima comodidad en pantallas personales.
-4. **Cero bloat, máxima velocidad**: Arquitectura estática (SSG) ligera, carga instantánea y funcionamiento confiable dentro y fuera del aula.
+1. **La práctica es la única métrica**: Si el estudiante no puede ejecutar, demostrar o resolver el reto en la máquina, el concepto no está afianzado. La evaluación es 100% técnica y demostrable.
+2. **Lectura técnica ininterrumpida**: El flujo de aprendizaje se experimenta como una guía de referencia continua de alta precisión, sin cortes de diapositivas ni pantallas fragmentadas.
+3. **Utilidad sobre decoración (Anti-slop)**: Cada línea, borde, color y espacio cumple una función de jerarquía cognitiva y legibilidad técnica.
+4. **Cero bloat, máxima velocidad**: Arquitectura SSG estática ligera, carga instantánea y funcionamiento confiable dentro y fuera del aula.
 
 ## Accessibility & Inclusion
-- Contraste visual adecuado para visibilidad en proyectores de aula y pantallas con iluminación variable.
+- Ratios de contraste conformes a WCAG AA (mínimo 4.5:1 para texto normal, 3:1 para elementos de interfaz y código).
 - Soporte para tema claro y tema oscuro con persistencia sin parpadeos (`color-theme`).
-- Controles accesibles por teclado para la navegación de diapositivas y exploración del contenido.
+- Navegación por teclado fluida y semántica en la tabla de contenidos, enlaces y bloques interactivos.

@@ -3,7 +3,6 @@ import '../styles/global.css';
 import Sidebar from '../components/Sidebar.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import SlideControls from '../components/presentation/SlideControls.astro';
 import type { NavigationResult } from '../utils/navigation';
 import { getNavigationStructure } from '../utils/navigation';
 import { getCollection } from 'astro:content';
@@ -44,7 +43,7 @@ if (!nav || !nav.modules || nav.modules.length === 0) {
     <title>{title} | Plataforma de Estudios</title>
 
     <!-- Script inicial para evitar parpadeos de tema y vista -->
-    <script is:inline define:vars={{ isLesson }}>
+    <script is:inline>
       if (
         localStorage.getItem('color-theme') === 'dark' ||
         (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
@@ -58,19 +57,9 @@ if (!nav || !nav.modules || nav.modules.length === 0) {
         document.documentElement.classList.add('sidebar-collapsed');
       }
 
-      document.documentElement.classList.remove('reading-mode', 'presentation-mode', 'presentation-scroll-mode', 'presentation-slides-mode');
-
-      const isDesktop = window.innerWidth >= 768;
-      if (isLesson && isDesktop) {
-        let rawMode = localStorage.getItem('view-mode') || 'reading';
-        if (rawMode === 'presentation-slides') {
-          document.documentElement.classList.add('presentation-mode', 'presentation-slides-mode');
-        } else {
-          document.documentElement.classList.add('reading-mode');
-        }
-      } else {
-        document.documentElement.classList.add('reading-mode');
-      }
+      // La plataforma opera de forma natural en modo de lectura con scroll continuo
+      document.documentElement.classList.remove('presentation-mode', 'presentation-scroll-mode', 'presentation-slides-mode');
+      document.documentElement.classList.add('reading-mode');
 
       try {
         const sessRaw = localStorage.getItem('cpi_portal_session_v1');
@@ -86,22 +75,22 @@ if (!nav || !nav.modules || nav.modules.length === 0) {
       } catch (e) {}
     </script>
   </head>
-  <body class="bg-brand-bg text-brand-text min-h-screen antialiased flex flex-col">
+  <body class="bg-brand-bg text-brand-text min-h-screen antialiased flex flex-col selection:bg-brand-primary selection:text-white">
     <!-- Enlace de accesibilidad -->
     <a href="#main-content" class="skip-link">Saltar al contenido</a>
 
     <div class="flex-1 flex min-h-screen">
-      <!-- Backdrop móvil (accesible en todas las páginas) -->
+      <!-- Backdrop móvil -->
       <div id="sidebar-backdrop" class="fixed inset-0 z-30 bg-black/40 backdrop-blur-xs transition-opacity duration-200 opacity-0 pointer-events-none lg:hidden"></div>
 
-      <!-- Barra lateral permanente de navegación (colapsable en escritorio) -->
+      <!-- Barra lateral permanente de navegación -->
       <Sidebar nav={nav} activeSlug={activeSlug} />
 
       <!-- Contenedor principal con margen adaptativo -->
       <div id="main-content-wrapper" class="flex-1 flex flex-col min-h-screen lg:pl-72 transition-all duration-300">
         <Header isLesson={isLesson} />
 
-        <main id="main-content" tabindex="-1" class={`flex-1 w-full ${isLesson ? 'max-w-5xl xl:max-w-6xl 2xl:max-w-7xl' : 'max-w-7xl'} mx-auto px-4 sm:px-8 py-8 transition-all`}>
+        <main id="main-content" tabindex="-1" class={`flex-1 w-full ${isLesson ? 'max-w-7xl' : 'max-w-7xl'} mx-auto px-4 sm:px-8 py-8 transition-all`}>
           <slot />
         </main>
 
@@ -109,17 +98,8 @@ if (!nav || !nav.modules || nav.modules.length === 0) {
       </div>
     </div>
 
-    {isLesson && (
-      <!-- Controles flotantes para modo presentación (solo escritorio) -->
-      <div class="hidden md:block">
-        <SlideControls />
-      </div>
-    )}
-
     <!-- Script de interacción base -->
     <script>
-      import { presentationStore, type ViewMode } from '../features/presentation';
-
       // 1. Alternador móvil
       const menuToggle = document.getElementById('menu-toggle');
       const sidebar = document.getElementById('sidebar');
@@ -169,22 +149,22 @@ if (!nav || !nav.modules || nav.modules.length === 0) {
         localStorage.setItem('color-theme', isDark ? 'dark' : 'light');
       });
 
-      // 4. Alternador de modos (Scroll continuo o Diapositivas en pantalla grande)
-      const btnReading = document.getElementById('btn-reading-mode');
-      const btnSlides = document.getElementById('btn-presentation-slides-mode');
-
-      function updateModeButtons(mode: ViewMode) {
-        const isSlides = mode === 'presentation-slides';
-        btnReading?.setAttribute('aria-checked', String(!isSlides));
-        btnSlides?.setAttribute('aria-checked', String(isSlides));
+      // 4. Barra de progreso de lectura (scroll spy)
+      const progressBar = document.getElementById('reading-progress-bar');
+      if (progressBar) {
+        const handleScroll = () => {
+          const docEl = document.documentElement;
+          const totalHeight = docEl.scrollHeight - window.innerHeight;
+          if (totalHeight <= 0) {
+            progressBar.style.width = '0%';
+            return;
+          }
+          const progress = Math.min(100, Math.max(0, (window.scrollY / totalHeight) * 100));
+          progressBar.style.width = `${progress}%`;
+        };
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        handleScroll();
       }
-
-      btnReading?.addEventListener('click', () => presentationStore.setMode('reading'));
-      btnSlides?.addEventListener('click', () => presentationStore.setMode('presentation-slides'));
-
-      presentationStore.subscribe((state) => {
-        updateModeButtons(state.mode);
-      });
     </script>
 
     <style is:global>
@@ -195,15 +175,6 @@ if (!nav || !nav.modules || nav.modules.length === 0) {
         .sidebar-collapsed #main-content-wrapper {
           padding-left: 0 !important;
         }
-      }
-      .presentation-mode #sidebar {
-        display: none !important;
-      }
-      .presentation-mode #main-content-wrapper {
-        padding-left: 0 !important;
-      }
-      .presentation-mode footer {
-        display: none !important;
       }
     </style>
   </body>

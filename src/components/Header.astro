@@ -11,11 +11,11 @@ const { isLesson = false } = Astro.props;
 
 <header class="sticky top-0 z-20 flex h-14 w-full items-center justify-between border-b border-brand-border bg-brand-bg/95 px-3 sm:px-5 backdrop-blur-xs transition-colors">
   <div class="flex items-center gap-2 sm:gap-3">
-    <!-- Botón móvil para abrir menú lateral en cualquier ruta -->
+    <!-- Botón móvil para abrir menú lateral -->
     <button
       id="menu-toggle"
       type="button"
-      class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-brand-muted hover:bg-slate-100 dark:hover:bg-brand-sidebar-bg hover:text-brand-text lg:hidden transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-brand-primary"
+      class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-brand-muted hover:bg-brand-hover-bg hover:text-brand-text lg:hidden transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-brand-primary"
       aria-label="Abrir Menú Lateral"
       aria-controls="sidebar"
       aria-expanded="false"
@@ -27,7 +27,7 @@ const { isLesson = false } = Astro.props;
     <button
       id="sidebar-toggle"
       type="button"
-      class="hidden lg:inline-flex h-9 w-9 items-center justify-center rounded-lg text-brand-muted hover:bg-slate-100 dark:hover:bg-brand-sidebar-bg hover:text-brand-text transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-brand-primary"
+      class="hidden lg:inline-flex h-9 w-9 items-center justify-center rounded-lg text-brand-muted hover:bg-brand-hover-bg hover:text-brand-text transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-brand-primary"
       aria-label="Alternar Temario"
       title="Alternar Temario / Barra Lateral"
     >
@@ -35,49 +35,20 @@ const { isLesson = false } = Astro.props;
     </button>
 
     <!-- Logo / Nombre de plataforma -->
-    <a href="/" class="flex items-center gap-2 font-semibold text-brand-navy dark:text-white text-sm sm:text-base tracking-tight hover:opacity-90 transition-opacity">
-      <div class="h-7 w-7 rounded-lg bg-brand-primary text-white flex items-center justify-center font-bold text-xs shadow-xs">
+    <a href="/" class="flex items-center gap-2.5 font-semibold text-brand-navy dark:text-white text-sm sm:text-base tracking-tight hover:opacity-90 transition-opacity">
+      <div class="h-7 w-7 rounded-md bg-brand-primary text-white flex items-center justify-center font-bold text-xs">
         CPI
       </div>
       <span class="hidden sm:inline font-bold">Plataforma de Estudios</span>
     </a>
   </div>
 
-  <div class="flex items-center gap-1.5 sm:gap-2.5">
-    {isLesson && (
-      <!-- Selector de Modo de Vista (Solo en lecciones) -->
-      <div class="hidden md:flex items-center rounded-xl border border-brand-border bg-slate-100 dark:bg-brand-sidebar-bg p-1" role="radiogroup" aria-label="Modo de visualización">
-        <button
-          id="btn-reading-mode"
-          type="button"
-          role="radio"
-          aria-checked="true"
-          class="flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-lg text-brand-muted hover:text-brand-text aria-checked:bg-white dark:aria-checked:bg-brand-bg aria-checked:text-brand-primary aria-checked:shadow-xs transition-colors cursor-pointer"
-          title="Modo Scroll continuo"
-        >
-          <Icon name="lucide:scroll" class="h-3.5 w-3.5" />
-          <span>Scroll</span>
-        </button>
-
-        <button
-          id="btn-presentation-slides-mode"
-          type="button"
-          role="radio"
-          aria-checked="false"
-          class="flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-lg text-brand-muted hover:text-brand-text aria-checked:bg-white dark:aria-checked:bg-brand-bg aria-checked:text-brand-primary aria-checked:shadow-xs transition-colors cursor-pointer"
-          title="Modo Diapositivas"
-        >
-          <Icon name="lucide:presentation" class="h-3.5 w-3.5" />
-          <span>Diapositivas</span>
-        </button>
-      </div>
-    )}
-
+  <div class="flex items-center gap-2">
     <!-- Alternador de Tema Claro / Oscuro -->
     <button
       id="theme-toggle"
       type="button"
-      class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-brand-border text-brand-muted hover:bg-slate-100 dark:hover:bg-brand-sidebar-bg hover:text-brand-text transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-brand-primary"
+      class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-brand-border text-brand-muted hover:bg-brand-hover-bg hover:text-brand-text transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-brand-primary"
       aria-label="Cambiar tema claro u oscuro"
       title="Cambiar tema claro u oscuro"
     >
@@ -88,4 +59,13 @@ const { isLesson = false } = Astro.props;
     <!-- Componente de Sesión y Logout -->
     <AuthSwitcher />
   </div>
+
+  {isLesson && (
+    <!-- Barra sutil de progreso de lectura (0% a 100%) -->
+    <div
+      id="reading-progress-bar"
+      class="absolute bottom-0 left-0 h-[2px] w-0 bg-brand-primary transition-[width] duration-75 ease-out"
+      aria-hidden="true"
+    ></div>
+  )}
 </header>

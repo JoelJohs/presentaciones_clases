@@ -4,25 +4,46 @@ import { Icon } from 'astro-icon/components';
 interface Props {
   title?: string;
   steps: string[];
+  id?: string;
 }
 
-const { title = 'Reto Práctico de Laboratorio', steps } = Astro.props;
+const { title = 'Reto Práctico de Laboratorio', steps, id: propId } = Astro.props;
+// Clave determinista basada en el título o ID explícito
+const checklistId = propId || title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 ---
 
 <div
   x-data={`{
+    storageKey: 'cpi_challenge_${checklistId}',
     steps: ${JSON.stringify(steps)},
-    checked: new Array(${steps.length}).fill(false),
+    checked: [],
+    init() {
+      try {
+        const saved = localStorage.getItem(this.storageKey);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          this.checked = Array.isArray(parsed) ? parsed : new Array(this.steps.length).fill(false);
+        } else {
+          this.checked = new Array(this.steps.length).fill(false);
+        }
+      } catch (e) {
+        this.checked = new Array(this.steps.length).fill(false);
+      }
+    },
     toggle(i) {
       this.checked[i] = !this.checked[i];
+      try {
+        localStorage.setItem(this.storageKey, JSON.stringify(this.checked));
+      } catch (e) {}
     },
     get completedCount() {
       return this.checked.filter(Boolean).length;
     },
     get percent() {
-      return Math.round((this.completedCount / this.steps.length) * 100);
+      return this.steps.length ? Math.round((this.completedCount / this.steps.length) * 100) : 0;
     }
   }`}
+  x-init="init()"
   class="challenge-card not-prose"
 >
   <div class="flex items-center justify-between gap-3 mb-3">

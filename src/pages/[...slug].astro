@@ -20,7 +20,7 @@ export async function getStaticPaths() {
 }
 
 const { leccion, lecciones, nav: propsNav } = Astro.props;
-const { Content } = await render(leccion);
+const { Content, headings = [] } = await render(leccion);
 
 const nav = propsNav || getNavigationStructure(lecciones);
 const activeSlug = leccion.id.replace(/\.(mdx|md)$/, '').replace(/\/index$/, '');
@@ -35,160 +35,193 @@ const duration = leccion.data.duration || meta?.duration || 45;
 const kind = leccion.data.kind || meta?.kind || 'lesson';
 const objectives = leccion.data.objectives || [];
 const leccionSemana = leccion.data.semana || 0;
+
+// Filtrar encabezados relevantes para la tabla de contenidos (H2 principales limpios)
+const tocHeadings = headings
+  .filter(h => h.depth === 2)
+  .map(h => ({
+    ...h,
+    text: h.text.replace(/\s*<Icon[^>]*\/>/g, '').trim(),
+  }));
 ---
 
 <Layout title={leccion.data.title} nav={nav} activeSlug={activeSlug} isLesson={true}>
-  <div class="space-y-6">
-    <!-- Migas de pan y metadatos de lección -->
-    <header class="border-b border-brand-border pb-6 space-y-3">
-      <nav aria-label="Ruta de navegación" class="flex items-center gap-1.5 text-xs text-brand-muted flex-wrap">
-        <a href="/" class="hover:text-brand-text transition-colors">Inicio</a>
-        {leccion.data.moduleTitle && (
-          <>
-            <Icon name="lucide:chevron-right" class="h-3 w-3" />
-            <span class="font-medium text-brand-primary">{leccion.data.moduleTitle}</span>
-          </>
-        )}
-        {leccion.data.topicTitle && (
-          <>
-            <Icon name="lucide:chevron-right" class="h-3 w-3" />
-            <span class="truncate max-w-[200px]">{leccion.data.topicTitle}</span>
-          </>
-        )}
-      </nav>
+  <div class="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_200px] 2xl:grid-cols-[minmax(0,1fr)_220px] gap-8 2xl:gap-10 items-start">
+    <!-- Columna Principal de Contenido -->
+    <div class="min-w-0 space-y-6">
+      <!-- Migas de pan y metadatos de lección -->
+      <header class="border-b border-brand-border pb-6 space-y-3">
+        <nav aria-label="Ruta de navegación" class="flex items-center gap-1.5 text-xs text-brand-muted flex-wrap">
+          <a href="/" class="hover:text-brand-text transition-colors">Inicio</a>
+          {leccion.data.moduleTitle && (
+            <>
+              <Icon name="lucide:chevron-right" class="h-3 w-3" />
+              <span class="font-medium text-brand-primary">{leccion.data.moduleTitle}</span>
+            </>
+          )}
+          {leccion.data.topicTitle && (
+            <>
+              <Icon name="lucide:chevron-right" class="h-3 w-3" />
+              <span class="truncate max-w-[200px]">{leccion.data.topicTitle}</span>
+            </>
+          )}
+        </nav>
 
-      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-brand-text">
-        {leccion.data.title}
-      </h1>
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-brand-navy dark:text-white">
+          {leccion.data.title}
+        </h1>
 
-      <!-- Etiquetas informativas -->
-      <div class="flex flex-wrap items-center gap-2 text-xs">
-        {isInduction ? (
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-50 dark:bg-purple-950/40 border border-purple-300 dark:border-purple-800 text-purple-700 dark:text-purple-300 font-semibold shadow-xs">
-            <Icon name="lucide:presentation" class="h-3.5 w-3.5" />
-            <span>Presentación Oficial del Curso</span>
-          </span>
-        ) : (
-          <>
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-brand-sidebar-bg border border-brand-border text-brand-text font-medium shadow-xs">
-              <Icon name="lucide:clock" class="h-3.5 w-3.5 text-brand-primary" />
-              <span>{duration} min</span>
-            </span>
-
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-brand-primary/10 border border-brand-primary/20 text-brand-primary font-semibold">
+        <!-- Metadatos de la Lección -->
+        <div class="flex flex-wrap items-center gap-2 text-xs">
+          {isInduction ? (
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-brand-primary/10 border border-brand-primary/20 text-brand-primary font-semibold">
               <Icon name="lucide:book-open" class="h-3.5 w-3.5" />
-              <span class="capitalize">{kind}</span>
+              <span>Guía de Inducción</span>
             </span>
-          </>
-        )}
+          ) : (
+            <>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white dark:bg-brand-sidebar-bg border border-brand-border text-brand-text font-medium">
+                <Icon name="lucide:clock" class="h-3.5 w-3.5 text-brand-primary" />
+                <span>{duration} min</span>
+              </span>
 
-        {leccion.data.fecha && (
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-brand-sidebar-bg border border-brand-border text-brand-text font-mono shadow-xs">
-            <Icon name="lucide:calendar" class="h-3.5 w-3.5 text-brand-primary" />
-            <span>{leccion.data.fecha}</span>
-          </span>
-        )}
-      </div>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-brand-primary/10 border border-brand-primary/20 text-brand-primary font-semibold">
+                <Icon name="lucide:book-open" class="h-3.5 w-3.5" />
+                <span class="capitalize">{kind}</span>
+              </span>
+            </>
+          )}
 
-      <!-- Objetivos pedagógicos -->
-      {objectives.length > 0 && (
-        <div class="mt-4 p-4 rounded-xl border border-brand-border bg-brand-callout-bg text-xs space-y-2">
-          <span class="font-bold text-brand-text block">Objetivos de la sesión</span>
-          <ul class="list-disc list-inside space-y-1.5 text-brand-text/90 marker:text-brand-primary">
-            {objectives.map((obj: string) => (
-              <li>{obj}</li>
-            ))}
-          </ul>
+          {leccion.data.fecha && (
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white dark:bg-brand-sidebar-bg border border-brand-border text-brand-text font-mono">
+              <Icon name="lucide:calendar" class="h-3.5 w-3.5 text-brand-primary" />
+              <span>{leccion.data.fecha}</span>
+            </span>
+          )}
         </div>
-      )}
-    </header>
 
-    <!-- Guard de bloqueo para alumnos si la lección es futura -->
-    <div
-      id="lesson-locked-guard"
-      class="hidden rounded-2xl border border-amber-300 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/40 p-6 sm:p-8 text-center space-y-4 shadow-xs"
-    >
-      <div class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200">
-        <Icon name="lucide:lock" class="h-6 w-6" />
-      </div>
-      <div class="space-y-1">
-        <h2 class="text-lg font-bold text-amber-950 dark:text-amber-200">
-          Clase no disponible para tu grupo
-        </h2>
-        <p id="lesson-guard-message" class="text-xs sm:text-sm text-amber-800 dark:text-amber-300 max-w-md mx-auto leading-relaxed">
-          Esta lección corresponde a una semana posterior del curso. Se habilitará cuando tu grupo alcance esta semana.
-        </p>
-      </div>
-      <div class="pt-2">
-        <a
-          href="/"
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-primary hover:bg-brand-accent text-white text-xs font-semibold transition-colors shadow-xs"
-        >
-          <Icon name="lucide:arrow-left" class="h-4 w-4" />
-          <span>Volver a mi clase activa</span>
-        </a>
-      </div>
-    </div>
+        <!-- Objetivos pedagógicos -->
+        {objectives.length > 0 && (
+          <div class="mt-4 p-4 rounded-lg border border-brand-border bg-brand-callout-bg text-xs space-y-2">
+            <span class="font-bold text-brand-navy dark:text-white block">Objetivos de la sesión</span>
+            <ul class="list-disc list-inside space-y-1.5 text-brand-text/90 marker:text-brand-primary">
+              {objectives.map((obj: string) => (
+                <li>{obj}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </header>
 
-    <!-- Contenido de la Lección en MDX -->
-    <article class="prose max-w-none" data-lesson-content data-slug={activeSlug} data-lesson-week={leccionSemana}>
-      <Content />
-    </article>
-
-    <!-- Barra de Completar Lección (Solo para lecciones regulares de alumnos) -->
-    {!isInduction && (
-      <LessonCompletionBar
-        slug={activeSlug}
-        nextLesson={nextLesson ? { slug: nextLesson.slug, title: nextLesson.title } : null}
-      />
-    )}
-
-    <!-- Navegación al pie de página -->
-    {!isInduction ? (
-      <nav class="flex items-center justify-between gap-4 border-t border-brand-border pt-6 text-xs">
-        {prevLesson ? (
+      <!-- Guard de bloqueo para alumnos si la lección es futura -->
+      <div
+        id="lesson-locked-guard"
+        class="hidden rounded-xl border border-amber-300 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/40 p-6 sm:p-8 text-center space-y-4"
+      >
+        <div class="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200">
+          <Icon name="lucide:lock" class="h-6 w-6" />
+        </div>
+        <div class="space-y-1">
+          <h2 class="text-lg font-bold text-amber-950 dark:text-amber-200">
+            Clase no disponible para tu grupo
+          </h2>
+          <p id="lesson-guard-message" class="text-xs sm:text-sm text-amber-800 dark:text-amber-300 max-w-md mx-auto leading-relaxed">
+            Esta lección corresponde a una semana posterior del curso. Se habilitará cuando tu grupo alcance esta semana.
+          </p>
+        </div>
+        <div class="pt-2">
           <a
-            href={`/${prevLesson.slug}`}
-            class="flex items-center gap-2 px-3 py-2 rounded-lg border border-brand-border text-brand-text hover:bg-brand-callout-bg dark:hover:bg-brand-sidebar-bg transition-colors"
+            href="/"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-primary hover:bg-brand-primary-hover text-white text-xs font-semibold transition-colors"
           >
             <Icon name="lucide:arrow-left" class="h-4 w-4" />
-            <span>{prevLesson.title}</span>
+            <span>Volver a mi clase activa</span>
           </a>
-        ) : <span />}
+        </div>
+      </div>
 
-        {nextLesson ? (
+      <!-- Contenido de la Lección en MDX (Lectura fluida con scroll natural) -->
+      <article class="prose max-w-none text-brand-text" data-lesson-content data-slug={activeSlug} data-lesson-week={leccionSemana}>
+        <Content />
+      </article>
+
+      <!-- Barra de Completar Lección -->
+      {!isInduction && (
+        <LessonCompletionBar
+          slug={activeSlug}
+          nextLesson={nextLesson ? { slug: nextLesson.slug, title: nextLesson.title } : null}
+        />
+      )}
+
+      <!-- Navegación al pie de página -->
+      {!isInduction ? (
+        <nav class="flex items-center justify-between gap-4 border-t border-brand-border pt-6 text-xs">
+          {prevLesson ? (
+            <a
+              href={`/${prevLesson.slug}`}
+              class="flex items-center gap-2 px-3.5 py-2 rounded-lg border border-brand-border text-brand-text hover:bg-brand-hover-bg transition-colors"
+            >
+              <Icon name="lucide:arrow-left" class="h-4 w-4" />
+              <span>{prevLesson.title}</span>
+            </a>
+          ) : <span />}
+
+          {nextLesson ? (
+            <a
+              href={`/${nextLesson.slug}`}
+              class="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-brand-primary text-white font-medium hover:bg-brand-primary-hover transition-colors"
+            >
+              <span>{nextLesson.title}</span>
+              <Icon name="lucide:arrow-right" class="h-4 w-4" />
+            </a>
+          ) : <span />}
+        </nav>
+      ) : (
+        <nav class="flex items-center justify-between gap-4 border-t border-brand-border pt-6 text-xs flex-wrap">
           <a
-            href={`/${nextLesson.slug}`}
-            class="flex items-center gap-2 px-3 py-2 rounded-lg bg-brand-primary text-white font-medium hover:bg-brand-accent transition-colors"
+            href="/"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-brand-border text-brand-text hover:bg-brand-hover-bg font-semibold transition-colors"
           >
-            <span>{nextLesson.title}</span>
-            <Icon name="lucide:arrow-right" class="h-4 w-4" />
+            <Icon name="lucide:arrow-left" class="h-4 w-4" />
+            <span>Volver al Inicio</span>
           </a>
-        ) : <span />}
-      </nav>
-    ) : (
-      <nav class="flex items-center justify-between gap-4 border-t border-brand-border pt-6 text-xs flex-wrap">
-        <a
-          href="/"
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-brand-border text-brand-text hover:bg-brand-callout-bg dark:hover:bg-brand-sidebar-bg font-semibold transition-colors"
-        >
-          <Icon name="lucide:arrow-left" class="h-4 w-4" />
-          <span>Volver al Inicio</span>
-        </a>
-        <a
-          href="/plan-de-estudios"
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-primary hover:bg-brand-accent text-white font-semibold transition-colors shadow-xs"
-        >
-          <Icon name="lucide:map" class="h-4 w-4" />
-          <span>Consultar Plan de Estudios Completo</span>
-        </a>
-      </nav>
+          <a
+            href="/plan-de-estudios"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-primary hover:bg-brand-primary-hover text-white font-semibold transition-colors"
+          >
+            <Icon name="lucide:map" class="h-4 w-4" />
+            <span>Consultar Plan de Estudios Completo</span>
+          </a>
+        </nav>
+      )}
+    </div>
+
+    <!-- Barra lateral fija: En esta página (TOC con ScrollSpy discreto) -->
+    {tocHeadings.length > 0 && (
+      <aside class="hidden xl:block">
+        <div class="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto pr-1 space-y-2.5">
+          <p class="text-[11px] font-semibold uppercase tracking-wider text-brand-muted/70">
+            En esta página
+          </p>
+          <nav id="toc-nav" class="space-y-0.5 text-[12px] border-l border-brand-border/60 pl-2.5">
+            {tocHeadings.map((h) => (
+              <a
+                href={`#${h.slug}`}
+                data-toc-slug={h.slug}
+                class="block py-1 text-brand-muted/80 hover:text-brand-text transition-colors leading-snug line-clamp-2"
+                title={h.text}
+              >
+                {h.text}
+              </a>
+            ))}
+          </nav>
+        </div>
+      </aside>
     )}
   </div>
 
-  <!-- Inicializador de Diapositivas y Envoltorios de Tablas -->
+  <!-- Inicializador de interactividad de lectura, tablas, código y scrollspy -->
   <script>
-    import { presentationStore } from '../features/presentation';
     import { getCurrentUser, getPortalDB } from '../features/portal/db';
 
     function checkWeekAccess() {
@@ -221,14 +254,11 @@ const leccionSemana = leccion.data.semana || 0;
       if (completionBar) completionBar.classList.remove('hidden');
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      checkWeekAccess();
-      window.addEventListener('cpi-portal-update', checkWeekAccess);
-
+    function initInteractiveFeatures() {
       const article = document.querySelector<HTMLElement>('article.prose[data-lesson-content]');
       if (!article) return;
 
-      // Envolver tablas para scroll responsivo con indicador final
+      // 1. Envolver tablas para scroll responsivo
       const tables = article.querySelectorAll('table');
       tables.forEach((table) => {
         if (!table.parentElement?.classList.contains('prose-table-wrapper')) {
@@ -248,9 +278,84 @@ const leccionSemana = leccion.data.semana || 0;
         }
       });
 
-      // Inicializar el store de presentación
-      const slug = article.getAttribute('data-slug') || '';
-      presentationStore.init(slug, article);
+      // 2. Botón de copiar código rápido en bloques pre
+      const codeBlocks = article.querySelectorAll('pre');
+      codeBlocks.forEach((pre) => {
+        if (pre.parentElement?.classList.contains('code-block-wrapper')) return;
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'code-block-wrapper relative group my-6';
+        pre.parentNode?.insertBefore(wrapper, pre);
+        wrapper.appendChild(pre);
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'copy-code-btn absolute top-2.5 right-2.5 px-2.5 py-1 text-xs font-mono font-medium rounded-md bg-white/10 hover:bg-white/20 text-slate-200 border border-white/10 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity cursor-pointer flex items-center gap-1.5 shadow-xs select-none';
+        btn.setAttribute('aria-label', 'Copiar código al portapapeles');
+        btn.innerHTML = `<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg><span>Copiar</span>`;
+
+        btn.addEventListener('click', async () => {
+          const codeEl = pre.querySelector('code');
+          const textToCopy = (codeEl ? codeEl.innerText : pre.innerText).trim();
+          try {
+            await navigator.clipboard.writeText(textToCopy);
+            btn.innerHTML = `<svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span class="text-emerald-400">Copiado</span>`;
+            setTimeout(() => {
+              btn.innerHTML = `<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg><span>Copiar</span>`;
+            }, 2000);
+          } catch (e) {
+            console.error('Error al copiar:', e);
+          }
+        });
+
+        wrapper.appendChild(btn);
+      });
+
+      // 3. ScrollSpy para Tabla de Contenidos (TOC)
+      const tocLinks = document.querySelectorAll<HTMLAnchorElement>('#toc-nav a[data-toc-slug]');
+      if (tocLinks.length > 0) {
+        const headingElements: HTMLElement[] = [];
+        tocLinks.forEach((link) => {
+          const slug = link.getAttribute('data-toc-slug');
+          if (slug) {
+            const el = document.getElementById(slug);
+            if (el) headingElements.push(el);
+          }
+        });
+
+        function updateActiveTOC() {
+          const scrollPos = window.scrollY + 120;
+          let currentId = '';
+
+          for (const heading of headingElements) {
+            if (heading.offsetTop <= scrollPos) {
+              currentId = heading.id;
+            } else {
+              break;
+            }
+          }
+
+          tocLinks.forEach((link) => {
+            const isCurrent = link.getAttribute('data-toc-slug') === currentId;
+            if (isCurrent) {
+              link.classList.add('text-brand-primary', 'font-medium');
+              link.classList.remove('text-brand-muted/80');
+            } else {
+              link.classList.remove('text-brand-primary', 'font-medium');
+              link.classList.add('text-brand-muted/80');
+            }
+          });
+        }
+
+        window.addEventListener('scroll', updateActiveTOC, { passive: true });
+        updateActiveTOC();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      checkWeekAccess();
+      window.addEventListener('cpi-portal-update', checkWeekAccess);
+      initInteractiveFeatures();
     });
   </script>
 </Layout>

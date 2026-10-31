@@ -30,6 +30,8 @@ __pycache__/
 *.pyc
 
 # local data
+*.local.json
+**/scripts/bin/
 lista_correos_alumnos.csv
 alumno-correo*.csv
 src/data/alumnos_correos.json

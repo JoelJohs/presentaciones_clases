@@ -1,0 +1,267 @@
+---
+title: "Lógica Computacional y Primeros Scripts"
+moduleTitle: "5 - Programación I: Lógica Algorítmica y Python"
+topicTitle: "Tema 1: Lógica Computacional y Algoritmos"
+subtopicTitle: "Diagramas, Pseudocódigo y Scripts en Python"
+semana: 17
+fecha: "31-10-2026"
+published: true
+description: "Descompón problemas en instrucciones secuenciales. Modela variables, traza diagramas de flujo, escribe pseudocódigo y traslada tus soluciones a Python con print(), input() y casteo."
+duration: 240
+objectives:
+  - "Comprender la ejecución secuencial de un algoritmo"
+  - "Diferenciar tipos de datos primitivos: str, int y float"
+  - "Trazar diagramas de flujo con los cuatro símbolos estándar"
+  - "Escribir pseudocódigo con MOSTRAR, LEER y asignación"
+  - "Comprobar la versión de Python y ejecutar scripts en VS Code"
+  - "Convertir tipos de datos con int() y float()"
+  - "Traducir algoritmos de libreta a código ejecutable en Python"
+---
+
+import { Icon } from "astro-icon/components";
+
+# Lógica Computacional y Primeros Scripts
+
+Traduce tu lógica a instrucciones que la computadora pueda procesar. Primero diseñas la solución en papel. Luego la escribes en Python.
+
+---
+
+## 1. Instrucciones Secuenciales y Algoritmos <Icon name="lucide:cpu" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+La computadora obedece instrucciones paso a paso. No infiere intenciones ni corrige descuidos.
+
+Un algoritmo cumple tres reglas:
+
+- **Determinismo:** Los mismos datos de entrada generan el mismo resultado en cada ejecución.
+- **Secuencialidad:** La máquina procesa una línea tras otra, de arriba hacia abajo.
+- **Atomicidad:** Cada instrucción realiza una sola acción indivisible.
+
+Un algoritmo es una secuencia finita, ordenada y clara de pasos para resolver un problema.
+
+---
+
+## 2. Variables y Tipos Primitivos <Icon name="lucide:box" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Una variable reserva espacio en memoria RAM para guardar un dato. Piensa en ella como una caja con un nombre y un valor.
+
+Python maneja tres tipos primitivos básicos:
+
+<table>
+  <thead>
+    <tr>
+      <th>Tipo</th>
+      <th>Nombre en Python</th>
+      <th>Uso</th>
+      <th>Ejemplos</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Texto</strong></td>
+      <td><code>str</code></td>
+      <td>Caracteres entre comillas. Se concatenan, no se suman.</td>
+      <td><code>"Hola"</code>, <code>"CPI"</code>, <code>"15"</code></td>
+    </tr>
+    <tr>
+      <td><strong>Entero</strong></td>
+      <td><code>int</code></td>
+      <td>Números sin decimales para conteos exactos.</td>
+      <td><code>3</code>, <code>0</code>, <code>-5</code>, <code>42</code></td>
+    </tr>
+    <tr>
+      <td><strong>Decimal</strong></td>
+      <td><code>float</code></td>
+      <td>Mediciones continuas con punto decimal.</td>
+      <td><code>1.75</code>, <code>19.99</code>, <code>-0.5</code></td>
+    </tr>
+  </tbody>
+</table>
+
+> [!TIP]
+> ¿Un número de teléfono (`"5512345678"`) o un código postal (`"06700"`) son enteros o texto? Son **texto (`str`)**. No vas a promediar dos teléfonos ni sumarle uno a un código postal.
+
+---
+
+## 3. Simbología de Diagramas de Flujo <Icon name="lucide:git-fork" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Usa cuatro símbolos para representar la lógica de tus programas:
+
+<table>
+  <thead>
+    <tr>
+      <th>Figura</th>
+      <th>Nombre</th>
+      <th>Función</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Óvalo</strong></td>
+      <td>Terminal</td>
+      <td>Marca el <strong>INICIO</strong> o el <strong>FIN</strong>.</td>
+    </tr>
+    <tr>
+      <td><strong>Paralelogramo</strong></td>
+      <td>Entrada / Salida</td>
+      <td>Pide datos al usuario (<code>LEER</code>) o muestra mensajes (<code>MOSTRAR</code>).</td>
+    </tr>
+    <tr>
+      <td><strong>Rectángulo</strong></td>
+      <td>Proceso</td>
+      <td>Realiza operaciones matemáticas o asignaciones (<code>&lt;-</code>).</td>
+    </tr>
+    <tr>
+      <td><strong>Flecha</strong></td>
+      <td>Línea de flujo</td>
+      <td>Indica el orden de ejecución hacia abajo.</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 4. Pseudocódigo Base <Icon name="lucide:file-code" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Usa tres verbos para escribir algoritmos en tu libreta:
+
+- `MOSTRAR`: Imprime texto o variables en pantalla.
+- `LEER`: Guarda lo que el usuario escribe en una variable.
+- `<-`: Guarda el resultado de una operación en una variable.
+
+```text
+INICIO
+    MOSTRAR "Ingresa tu nombre:"
+    LEER nombre
+    MOSTRAR "Hola, " + nombre + ". Cuenta activada."
+FIN
+```
+
+---
+
+## 5. Ejercicio 1: Generador de Nombres de Usuario <Icon name="lucide:user" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Dibuja el diagrama de flujo en tu cuaderno y escribe el pseudocódigo:
+
+- **Problema:** Pide el nombre y el color favorito del usuario. Une ambos datos con un guion bajo.
+- **Objetivo:** Capturar cadenas (`str`) y concatenarlas sin operaciones matemáticas.
+
+### Pseudocódigo
+
+```text
+INICIO
+    MOSTRAR "¿Cómo te llamas?"
+    LEER nombre
+    MOSTRAR "¿Cuál es tu color favorito?"
+    LEER color
+    usuario_final <- nombre + "_" + color
+    MOSTRAR "Tu usuario sugerido es: " + usuario_final
+FIN
+```
+
+---
+
+## 6. Ejercicio 2: Caja Registradora del Kiosco <Icon name="lucide:shopping-cart" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Resuelve este ejercicio en tu cuaderno separando datos enteros de valores con punto decimal:
+
+- **Problema:** Un cliente compra papas de `$18.50` y refrescos de `$16.00`. Pide la cantidad de cada producto, calcula el total y muestra el monto final.
+- **Objetivo:** Combinar enteros (`cant_papas`, `cant_refresco`) con decimales (`precio_papas`, `precio_refresco`, `total`).
+
+### Pseudocódigo
+
+```text
+INICIO
+    precio_papas <- 18.50
+    precio_refresco <- 16.00
+    MOSTRAR "¿Cuántas bolsas de papas compraste?"
+    LEER cant_papas
+    MOSTRAR "¿Cuántos refrescos compraste?"
+    LEER cant_refresco
+    total <- (cant_papas * precio_papas) + (cant_refresco * precio_refresco)
+    MOSTRAR "Total a pagar: $" + total
+FIN
+```
+
+---
+
+## 7. Preparación del Entorno en PC <Icon name="lucide:terminal" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Con la lógica validada en papel, pasa a la computadora:
+
+1. **Verifica Python:** Abre la terminal (`Ctrl + Alt + T` en Linux o Terminal en Windows) y escribe:
+   ```bash
+   python3 --version
+   ```
+   En Windows usa `python --version`. Si instalas Python en Windows, marca la casilla **"Add Python to PATH"**.
+
+2. **Extensión en VS Code:** Abre VS Code e instala la extensión **Python** de Microsoft.
+
+3. **Crea tu archivo:** Abre una carpeta de trabajo llamada `primeros_pasos` en VS Code y crea el archivo `app.py`.
+
+---
+
+## 8. Entrada de Datos con input() y Conversión de Tipos <Icon name="lucide:alert-triangle" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Escribe este código en `app.py`:
+
+```python
+num1 = input("Dame un número: ")
+num2 = input("Dame otro número: ")
+print("La suma es:", num1 + num2)
+```
+
+Al ingresar `5` y `5`, la consola muestra:
+
+```text
+La suma es: 55
+```
+
+La función `input()` devuelve texto (`str`), aunque escribas dígitos. El operador `+` entre textos los concatena en vez de sumarlos.
+
+Para sumar cantidades, convierte el texto a número con `int()` o `float()`:
+
+```python
+num1 = int(input("Dame un número: "))
+num2 = int(input("Dame otro número: "))
+print("La suma real es:", num1 + num2)
+```
+
+Al ingresar `5` y `5`, el resultado es `10`.
+
+---
+
+## 9. De la Libreta al Código: Caja Registradora en Python <Icon name="lucide:play" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Traslada el Ejercicio 2 de tu libreta a Python en `app.py`:
+
+```python
+precio_papas = 18.50
+precio_refresco = 16.00
+
+cant_papas = int(input("¿Cuántas bolsas de papas compraste? "))
+cant_refresco = int(input("¿Cuántos refrescos compraste? "))
+
+total = (cant_papas * precio_papas) + (cant_refresco * precio_refresco)
+
+print("=== TICKET DE PAGO ===")
+print("Total a pagar: $", total)
+```
+
+Guarda el archivo (`Ctrl + S`) y ejecútalo en la terminal integrada:
+
+```bash
+python3 app.py
+```
+
+Si compras 2 bolsas de papas y 2 refrescos, el total en pantalla debe ser `$69.0`.
+
+---
+
+## 10. Referencias <Icon name="lucide:book-marked" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Consulta estas obras para profundizar en algoritmia y sintaxis:
+
+- **"Fundamentos de Programación" – Luis Joyanes Aguilar:** Capítulos 1 y 2. Estructura general de programas y transición a pseudocódigo.
+- **"Metodología de la Programación" – Osvaldo Cairó:** Capítulos 1 y 2. Ejercicios secuenciales en papel.
+- **"Python Crash Course" – Eric Matthes:** Capítulo 2. Manejo de variables, cadenas y números.
+- **"Automate the Boring Stuff with Python" – Al Sweigart:** Capítulo 1. Uso directo de terminal y funciones básicas.
