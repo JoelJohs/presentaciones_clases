@@ -1,0 +1,493 @@
+---
+title: "Estructuras de Control Condicional"
+moduleTitle: "5 - Programación I: Lógica Algorítmica y Python"
+topicTitle: "Tema 1: Lógica Computacional y Algoritmos"
+subtopicTitle: "Rombo de Decisión, Álgebra Booleana y Bloques if-elif-else"
+semana: 18
+fecha: "07-11-2026"
+published: true
+description: "Modela bifurcaciones con el rombo de decisión, evalúa expresiones booleanas y programa decisiones en Python con if, elif y else."
+duration: 240
+objectives:
+  - "Evaluar expresiones con operadores de comparación y lógicos"
+  - "Representar bifurcaciones simples, dobles y múltiples en diagramas de flujo"
+  - "Escribir pseudocódigo estructurado con SI, SINO SI y SINO"
+  - "Rastrear valores y ramas con tablas de prueba de escritorio"
+  - "Prevenir errores de asignación y orden en bloques condicionales de Python"
+  - "Traducir algoritmos de libreta a scripts ejecutables con if, elif y else"
+---
+
+import { Icon } from "astro-icon/components";
+
+# Estructuras de Control Condicional
+
+Tus primeros programas ejecutaban cada instrucción en orden secuencial sin desvíos. Con las estructuras condicionales, la computadora evalúa datos y selecciona qué camino de código ejecutar.
+
+---
+
+## 1. El Tipo Booleano y los Operadores de Comparación <Icon name="lucide:toggle-left" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Un booleano (`bool`) almacena solo uno de dos estados: `True` o `False`. Escribe estos valores con la primera letra mayúscula y sin comillas.
+
+Una comparación formula una pregunta matemática a la máquina. El resultado siempre produce un valor booleano.
+
+<table>
+  <thead>
+    <tr>
+      <th>Operador</th>
+      <th>Significado</th>
+      <th>Ejemplo</th>
+      <th>Resultado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>==</code></td>
+      <td>Igual a</td>
+      <td><code>5 == 5</code></td>
+      <td><code>True</code></td>
+    </tr>
+    <tr>
+      <td><code>!=</code></td>
+      <td>Diferente de</td>
+      <td><code>10 != 10</code></td>
+      <td><code>False</code></td>
+    </tr>
+    <tr>
+      <td><code>&gt;</code></td>
+      <td>Mayor que</td>
+      <td><code>15 &gt; 8</code></td>
+      <td><code>True</code></td>
+    </tr>
+    <tr>
+      <td><code>&lt;</code></td>
+      <td>Menor que</td>
+      <td><code>20 &lt; 12</code></td>
+      <td><code>False</code></td>
+    </tr>
+    <tr>
+      <td><code>&gt;=</code></td>
+      <td>Mayor o igual que</td>
+      <td><code>18 &gt;= 18</code></td>
+      <td><code>True</code></td>
+    </tr>
+    <tr>
+      <td><code>&lt;=</code></td>
+      <td>Menor o igual que</td>
+      <td><code>7 &lt;= 6</code></td>
+      <td><code>False</code></td>
+    </tr>
+  </tbody>
+</table>
+
+> [!IMPORTANT]
+> Un solo signo `=` guarda un dato en una variable. Dos signos `==` comparan dos datos para verificar si tienen el mismo valor.
+
+---
+
+## 2. Operadores Lógicos para Condiciones Compuestas <Icon name="lucide:binary" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Combina dos o más comparaciones usando operadores lógicos:
+
+<table>
+  <thead>
+    <tr>
+      <th>Operador</th>
+      <th>Nombre</th>
+      <th>Regla de evaluación</th>
+      <th>Ejemplo</th>
+      <th>Resultado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>and</code></td>
+      <td>Y lógico</td>
+      <td>Devuelve <code>True</code> solo si ambas condiciones son verdaderas.</td>
+      <td><code>(10 &gt; 5) and (3 &lt; 1)</code></td>
+      <td><code>False</code></td>
+    </tr>
+    <tr>
+      <td><code>or</code></td>
+      <td>O lógico</td>
+      <td>Devuelve <code>True</code> si al menos una condición es verdadera.</td>
+      <td><code>(5 == 5) or (10 &gt; 20)</code></td>
+      <td><code>True</code></td>
+    </tr>
+    <tr>
+      <td><code>not</code></td>
+      <td>Negación</td>
+      <td>Invierte el valor booleano. Convierte verdad en falsedad y viceversa.</td>
+      <td><code>not (4 == 4)</code></td>
+      <td><code>False</code></td>
+    </tr>
+  </tbody>
+</table>
+
+### Prueba de evaluación mental
+
+Resuelve cada expresión en tu libreta antes de revisar el resultado:
+
+- `10 > 5` produce `True`.
+- `"gato" == "perro"` produce `False`.
+- `(7 >= 7) and (3 < 1)` produce `False` porque la segunda parte falla.
+- `(5 == 5) or (10 > 20)` produce `True` porque la primera parte cumple la condición.
+
+---
+
+## 3. El Rombo de Decisión en Diagramas de Flujo <Icon name="lucide:git-fork" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+El rombo representa una bifurcación en el flujo del algoritmo.
+
+### Reglas de dibujo
+
+1. Una flecha entra por la punta superior.
+2. Salen dos flechas: una por la punta derecha y otra por la punta inferior o izquierda.
+3. Etiqueta una flecha con `SÍ` y la otra flecha con `NO`. Ningún rombo tiene tres salidas.
+
+### Tres patrones de bifurcación
+
+1. **Bifurcación simple:** Ejecuta un bloque de instrucciones si la condición se cumple. Si la condición resulta falsa, la línea de flujo salta el bloque y continúa el recorrido.
+2. **Bifurcación doble:** Divide la ejecución en dos caminos exclusivos. Un camino corre con `SÍ` y el camino opuesto corre con `NO`.
+3. **Bifurcación múltiple (cascada):** La rama del `NO` conecta con un nuevo rombo de decisión. Permite clasificar datos en tres o más rangos sucesivos.
+
+---
+
+## 4. Estructura de Pseudocódigo Formal <Icon name="lucide:file-code" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Escribe bifurcaciones en tu libreta con esta plantilla estructurada:
+
+```text
+SI condicion_1 ENTONCES
+    // Instrucciones si condicion_1 es verdadera
+SINO SI condicion_2 ENTONCES
+    // Instrucciones si condicion_2 es verdadera
+SINO
+    // Instrucciones si ninguna condicion anterior se cumplio
+FIN SI
+```
+
+### Reglas de escritura
+
+- Agrega sangría en las instrucciones internas de cada bloque.
+- Coloca la condición después de las palabras `SI` o `SINO SI`.
+- La palabra `SINO` no lleva condición propia; captura todos los casos restantes.
+- Cierra cada bloque condicional con `FIN SI`.
+
+---
+
+## 5. La Prueba de Escritorio en Papel <Icon name="lucide:table" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+La prueba de escritorio rastrea el valor de cada variable paso a paso. Detecta fallas lógicas antes de encender la computadora.
+
+Traza una tabla en tu libreta con una columna por variable, una columna para la condición evaluada y una columna para el texto en pantalla.
+
+### Ejemplo: Verificación de Mayoría de Edad
+
+Prueba este algoritmo con tres valores de entrada: `17`, `18` y `19`.
+
+<table>
+  <thead>
+    <tr>
+      <th>Paso</th>
+      <th>edad</th>
+      <th>Condición (edad &gt;= 18)</th>
+      <th>Resultado</th>
+      <th>Salida en pantalla</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Caso 1</td>
+      <td><code>17</code></td>
+      <td><code>17 &gt;= 18</code></td>
+      <td><code>False</code></td>
+      <td>"Menor de edad"</td>
+    </tr>
+    <tr>
+      <td>Caso 2</td>
+      <td><code>18</code></td>
+      <td><code>18 &gt;= 18</code></td>
+      <td><code>True</code></td>
+      <td>"Acceso permitido"</td>
+    </tr>
+    <tr>
+      <td>Caso 3</td>
+      <td><code>19</code></td>
+      <td><code>19 &gt;= 18</code></td>
+      <td><code>True</code></td>
+      <td>"Acceso permitido"</td>
+    </tr>
+  </tbody>
+</table>
+
+> [!TIP]
+> Prueba siempre con valores límite. En una condición con `>=`, el número exacto del corte (en este caso `18`) comprueba si el operador incluye o excluye el límite.
+
+---
+
+## 6. Reto de Libreta 1: Clasificador de Boletos de Cine <Icon name="lucide:ticket" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Dibuja el diagrama de flujo con rombos de decisión y copia este pseudocódigo en tu libreta:
+
+### Problema
+
+Una taquilla cobra tarifas según la edad:
+
+- Menor a 0 o mayor a 120 años: `"Edad no válida"`
+- Menores de 12 años: `$45.00` (Tarifa infantil)
+- De 12 a 59 años: `$80.00` (Tarifa regular)
+- 60 años o más: `$40.00` (Tarifa adulto mayor)
+
+### Pseudocódigo
+
+```text
+INICIO
+    MOSTRAR "Ingresa tu edad:"
+    LEER edad
+    SI edad < 0 O edad > 120 ENTONCES
+        MOSTRAR "Edad no válida"
+    SINO SI edad < 12 ENTONCES
+        MOSTRAR "Tarifa infantil: $45.00"
+    SINO SI edad < 60 ENTONCES
+        MOSTRAR "Tarifa regular: $80.00"
+    SINO
+        MOSTRAR "Tarifa adulto mayor: $40.00"
+    FIN SI
+FIN
+```
+
+### Prueba de escritorio requerida
+
+<table>
+  <thead>
+    <tr>
+      <th>Caso</th>
+      <th>edad</th>
+      <th>Condición cumplida</th>
+      <th>Salida esperada</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td><code>-3</code></td>
+      <td><code>edad &lt; 0 O edad &gt; 120</code></td>
+      <td>"Edad no válida"</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><code>10</code></td>
+      <td><code>edad &lt; 12</code></td>
+      <td>"Tarifa infantil: $45.00"</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><code>35</code></td>
+      <td><code>edad &lt; 60</code></td>
+      <td>"Tarifa regular: $80.00"</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td><code>68</code></td>
+      <td><code>SINO</code></td>
+      <td>"Tarifa adulto mayor: $40.00"</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 7. Reto de Libreta 2: Control de Acceso con Doble Credencial <Icon name="lucide:shield-check" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Diseña un sistema de autenticación para una sala de servidores.
+
+### Reglas de validación
+
+- Usuario correcto: `"admin"`
+- NIP numérico: `2026`
+- Si usuario y NIP coinciden: `"Acceso Concedido"`
+- Si el usuario coincide pero el NIP falla: `"NIP incorrecto"`
+- Si el usuario no coincide: `"Usuario desconocido"`
+
+### Pseudocódigo
+
+```text
+INICIO
+    MOSTRAR "Usuario:"
+    LEER usuario
+    MOSTRAR "NIP:"
+    LEER nip
+    SI usuario == "admin" Y nip == 2026 ENTONCES
+        MOSTRAR "Acceso Concedido"
+    SINO SI usuario == "admin" Y nip != 2026 ENTONCES
+        MOSTRAR "NIP incorrecto"
+    SINO
+        MOSTRAR "Usuario desconocido"
+    FIN SI
+FIN
+```
+
+### Prueba de escritorio requerida
+
+<table>
+  <thead>
+    <tr>
+      <th>Caso</th>
+      <th>usuario</th>
+      <th>nip</th>
+      <th>Rama ejecutada</th>
+      <th>Salida en pantalla</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td><code>"admin"</code></td>
+      <td><code>2026</code></td>
+      <td>Rama 1 (<code>SI</code>)</td>
+      <td>"Acceso Concedido"</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><code>"admin"</code></td>
+      <td><code>9999</code></td>
+      <td>Rama 2 (<code>SINO SI</code>)</td>
+      <td>"NIP incorrecto"</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><code>"invitado"</code></td>
+      <td><code>2026</code></td>
+      <td>Rama 3 (<code>SINO</code>)</td>
+      <td>"Usuario desconocido"</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 8. Python al Silicio: Indentación y Trampas de Código <Icon name="lucide:alert-triangle" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Python utiliza sangría obligatoria de 4 espacios y dos puntos `:` al final de cada encabezado condicional. No utiliza llaves ni palabras de cierre.
+
+### Trampa 1: Asignar en lugar de comparar
+
+```python
+# ERROR: produce SyntaxError
+if edad = 18:
+    print("Tienes 18")
+
+# CORRECTO: compara igualdad
+if edad == 18:
+    print("Tienes 18")
+```
+
+### Trampa 2: Orden erróneo en cascada
+
+Python evalúa condiciones de arriba hacia abajo. Al encontrar una expresión verdadera, ejecuta ese bloque y salta todo el resto del grupo condicional.
+
+```python
+# ERROR LÓGICO: 65 es mayor o igual a 12, por lo que nunca alcanza la tarifa de adulto mayor
+if edad >= 12:
+    print("Tarifa regular")
+elif edad >= 60:
+    print("Tarifa adulto mayor")
+```
+
+Para corregir el flujo, evalúa primero la condición más restrictiva o acota rangos con comparadores claros.
+
+---
+
+## 9. Práctica en VS Code: Script de Taquilla de Cine <Icon name="lucide:play" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Abre VS Code, crea el archivo `clasificador_cine.py` en tu carpeta de trabajo y escribe este script:
+
+```python
+print("=== TAQUILLA DEL CINE ===")
+edad = int(input("Ingresa la edad del cliente: "))
+
+if edad < 0 or edad > 120:
+    print("Error: Edad fuera de rango válido.")
+elif edad < 12:
+    print("Categoría: Infantil")
+    print("Monto a pagar: $45.00")
+elif edad < 60:
+    print("Categoría: Regular")
+    print("Monto a pagar: $80.00")
+else:
+    print("Categoría: Adulto Mayor")
+    print("Monto a pagar: $40.00")
+
+print("Disfrute su función.")
+```
+
+Guarda el archivo (`Ctrl + S`) y ejecútalo desde la terminal integrada:
+
+```bash
+python3 clasificador_cine.py
+```
+
+Comprueba el script ingresando las edades de tu prueba de escritorio: `-3`, `10`, `35` y `68`. Verifica que cada respuesta coincida con lo calculado en tu libreta.
+
+---
+
+## 10. Desafío Autónomo en PC: Calculadora de Descuentos <Icon name="lucide:percent" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Crea un script llamado `descuentos.py`. Resuelve el problema en tu computadora aplicando la estructura condicional adecuada.
+
+### Reglas comerciales
+
+Una tienda de abarrotes aplica descuentos según el total de la compra:
+
+- Compras menores a `$500.00`: `0%` de descuento. Paga el total completo.
+- Compras desde `$500.00` hasta menos de `$1000.00`: `10%` de descuento (`total * 0.90`).
+- Compras de `$1000.00` o más: `20%` de descuento (`total * 0.80`).
+
+> [!WARNING]
+> Ordena las evaluaciones con cuidado. Si evalúas `>= 500` antes de `>= 1000`, una compra de `$1200.00` entrará al bloque del 10% y no recibirá el 20%.
+
+### Casos de prueba requeridos
+
+<table>
+  <thead>
+    <tr>
+      <th>Total ingresado</th>
+      <th>Descuento aplicado</th>
+      <th>Monto final a pagar</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>$350.00</code></td>
+      <td>0%</td>
+      <td><code>$350.00</code></td>
+    </tr>
+    <tr>
+      <td><code>$500.00</code></td>
+      <td>10%</td>
+      <td><code>$450.00</code></td>
+    </tr>
+    <tr>
+      <td><code>$800.00</code></td>
+      <td>10%</td>
+      <td><code>$720.00</code></td>
+    </tr>
+    <tr>
+      <td><code>$1200.00</code></td>
+      <td>20%</td>
+      <td><code>$960.00</code></td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 11. Referencias <Icon name="lucide:book-marked" class="inline w-6 h-6 align-text-bottom text-brand-primary" />
+
+Consulta estas fuentes técnicas para profundizar en estructuras selectivas:
+
+- **"Metodología de la Programación: Algoritmos, Diagramas de Flujo y Programas" - Osvaldo Cairó:** Capítulo 3 (Estructuras Algorítmicas Selectivas). Clasificación formal de estructuras simples, dobles y múltiples.
+- **"Fundamentos de Programación: Algoritmos, Estructuras de Datos y Objetos" - Luis Joyanes Aguilar:** Capítulo 4 (Estructuras de Control I: Estructuras Selectivas). Anidamiento lógico y operadores booleanos.
+- **"Python Crash Course" - Eric Matthes:** Capítulo 5 (If Statements). Sintaxis de condicionales en Python, pruebas de igualdad y estilo PEP 8.
+- **"Automate the Boring Stuff with Python" - Al Sweigart:** Capítulo 2 (Flow Control). Tablas de verdad, evaluación booleana y saltos en el flujo de ejecución.
